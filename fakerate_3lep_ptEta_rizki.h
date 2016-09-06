@@ -33,8 +33,8 @@ std::vector<double> SF3Lepbkg(double f, double p, int N_t0, int N_t1, int N_t2, 
 	//output: {0:N_ppp, 1:N_fpp, 2:N_ffp, 3:N_fff, 4:N_signal, 5:N_1fake, 6:N_2fakes, 7:N_3fakes, 8:N_bkg}
 double SF3Lepbkg_simple(double f, double p, int N_t0, int N_t1, int N_t2, int N_t3);
 
-double ChiSquared(int k);
-int ThrowPoissonFromMeasurement(TRandom2* r, int n);
+// double ChiSquared(int k); //what are these for??
+// int ThrowPoissonFromMeasurement(TRandom2* r, int n); //what are these for??
 
 
 /////////////////// Tripple electron ////////////////////////
@@ -229,16 +229,17 @@ double SF3Lepbkg_simple(double f, double p, int N_t0, int N_t1, int N_t2, int N_
 
 /////////////////////////////////////////////////////////////
 
+/* //what is this for???
 int ThrowPoissonFromMeasurement(TRandom2* r, int n){//wad
 	if(n>100) return (int) r->Gaus(n, sqrt((float)n));
 	//figure out what the distribution of poisson parameters are. 
 	return r->Poisson( 0.5*ChiSquared(2*(n+1) ) );
-}
+} //what is this for???
 double ChiSquared(int k){//wad
 	ROOT::Math::Random<ROOT::Math::GSLRngMT> r;
 	return r.ChiSquare(k);
-}
-
+} //what is this for???
+*/
 
 /////////////////////// FUNCTIONS FOR WEIGHTS /////////////////////
 ///////////////////////coifs for SS emu////////////////////////////
