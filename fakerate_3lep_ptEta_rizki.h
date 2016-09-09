@@ -73,7 +73,8 @@ float Pr(int mode, std::vector<double> lep_info){
 // 		std::cout << "Ele: Mode: " << mode << ", " << prModeBehavior(mode) << " * uPr: " << uPr(lep_info)<< endl;
 // 		return 0.87 + uPr(lep_info)*prModeBehavior(mode); //from anthony
 // 		return 0.873 + uPr(lep_info)*prModeBehavior(mode); // Clints
-		return 0.873 + uPr(lep_info)*prModeBehavior(mode); // Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+// 		return 0.873 + uPr(lep_info)*prModeBehavior(mode); // Clints New Rate (2015) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+		return 0.839 + uPr(lep_info)*prModeBehavior(mode); // Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
 
 	}
 	else{
@@ -81,7 +82,8 @@ float Pr(int mode, std::vector<double> lep_info){
 // 		std::cout << "Mu: Mode: " << mode << ", " << prModeBehavior(mode) << " * uPr: " << uPr(lep_info)<< endl;
 // 		return 0.9836 + uPr(lep_info)*prModeBehavior(mode); //from anthony
 // 		return 0.940 + uPr(lep_info)*prModeBehavior(mode); //Clints
-		return 0.963 + uPr(lep_info)*prModeBehavior(mode); //Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+// 		return 0.963 + uPr(lep_info)*prModeBehavior(mode); //Clints New Rate (2015) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+		return 0.956 + uPr(lep_info)*prModeBehavior(mode); //Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
 	}
 }
 	
@@ -102,7 +104,8 @@ float Fr(int mode, std::vector<double> lep_info){
 
 // 		return 0.3305 + uFr(lep_info)*frModeBehavior(mode); //our calculation
 // 		return 0.298 + uFr(lep_info)*frModeBehavior(mode); //Clints
-		return 0.286 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+// 		return 0.286 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+		return 0.259 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
 
 
 	}
@@ -122,7 +125,8 @@ float Fr(int mode, std::vector<double> lep_info){
 
 // 		return 0.4673 + uFr(lep_info)*frModeBehavior(mode); //our calculation
 // 		return 0.371 + uFr(lep_info)*frModeBehavior(mode); //Clints
-		return 0.426 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+// 		return 0.426 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+		return 0.427 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
 	}
 }
 
