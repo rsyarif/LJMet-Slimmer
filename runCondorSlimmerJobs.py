@@ -173,7 +173,7 @@ dirList = [
 	#Additionally for multilepton:
 	'WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8',
 	'ZZTo4L_13TeV_powheg_pythia8',
-	'WWW_4f_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
+	'WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
 	'WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
 	'WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
 	'ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8',       
