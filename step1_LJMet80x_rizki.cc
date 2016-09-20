@@ -594,7 +594,7 @@ void step1::Loop()
    int   njetsCut=2;
    float JetLeadPtCut=0;
    float JetSubLeadPtCut=0;
-   float lepPtCut=30;
+   float lepPtCut=25;
    //float elEtaCut=2.1;
    float jetEtaCut=2.4;
    float ak8EtaCut=2.4;
