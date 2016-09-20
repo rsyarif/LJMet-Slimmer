@@ -1599,7 +1599,7 @@ void step1::Loop()
 		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersEl_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively electron triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) //||
+						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
 // 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
 // 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
 
