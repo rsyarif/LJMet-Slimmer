@@ -569,6 +569,22 @@ void step1::Loop()
    outputTree->Branch("mass_lepBJets_lSFdn",&mass_lepBJets_lSFdn);
    outputTree->Branch("mass_lepAK8s",&mass_lepAK8s);
 
+   outputTree->Branch("minDR_lepJets",&minDR_lepJets);
+   outputTree->Branch("minDR_lepBJets",&minDR_lepBJets);
+
+   outputTree->Branch("deltaR_lep1Jets",&deltaR_lep1Jets);
+   outputTree->Branch("deltaR_lep2Jets",&deltaR_lep2Jets);
+   outputTree->Branch("deltaR_lep3Jets",&deltaR_lep3Jets);
+   outputTree->Branch("deltaR_lepClosestJet",&deltaR_lepClosestJet);
+   outputTree->Branch("PtRelLepClosestJet",&PtRelLepClosestJet);
+
+   outputTree->Branch("Mll_sameFlavorOS",&Mll_sameFlavorOS,"Mll_sameFlavorOS/F");
+   outputTree->Branch("MllOS_allComb",&MllOS_allComb);
+   outputTree->Branch("MllOS_allComb_min",&MllOS_allComb_min,"MllOS_allComb_min/F");
+   outputTree->Branch("MllOS_allComb_max",&MllOS_allComb_max,"MllOS_allComb_max/F");
+   outputTree->Branch("Mlll",&Mlll,"Mlll/F");
+
+
   // ----------------------------------------------------------------------------
   // Define and initialize objects / cuts / efficiencies
   // ----------------------------------------------------------------------------
@@ -578,8 +594,8 @@ void step1::Loop()
    int   njetsCut=2;
    float JetLeadPtCut=0;
    float JetSubLeadPtCut=0;
-   float lepPtCut=30;
-   float elEtaCut=2.1;
+   float lepPtCut=25;
+   //float elEtaCut=2.1;
    float jetEtaCut=2.4;
    float ak8EtaCut=2.4;
    float jetPtCut=30;
@@ -810,7 +826,8 @@ void step1::Loop()
       int alllepindex = 0;
             
       //collect all electrons.
-      //if(DEBUG)std::cout<<"Collecting electrons ..."<<std::endl;      
+      if(DEBUG)std::cout<<"Collecting electrons ..."<<std::endl;      
+      if(DEBUG)std::cout<<"elPt_singleLepCalc->size() = "<< elPt_singleLepCalc->size() <<std::endl;  
       for(unsigned int iel = 0; iel < elPt_singleLepCalc->size(); iel++){
 		if(elPt_singleLepCalc->at(iel) < lepPtCut || fabs(elEta_singleLepCalc->at(iel)) > 2.4) continue;
 
@@ -861,7 +878,8 @@ void step1::Loop()
       }
       
       //collect all muons. --->>  ATTENTION: ICHEP dataset: Endcap muons outside 500 GeV had to be rejected
-      //if(DEBUG)std::cout<<"Collecting muons ..."<<std::endl;      
+      if(DEBUG)std::cout<<"Collecting muons ..."<<std::endl;      
+      if(DEBUG)std::cout<<"muPt_singleLepCalc->size() = "<< muPt_singleLepCalc->size() <<std::endl;  
       for(unsigned int imu = 0; imu < muPt_singleLepCalc->size(); imu++){
 		if(muPt_singleLepCalc->at(imu) < lepPtCut || fabs(muEta_singleLepCalc->at(imu)) > 2.4) continue;
 		if(muPt_singleLepCalc->at(imu) > 500 && fabs(muEta_singleLepCalc->at(imu)) > 1.2) continue; // --->>  ATTENTION: ICHEP dataset: Endcap muons outside 500 GeV had to be rejected, says Julie.
@@ -1572,21 +1590,24 @@ void step1::Loop()
       
 		if(DEBUGTriggers){
 			for(unsigned int itrig=0; itrig < vsSelMCTriggersEl_singleLepCalc->size(); itrig++){
-				if(viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) std::cout << "pass El trigger : " << vsSelMCTriggersEl_singleLepCalc->at(itrig) << std::endl;
+				if(viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) std::cout << "pass El MC trigger : " << vsSelMCTriggersEl_singleLepCalc->at(itrig) << std::endl;
 				}
 			for(unsigned int itrig=0; itrig < vsSelMCTriggersMu_singleLepCalc->size(); itrig++){
-				if(viSelMCTriggersMu_singleLepCalc->at(itrig) > 0) std::cout << "pass Mu trigger : " << vsSelMCTriggersMu_singleLepCalc->at(itrig) << std::endl;
+				if(viSelMCTriggersMu_singleLepCalc->at(itrig) > 0) std::cout << "pass Mu MC trigger : " << vsSelMCTriggersMu_singleLepCalc->at(itrig) << std::endl;
 				}
 		}
+
+		if(DEBUG)std::cout<<"Matching with desired MC trigger selection..."<<std::endl;  
 
    		if(isEEE){
 		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersEl_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively electron triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
+// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
+// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
 
-						//ATTENTION! --> MC has no trigger info at the moment! 
+						//ATTENTION! --> MC BKG has no trigger info at the moment! MC Signal has trig info.
 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
 
 					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
@@ -1596,7 +1617,7 @@ void step1::Loop()
 				if( (
 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v") != std::string::npos) ||
 
-						//ATTENTION! --> MC has no trigger info at the moment! 
+						//ATTENTION! --> MC BKG has no trigger info at the moment! MC Signal has trig info.
 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos)
 
 					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
@@ -1609,14 +1630,17 @@ void step1::Loop()
 		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersEl_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively electron triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) || 	
+						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
+// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
+// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) || 	
 
 						//el&mu triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
 						
-						//ATTENTION! --> MC has no trigger info at the moment! 
+						//ATTENTION! --> MC BKG has no trigger info at the moment! MC Signal has trig info.
 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
 
 					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
@@ -1626,7 +1650,7 @@ void step1::Loop()
 				if( (
 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v") != std::string::npos)  ||
 
-						//ATTENTION! --> MC has no trigger info at the moment! 
+						//ATTENTION! --> MC BKG has no trigger info at the moment! MC Signal has trig info.
 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
 
 					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
@@ -1639,20 +1663,22 @@ void step1::Loop()
 		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersMu_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleIsoMu17_eta2p1_v") != std::string::npos) ||
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") != std::string::npos) ||
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v") != std::string::npos) || 	
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleIsoMu17_eta2p1_v") != std::string::npos) ||
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") != std::string::npos) ||
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v") != std::string::npos) || 	
 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v") != std::string::npos) || 	
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) || 	
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_v") != std::string::npos) || 	
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_DZ_v") != std::string::npos) || 	
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_SameSign_DZ_v") != std::string::npos) || 	
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) || 	
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_v") != std::string::npos) || 	
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_DZ_v") != std::string::npos) || 	
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_SameSign_DZ_v") != std::string::npos) || 	
 
 						//el&mu triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
 
-						//ATTENTION! --> MC has no trigger info at the moment! 
+						//ATTENTION! --> MC BKG has no trigger info at the moment! MC Signal has trig info.
 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
 
 					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
@@ -1662,7 +1688,7 @@ void step1::Loop()
 				if( (
 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v") != std::string::npos) ||
 
-						//ATTENTION! --> MC has no trigger info at the moment! 
+						//ATTENTION! --> MC BKG has no trigger info at the moment! MC Signal has trig info.
 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
 
 					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
@@ -1675,16 +1701,16 @@ void step1::Loop()
 		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersMu_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleIsoMu17_eta2p1_v") != std::string::npos) ||
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") != std::string::npos) ||
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v") != std::string::npos) || 	
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleIsoMu17_eta2p1_v") != std::string::npos) ||
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") != std::string::npos) ||
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v") != std::string::npos) || 	
 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v") != std::string::npos) || 	
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) || 	
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_v") != std::string::npos) || 	
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_DZ_v") != std::string::npos) || 	
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_SameSign_DZ_v") != std::string::npos) 	 ||
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) || 	
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_v") != std::string::npos) || 	
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_DZ_v") != std::string::npos) || 	
+// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_SameSign_DZ_v") != std::string::npos) 	 ||
 
-						//ATTENTION! --> MC has no trigger info at the moment! 
+						//ATTENTION! --> MC BKG has no trigger info at the moment! MC Signal has trig info.
 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
 
 					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
@@ -1696,7 +1722,7 @@ void step1::Loop()
 				if( (
 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_TripleMu_12_10_5_v") != std::string::npos) ||
 
-						//ATTENTION! --> MC has no trigger info at the moment! 
+						//ATTENTION! --> MC BKG has no trigger info at the moment! MC Signal has trig info.
 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
 
 					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
@@ -1708,6 +1734,7 @@ void step1::Loop()
 			}
 	  	}
 
+		if(DEBUG)std::cout<<"Done matching with desired MC trigger selection..."<<std::endl;  
 
 		// APPLY SCALE FACTORS PER EVENT
 		for(unsigned int ilep = 0; ilep < TightLeptonPt_PtOrdered.size(); ilep++){
@@ -1956,13 +1983,16 @@ void step1::Loop()
 				if(viSelTriggersMu_singleLepCalc->at(itrig) > 0) std::cout << "pass Mu trigger : " << vsSelTriggersMu_singleLepCalc->at(itrig) << std::endl;
 				}
 		}
+
+		if(DEBUG)std::cout<<"Matching with desired trigger selection..."<<std::endl;  
     	
    		if(isEEE){
 		  	for(unsigned int itrig=0; itrig < vsSelTriggersEl_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively electron triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) 	
+						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) //||
+// 						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
+// 						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) 	
 
 					) &&  viSelTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
@@ -1980,12 +2010,15 @@ void step1::Loop()
 		  	for(unsigned int itrig=0; itrig < vsSelTriggersEl_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively electron triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) || 	
+						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
+// 						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
+// 						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) || 	
 
 						//el&mu triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos)
+						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) //||
+// 						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+// 						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos)
 
 					) &&  viSelTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
@@ -2003,18 +2036,20 @@ void step1::Loop()
 		  	for(unsigned int itrig=0; itrig < vsSelTriggersMu_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleIsoMu17_eta2p1_v") != std::string::npos) ||
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") != std::string::npos) ||
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v") != std::string::npos) || 	
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleIsoMu17_eta2p1_v") != std::string::npos) ||
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") != std::string::npos) ||
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v") != std::string::npos) || 	
 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v") != std::string::npos) || 	
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) || 	
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_v") != std::string::npos) || 	
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_DZ_v") != std::string::npos) || 	
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_SameSign_DZ_v") != std::string::npos) || 	
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) || 	
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_v") != std::string::npos) || 	
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_DZ_v") != std::string::npos) || 	
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_SameSign_DZ_v") != std::string::npos) || 	
 
 						//el&mu triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos)
+						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) //||
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos)
 
 					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
@@ -2032,14 +2067,14 @@ void step1::Loop()
 		  	for(unsigned int itrig=0; itrig < vsSelTriggersMu_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleIsoMu17_eta2p1_v") != std::string::npos) ||
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") != std::string::npos) ||
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v") != std::string::npos) || 	
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v") != std::string::npos) || 	
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) || 	
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_v") != std::string::npos) || 	
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_DZ_v") != std::string::npos) || 	
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_SameSign_DZ_v") != std::string::npos) 	
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleIsoMu17_eta2p1_v") != std::string::npos) ||
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") != std::string::npos) ||
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v") != std::string::npos) || 	
+						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v") != std::string::npos) //|| 	
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) || 	
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_v") != std::string::npos) || 	
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_DZ_v") != std::string::npos) || 	
+// 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_SameSign_DZ_v") != std::string::npos) 	
 
 					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
@@ -2058,6 +2093,8 @@ void step1::Loop()
 			}
 	  	}
 
+		if(DEBUG)std::cout<<"Matching with desired MC trigger selection..."<<std::endl;  
+
       	isPastTrigMC = 1;
 		isPastTrigMCAlt = 1; 
 		isPastTrigMC_trilep = 1;
@@ -2068,8 +2105,9 @@ void step1::Loop()
       }
       
       if(isPastTrig) npass_trigger+=1;
-               
-      float AK4HTpMETpLepPt = AK4HT + corr_met_singleLepCalc;
+      
+      
+      AK4HTpMETpLepPt = AK4HT + corr_met_singleLepCalc;
       if(isPassTrilepton){
 		  for(unsigned int ilep = 0; ilep < TightLeptonPt_PtOrdered.size(); ilep++){
 			AK4HTpMETpLepPt += TightLeptonPt_PtOrdered.at(ilep);
@@ -2080,6 +2118,7 @@ void step1::Loop()
 			AK4HTpMETpLepPt += AllLeptonPt_PtOrdered.at(ilep);
 		  }      
       }
+      if(DEBUG)std::cout << "AK4HTpMETpLepPt = " << AK4HTpMETpLepPt << std::endl;
       
       if(DEBUG)std::cout<<"Rizki B - end"<<std::endl;      
 
@@ -2128,17 +2167,17 @@ void step1::Loop()
 		  if(isTOP || isSig){
 			if(jetpt >= 200){
 			  if(jetpt < 725){
-			JetSF_pTNbwflat *= min(one,jetsf);
-			JetSFup_pTNbwflat *= wideup;
-			JetSFdn_pTNbwflat *= widedn;
-			JetSFupwide_pTNbwflat *= wideup;
-			JetSFdnwide_pTNbwflat *= widedn;
+				JetSF_pTNbwflat *= min(one,jetsf);
+				JetSFup_pTNbwflat *= wideup;
+				JetSFdn_pTNbwflat *= widedn;
+				JetSFupwide_pTNbwflat *= wideup;
+				JetSFdnwide_pTNbwflat *= widedn;
 			  }else{
-			JetSF_pTNbwflat *= 0.747382;
-			JetSFup_pTNbwflat *= wideup;
-			JetSFdn_pTNbwflat *= widedn;
-			JetSFupwide_pTNbwflat *= wideup;
-			JetSFdnwide_pTNbwflat *= widedn;
+				JetSF_pTNbwflat *= 0.747382;
+				JetSFup_pTNbwflat *= wideup;
+				JetSFdn_pTNbwflat *= widedn;
+				JetSFupwide_pTNbwflat *= wideup;
+				JetSFdnwide_pTNbwflat *= widedn;
 			  }
 			}
 		  }else{
