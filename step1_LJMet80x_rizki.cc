@@ -1599,7 +1599,7 @@ void step1::Loop()
 		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersEl_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively electron triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
+						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) //||
 // 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
 // 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
 
@@ -1983,7 +1983,7 @@ void step1::Loop()
 		  	for(unsigned int itrig=0; itrig < vsSelTriggersEl_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively electron triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
+						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) //||
 // 						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v") != std::string::npos) ||
 // 						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) 	
 
@@ -2009,7 +2009,7 @@ void step1::Loop()
 
 						//el&mu triggers
 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) //||
 // 						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
 // 						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos)
 
@@ -2040,7 +2040,7 @@ void step1::Loop()
 
 						//el&mu triggers
 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
+						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) //||
 // 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
 // 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos)
 
@@ -2063,7 +2063,7 @@ void step1::Loop()
 // 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleIsoMu17_eta2p1_v") != std::string::npos) ||
 // 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v") != std::string::npos) ||
 // 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v") != std::string::npos) || 	
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v") != std::string::npos) || 	
+						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v") != std::string::npos) //|| 	
 // 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) || 	
 // 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_v") != std::string::npos) || 	
 // 						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_Mu8_DZ_v") != std::string::npos) || 	
