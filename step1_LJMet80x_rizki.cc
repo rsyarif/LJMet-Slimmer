@@ -591,7 +591,7 @@ void step1::Loop()
 
    // basic cuts
    float metCut=20;
-   int   njetsCut=2;
+   int   njetsCut=0;
    float JetLeadPtCut=0;
    float JetSubLeadPtCut=0;
    float lepPtCut=25;
@@ -727,6 +727,7 @@ void step1::Loop()
    //DEBUG printout switches
    bool DEBUG = false;
    bool DEBUGleptons = false;
+   bool DEBUGjets = true;
    bool DEBUGddbkg = false;
    bool DEBUGTriggers = false;
    
@@ -740,7 +741,7 @@ void step1::Loop()
       if (Cut(ientry) != 1) continue;
       
       //      if (ientry > 5000) continue;
-
+      
       if(DEBUG||DEBUGleptons||DEBUGddbkg||DEBUGTriggers)std::cout << "" << std::endl;
       if(DEBUG||DEBUGleptons||DEBUGddbkg||DEBUGTriggers)std::cout << "+++++++++++++++++++++++++++++++" << std::endl;
       if(DEBUG||DEBUGleptons||DEBUGddbkg||DEBUGTriggers)std::cout<<"Event "<<event_CommonCalc<<std::endl;
@@ -1561,8 +1562,6 @@ void step1::Loop()
       }
       */
       
-      if(DataPastTrigger) npass_trigger+=1;
-
       //Rizki - start
 
       if(DEBUG)std::cout<<"Rizki B - start"<<std::endl;      
@@ -2106,6 +2105,7 @@ void step1::Loop()
       
       if(isPastTrig) npass_trigger+=1;
       
+      if(DataPastTrigger) npass_trigger+=1;
       
       AK4HTpMETpLepPt = AK4HT + corr_met_singleLepCalc;
       if(isPassTrilepton){
@@ -2140,6 +2140,8 @@ void step1::Loop()
       JetSF_80X = 1.0;
       JetSFup_80X = 1.0;
       JetSFdn_80X = 1.0;
+      
+      if(DEBUGjets)std::cout<< "theJetPt_JetSubCalc->size() (before jet loop) = " << theJetPt_JetSubCalc->size() << std::endl;
 
       for(unsigned int ijet=0; ijet < theJetPt_JetSubCalc->size(); ijet++){
 
@@ -2286,6 +2288,8 @@ void step1::Loop()
 		  AK4HT+=theJetPt_JetSubCalc->at(ijet);
 		}
       }
+
+      if(DEBUGjets)std::cout<< "NJets (after jet loop) = " << NJets_JetSubCalc << std::endl;
 	
       // ----------------------------------------------------------------------------
       // Apply pt ordering to AK4 vectors
@@ -2422,7 +2426,9 @@ void step1::Loop()
       if(!(isPastMETcut && isPastNJetsCut && isPastJetLeadPtCut && isPastTriLepPtCut && isPastElEtaCut && isPastJetSubLeadPtCut)) continue;
       */
 
-      if(!(isPastMETcut && isPastNJetsCut && isPastJetLeadPtCut && isPastTriLepPtCut && isPastJetSubLeadPtCut)) continue;
+      //if(!(isPastMETcut && isPastNJetsCut && isPastJetLeadPtCut && isPastTriLepPtCut && isPastJetSubLeadPtCut)) continue; //this indirectly removes events with nJets < 2 !
+
+      if(!(isPastMETcut && isPastNJetsCut && isPastTriLepPtCut)) continue;
 
       npass_all+=1;
 
@@ -3330,8 +3336,9 @@ void step1::Loop()
       DataPastTrigger_dilepHT       = (int)   isPastTrig_dilepHT;
       MCPastTrigger_trilep         = (int)   isPastTrigMC_trilep;
       DataPastTrigger_trilep       = (int)   isPastTrig_trilep;
-
       
+      if(DEBUGjets)std::cout<< "NJets (just before filling tree) = " << NJets_JetSubCalc << std::endl;
+ 
       outputTree->Fill();
    }
 
