@@ -727,7 +727,7 @@ void step1::Loop()
    //DEBUG printout switches
    bool DEBUG = false;
    bool DEBUGleptons = false;
-   bool DEBUGjets = true;
+   bool DEBUGjets = false;
    bool DEBUGddbkg = false;
    bool DEBUGTriggers = false;
    
