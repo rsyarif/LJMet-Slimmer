@@ -106,6 +106,7 @@ float Fr(int mode, std::vector<double> lep_info){
 // 		return 0.298 + uFr(lep_info)*frModeBehavior(mode); //Clints
 // 		return 0.286 + uFr(lep_info)*frModeBehavior(mode); //Clints Rate (2015) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
 		return 0.206 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) - CMS AN-2016/242
+// 		return 0.158 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) -  page 20 https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf (measured with ttbar) - I label this FRv2
 
 
 	}
@@ -126,7 +127,9 @@ float Fr(int mode, std::vector<double> lep_info){
 // 		return 0.4673 + uFr(lep_info)*frModeBehavior(mode); //our calculation
 // 		return 0.371 + uFr(lep_info)*frModeBehavior(mode); //Clints
 // 		return 0.426 + uFr(lep_info)*frModeBehavior(mode); //Clints Rate (2015) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
-		return 0.427 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) - CMS AN-2016/242
+// 		return 0.427 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) - CMS AN-2016/242
+// 		return 0.338 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) - page 34 https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf (measured with ttbar)- I label this FRv2
+		return 0.427*0.4 + uFr(lep_info)*frModeBehavior(mode); //Ad hoc fix, as test, 60% lower than Clints New Rate (2016) - CMS AN-2016/242 - I label this FRv3 - LJMet80x_3lepTT_2016_10_13_rizki_step1 uses this FR.
 	}
 }
 
