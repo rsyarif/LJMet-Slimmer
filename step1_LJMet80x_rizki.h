@@ -116,9 +116,19 @@ public :
    Float_t         deltaRlepJetInMinMljet;
    Float_t         deltaPhilepJetInMinMljet;
    Float_t         minDR_lepJet;
+   Float_t         minDR_lep1Jet;
+   Float_t         minDR_lep2Jet;
+   Float_t         minDR_lep3Jet;
+   Float_t         minDR_lepMET;
+   Float_t         minDR_METJet;
    Float_t         ptRel_lepJet;
    Float_t         MT_lepMet;
    vector<double>  deltaR_lepJets;
+   vector<double>  deltaR_lep1Jets;
+   vector<double>  deltaR_lep2Jets;
+   vector<double>  deltaR_lep3Jets;
+   vector<double>  deltaR_lepMETs;
+   vector<double>  deltaR_METJets;
    vector<double>  deltaPhi_lepJets;
    vector<double>  mass_lepJets;
 

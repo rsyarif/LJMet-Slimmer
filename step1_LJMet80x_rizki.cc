@@ -251,13 +251,9 @@ void step1::Loop()
    float topPtWeightPast400;
    float topPtWeightHighPt;
    float minDR_leadAK8otherAK8;
-   std::vector<float> deltaR_lepJets;
    std::vector<float> minDR_lepJets;
    std::vector<float> deltaR_lepBJets;
    std::vector<float> minDR_lepBJets;
-   std::vector<float> deltaR_lep1Jets;
-   std::vector<float> deltaR_lep2Jets;
-   std::vector<float> deltaR_lep3Jets;
    std::vector<float> deltaR_lepClosestJet;
    std::vector<float> PtRelLepClosestJet;
    
@@ -545,9 +541,19 @@ void step1::Loop()
    outputTree->Branch("minDR_leadAK8otherAK8",&minDR_leadAK8otherAK8,"minDR_leadAK8otherAK8/F");
    outputTree->Branch("minDR_lepAK8",&minDR_lepAK8,"minDR_lepAK8/F");
    outputTree->Branch("minDR_lepJet",&minDR_lepJet,"minDR_lepJet/F");
+   outputTree->Branch("minDR_lep1Jet",&minDR_lep1Jet,"minDR_lep1Jet/F");
+   outputTree->Branch("minDR_lep2Jet",&minDR_lep2Jet,"minDR_lep2Jet/F");
+   outputTree->Branch("minDR_lep3Jet",&minDR_lep3Jet,"minDR_lep3Jet/F");
+   outputTree->Branch("minDR_lepMET",&minDR_lepMET,"minDR_lepMET/F");
+   outputTree->Branch("minDR_METJet",&minDR_METJet,"minDR_METJet/F");
    outputTree->Branch("ptRel_lepJet",&ptRel_lepJet,"ptRel_lepJet/F");
    outputTree->Branch("MT_lepMet",&MT_lepMet,"MT_lepMet/F");
    outputTree->Branch("deltaR_lepJets",&deltaR_lepJets);
+   outputTree->Branch("deltaR_lep1Jets",&deltaR_lep1Jets);
+   outputTree->Branch("deltaR_lep2Jets",&deltaR_lep2Jets);
+   outputTree->Branch("deltaR_lep3Jets",&deltaR_lep3Jets);
+   outputTree->Branch("deltaR_lepMETs",&deltaR_lepMETs);
+   outputTree->Branch("deltaR_METJets",&deltaR_METJets);
    outputTree->Branch("deltaR_lepBJets",&deltaR_lepBJets);
    outputTree->Branch("deltaR_lepBJets_bSFup",&deltaR_lepBJets_bSFup);
    outputTree->Branch("deltaR_lepBJets_bSFdn",&deltaR_lepBJets_bSFdn);
@@ -572,9 +578,6 @@ void step1::Loop()
    outputTree->Branch("minDR_lepJets",&minDR_lepJets);
    outputTree->Branch("minDR_lepBJets",&minDR_lepBJets);
 
-   outputTree->Branch("deltaR_lep1Jets",&deltaR_lep1Jets);
-   outputTree->Branch("deltaR_lep2Jets",&deltaR_lep2Jets);
-   outputTree->Branch("deltaR_lep3Jets",&deltaR_lep3Jets);
    outputTree->Branch("deltaR_lepClosestJet",&deltaR_lepClosestJet);
    outputTree->Branch("PtRelLepClosestJet",&PtRelLepClosestJet);
 
@@ -2784,9 +2787,19 @@ void step1::Loop()
       deltaRlepbJetInMinMlb = -99;
       deltaPhilepbJetInMinMlb = -99;
       minDR_lepJet = 1e8;
+      minDR_lep1Jet = 1e8;
+      minDR_lep2Jet = 1e8;
+      minDR_lep3Jet = 1e8;
+      minDR_lepMET = 1e8;
+      minDR_METJet = 1e8;
       ptRel_lepJet = -99;
       BJetLeadPt_shifts.clear();
       deltaR_lepJets.clear();
+      deltaR_lep1Jets.clear();
+      deltaR_lep2Jets.clear();
+      deltaR_lep3Jets.clear();
+      deltaR_lepMETs.clear();
+      deltaR_METJets.clear();
       deltaR_lepBJets.clear();
       deltaR_lepBJets_bSFup.clear();
       deltaR_lepBJets_bSFdn.clear();
@@ -2831,6 +2844,39 @@ void step1::Loop()
 		mass_lepJets.push_back((lepton_lv + jet_lv).M());
 		*/
 
+		//calculate dR(leps,jets) and min - start
+		for (unsigned int ilep=0; ilep < lepton_lv.size() ; ilep++){
+			if(ilep==0)deltaR_lep1Jets.push_back(jet_lv.DeltaR(lepton_lv.at(0)));
+			if(ilep==1)deltaR_lep2Jets.push_back(jet_lv.DeltaR(lepton_lv.at(1)));
+			if(ilep==2)deltaR_lep3Jets.push_back(jet_lv.DeltaR(lepton_lv.at(2)));
+			deltaR_lepJets.push_back(jet_lv.DeltaR(lepton_lv.at(ilep)));
+
+			if(DEBUGjets||DEBUGleptons) std::cout << "dR(lep"<<ilep<<",jet"<<ijet<<") = "<< jet_lv.DeltaR(lepton_lv.at(ilep)) << std::endl;
+		}
+		//find minimum 
+		vector<double>::const_iterator minDR_lep1Jet_it;  
+		minDR_lep1Jet_it = std::min_element(deltaR_lep1Jets.begin(), deltaR_lep1Jets.end());
+		if(minDR_lep1Jet > *minDR_lep1Jet_it) minDR_lep1Jet = *minDR_lep1Jet_it;
+		if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep1,jets) = "<< minDR_lep1Jet << std::endl;
+
+		vector<double>::const_iterator minDR_lep2Jet_it;  
+		minDR_lep2Jet_it = std::min_element(deltaR_lep2Jets.begin(), deltaR_lep2Jets.end());
+		if(minDR_lep2Jet > *minDR_lep2Jet_it) minDR_lep2Jet = *minDR_lep2Jet_it;
+		if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep2,jets) = "<< minDR_lep2Jet << std::endl;
+
+		vector<double>::const_iterator minDR_lep3Jet_it;  
+		minDR_lep3Jet_it = std::min_element(deltaR_lep3Jets.begin(), deltaR_lep3Jets.end());
+		if(minDR_lep3Jet > *minDR_lep3Jet_it) minDR_lep3Jet = *minDR_lep3Jet_it;
+		if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep3,jets) = "<< minDR_lep3Jet << std::endl;
+
+		vector<double>::const_iterator minDR_lepJet_it;  
+		minDR_lepJet_it = std::min_element(deltaR_lepJets.begin(), deltaR_lepJets.end());
+		if(minDR_lepJet > *minDR_lepJet_it) minDR_lepJet = *minDR_lepJet_it;
+		if(DEBUGjets||DEBUGleptons) std::cout << "min dR(leps,jets) = "<< minDR_lepJet << std::endl;
+		//calculate dR(leps,jets) and min - end
+		
+		//calculate dR(MET,jets) and min - start
+		//calculate dR(MET,jets) and min - end
 
 		if(theJetBTag_JetSubCalc_PtOrdered.at(ijet) == 1){
 		  NJetsCSVwithSF_JetSubCalc += 1;
