@@ -2851,28 +2851,24 @@ void step1::Loop()
 			if(ilep==2)deltaR_lep3Jets.push_back(jet_lv.DeltaR(lepton_lv.at(2)));
 			deltaR_lepJets.push_back(jet_lv.DeltaR(lepton_lv.at(ilep)));
 
-			if(DEBUGjets||DEBUGleptons) std::cout << "dR(lep"<<ilep<<",jet"<<ijet<<") = "<< jet_lv.DeltaR(lepton_lv.at(ilep)) << std::endl;
+			if(DEBUGjets||DEBUGleptons) std::cout << "dR(lep"<<ilep+1<<",jet"<<ijet+1<<") = "<< jet_lv.DeltaR(lepton_lv.at(ilep)) << std::endl;
 		}
 		//find minimum 
 		vector<double>::const_iterator minDR_lep1Jet_it;  
 		minDR_lep1Jet_it = std::min_element(deltaR_lep1Jets.begin(), deltaR_lep1Jets.end());
 		if(minDR_lep1Jet > *minDR_lep1Jet_it) minDR_lep1Jet = *minDR_lep1Jet_it;
-		if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep1,jets) = "<< minDR_lep1Jet << std::endl;
 
 		vector<double>::const_iterator minDR_lep2Jet_it;  
 		minDR_lep2Jet_it = std::min_element(deltaR_lep2Jets.begin(), deltaR_lep2Jets.end());
 		if(minDR_lep2Jet > *minDR_lep2Jet_it) minDR_lep2Jet = *minDR_lep2Jet_it;
-		if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep2,jets) = "<< minDR_lep2Jet << std::endl;
 
 		vector<double>::const_iterator minDR_lep3Jet_it;  
 		minDR_lep3Jet_it = std::min_element(deltaR_lep3Jets.begin(), deltaR_lep3Jets.end());
 		if(minDR_lep3Jet > *minDR_lep3Jet_it) minDR_lep3Jet = *minDR_lep3Jet_it;
-		if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep3,jets) = "<< minDR_lep3Jet << std::endl;
 
 		vector<double>::const_iterator minDR_lepJet_it;  
 		minDR_lepJet_it = std::min_element(deltaR_lepJets.begin(), deltaR_lepJets.end());
 		if(minDR_lepJet > *minDR_lepJet_it) minDR_lepJet = *minDR_lepJet_it;
-		if(DEBUGjets||DEBUGleptons) std::cout << "min dR(leps,jets) = "<< minDR_lepJet << std::endl;
 		//calculate dR(leps,jets) and min - end
 		
 		//calculate dR(MET,jets) and min - start
@@ -2971,6 +2967,11 @@ void step1::Loop()
 		}
 		*/
       }
+      
+      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep1,jets) = "<< minDR_lep1Jet << std::endl;
+      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep2,jets) = "<< minDR_lep2Jet << std::endl;
+      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep3,jets) = "<< minDR_lep3Jet << std::endl;
+      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(leps,jets) = "<< minDR_lepJet << std::endl;
 
       // ----------------------------------------------------------------------------
       // AK8 Jet - lepton associations, Top and W taggging
