@@ -2,6 +2,8 @@
 
 date
 
+source switchTo_LJMet80x_rizki_Full2016_20Jan2017.sh
+
 echo "SUBMITTING nominal"
 
 python -u runCondorSlimmerJobs.py nominal

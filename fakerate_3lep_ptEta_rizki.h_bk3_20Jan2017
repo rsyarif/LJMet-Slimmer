@@ -70,10 +70,66 @@ TH2D *h_mu = (TH2D*) c_mu->GetPrimitive("newratioMu");
 float Pr(int mode, std::vector<double> lep_info){
 	if(lep_info.at(0)==0){
 		//ele prompt rate
-		double pt_el = lep_info.at(2);
-		double eta_el = lep_info.at(3);
-		double weight = 0.0;
-			
+// 		std::cout << "Ele: Mode: " << mode << ", " << prModeBehavior(mode) << " * uPr: " << uPr(lep_info)<< endl;
+// 		return 0.87 + uPr(lep_info)*prModeBehavior(mode); //from anthony
+// 		return 0.873 + uPr(lep_info)*prModeBehavior(mode); // Clints
+// 		return 0.873 + uPr(lep_info)*prModeBehavior(mode); // Clints New Rate (2015) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+// 		return 0.839 + uPr(lep_info)*prModeBehavior(mode); // Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+
+		
+		//PRv2
+// 		double pt_el = lep_info.at(2);
+// 		double eta_el = lep_info.at(3);
+// 		double weight = 0.0;
+// 		//anthony's numbers based on clints measurement.
+// 		//30-60 GeV: 0.8362 ± 0.0005
+// 		//60-120 GeV: 0.887±0.002
+// 		//120+ GeV: 0.896±0.009
+// 		if(pt_el<=30){ //need to measure this, currently just applying larger uncertainty since clint doesn have a lower pt bin value.
+// 			weight = 0.8362 + uPr(lep_info)*prModeBehavior(mode);
+// 			if(mode==3) weight = weight + 0.05; //promptrate plus mode
+// 			if(mode==4) weight = weight - 0.05; //promptrate minue mode
+// 		}
+// 		else if(pt_el>30 && pt_el<=60){
+// 			weight = 0.8362 + uPr(lep_info)*prModeBehavior(mode);
+// 			if(mode==3) weight = weight + 0.0005; //promptrate plus mode
+// 			if(mode==4) weight = weight - 0.0005; //promptrate minue mode
+// 		}
+// 		else if(pt_el>60 && pt_el<=120){
+// 			weight = 0.887 + uPr(lep_info)*prModeBehavior(mode);
+// 			if(mode==3) weight = weight + 0.002; //promptrate plus mode
+// 			if(mode==4) weight = weight - 0.002; //promptrate minue mode
+// 		}
+// 		else if(pt_el>120){
+// 			weight = 0.896 + uPr(lep_info)*prModeBehavior(mode);
+// 			if(mode==3) weight = weight + 0.009; //promptrate plus mode
+// 			if(mode==4) weight = weight - 0.009; //promptrate minue mode
+// 		}
+// 		return weight;
+		
+		//std::cout << "Ele -- Mode: " << mode << ", pt: " << pt_el << ", eta: " << eta_el << ", weight: " << weight << ", prModeBehavior(mode): " << frModeBehavior(mode) << ", uFr: " << uFr(lep_info)<< ", weight + uFr(lep_info)*frModeBehavior(mode): " << weight + uFr(lep_info)*prModeBehavior(mode) << endl;
+		
+		//PRv2a - with enlarged sys
+// 		double pt_el = lep_info.at(2);
+// 		double eta_el = lep_info.at(3);
+// 		double weight = 0.0;
+// 		if(pt_el<=30){ //need to measure this, currently just applying larger uncertainty since clint doesn have a lower pt bin value.
+// 			weight = 0.8362 + uPr(lep_info)*prModeBehavior(mode);
+// 		}
+// 		else if(pt_el>30 && pt_el<=60){
+// 			weight = 0.8362 + uPr(lep_info)*prModeBehavior(mode);
+// 		}
+// 		else if(pt_el>60 && pt_el<=120){
+// 			weight = 0.887 + uPr(lep_info)*prModeBehavior(mode);
+// 		}
+// 		else if(pt_el>120){
+// 			weight = 0.896 + uPr(lep_info)*prModeBehavior(mode);
+// 		}
+// 		return weight;
+
+		//PRv3 - Clints AN2016_242_v9 values 
+// 		return 0.803 + uPr(lep_info)*prModeBehavior(mode); // Clints AN2016_242_v9 values for MiniIso < 0.1 - http://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2016_242_v9.pdf
+
 		//PRv4 - anthony's numbers based on clints 'new' 74X/76X el MVA measurement (https://indico.cern.ch/event/605620/contributions/2441087/attachments/1398025/2132153/VHFMeeting_X53_01.18.17.pdf)
 		/* as given by anthony
 			if(Pt>20. && Pt < 70.) ret = -7e-5*Pt*Pt + 0.0101*Pt + 0.4807;
@@ -86,25 +142,29 @@ float Pr(int mode, std::vector<double> lep_info){
         	else if(Pt<90) return 0.004;
         	else return 0.0156;
 		*/
+		double pt_el = lep_info.at(2);
+		double eta_el = lep_info.at(3);
+		double weight = 0.0;
 		if(pt_el>20. && pt_el < 70.) weight = -7e-5*pt_el*pt_el + 0.0101*pt_el + 0.4807;
         else if(pt_el<80) weight = 0.863;
         else if(pt_el<90) weight = 0.867;
         else if(pt_el>=90)weight = 0.875;
-		//std::cout << "elPR used (mode:"<<mode<<") = " << weight << " + " << "("<<prModeBehavior(mode)<<")"<<uPr(lep_info)<< std::endl;
-		//std::cout << "Ele -- Mode: " << mode << ", pt: " << pt_el << ", eta: " << eta_el << ", weight: " << weight << ", prModeBehavior(mode): " << frModeBehavior(mode) << ", uFr: " << uFr(lep_info)<< ", weight + uFr(lep_info)*frModeBehavior(mode): " << weight + uFr(lep_info)*prModeBehavior(mode) << endl;
+		std::cout << "elPR used (mode:"<<mode<<") = " << weight << " + " << "("<<prModeBehavior(mode)<<")"<<uPr(lep_info)<< std::endl;
 		return weight + uPr(lep_info)*prModeBehavior(mode);
 
 	}
 	else{
 		//muon prompt rate
-		double pt_mu = lep_info.at(2);
-		double eta_mu = lep_info.at(3);
-		double weight = 0.0;
+// 		std::cout << "Mu: Mode: " << mode << ", " << prModeBehavior(mode) << " * uPr: " << uPr(lep_info)<< endl;
+// 		return 0.9836 + uPr(lep_info)*prModeBehavior(mode); //from anthony
+// 		return 0.940 + uPr(lep_info)*prModeBehavior(mode); //Clints
+// 		return 0.963 + uPr(lep_info)*prModeBehavior(mode); //Clints New Rate (2015) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+// 		return 0.956 + uPr(lep_info)*prModeBehavior(mode); //Clints New Rate (2016) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf , PRv2, PRv2a
 
 		// PRv3, PRv4 - Clints AN2016_242_v9 values for MiniIso < 0.1 - http://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2016_242_v9.pdf
+		double weight=0.0;
 		weight = 0.932; 
-		//std::cout << "muPR used (mode:"<<mode<<") = " << weight << " + " << "("<<prModeBehavior(mode)<<")"<<uPr(lep_info)<< std::endl;
- 		//std::cout << "Mu: Mode: " << mode << ", " << prModeBehavior(mode) << " * uPr: " << uPr(lep_info)<< endl;
+		std::cout << "muPR used (mode:"<<mode<<") = " << weight << " + " << "("<<prModeBehavior(mode)<<")"<<uPr(lep_info)<< std::endl;
 		return weight + uPr(lep_info)*prModeBehavior(mode); 
 
 	}
@@ -116,11 +176,43 @@ float Fr(int mode, std::vector<double> lep_info){
 		double pt_el = lep_info.at(2);
 		double eta_el = lep_info.at(3);
 		double weight = 0.0;
+		if(pt_el>0 && fabs(eta_el)<2.4){
+			weight = h_el->GetBinContent(h_el->GetXaxis()->FindBin(pt_el),h_el->GetYaxis()->FindBin(fabs(eta_el)));
+		}
+		else{
+			weight =  1.;	
+		}
+// 		std::cout << "Ele -- Mode: " << mode << ", pt: " << pt_el << ", eta: " << eta_el << ", weight: " << weight << ", frModeBehavior(mode): " << frModeBehavior(mode) << ", uFr: " << uFr(lep_info)<< ", weight + uFr(lep_info)*frModeBehavior(mode): " << weight + uFr(lep_info)*frModeBehavior(mode) << endl;
+// 		return weight + uFr(lep_info)*frModeBehavior(mode);
+
+// 		return 0.3305 + uFr(lep_info)*frModeBehavior(mode); //our calculation
+// 		return 0.298 + uFr(lep_info)*frModeBehavior(mode); //Clints
+// 		return 0.158 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) -  page 20 https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf (measured with ttbar) - I label this FRv2
+// 		return 0.286 + uFr(lep_info)*frModeBehavior(mode); //Clints Rate (2015) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
 		
 		if(lep_info.size()==4){ //before scan size is 4
+			//weight = 0.206 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) - CMS AN-2016/242
+			//weight = 0.17 + uFr(lep_info)*frModeBehavior(mode); //My ddbkg fit measurement! - I label this FRv5
 
-			//FRv14, FRv14a - My 2D ddbkg fit measurement using PRv2 no btag fixed ST looseLepJetlean Full2016 HLTupdate Mu MiniIso < 0.1 !
-			weight = 0.21 + uFr(lep_info)*frModeBehavior(mode); 
+			//weight = 0.04 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement w/ 1 btag! - I label this FRv6
+			//if(mode==1) weight = 0.21; //fakerate plus mode
+			//if(mode==2) weight = 0.0; //fakerate minue mode
+
+// 			weight = 0.21 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement no btag! - I label this FRv7
+
+// 			weight = 0.20 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement no btag fixed ST! - I label this FRv8
+
+// 			weight = 0.26 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement no btag fixed ST looseLepJetlean Full2016! - I label this FRv9
+
+// 			weight = 0.20 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement 1 btag fixed ST looseLepJetlean Full2016! - I label this FRv10
+
+// 			weight = 0.204 + uFr(lep_info)*frModeBehavior(mode); //Clints AN2016_242_v9 values for MiniIso < 0.1 http://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2016_242_v9.pdf - I label this FRv11
+
+// 			weight = 0.24 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement no btag fixed ST looseLepJetlean Full2016 HLTupdate! - I label this FRv12
+
+// 			weight = 0.21 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement 1 btag fixed ST looseLepJetlean Full2016 HLTupdate! - I label this FRv13
+
+			weight = 0.21 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement using PRv2 no btag fixed ST looseLepJetlean Full2016 HLTupdate Mu MiniIso < 0.1 ! - I label this FRv14, FRv14a
 
 		}
 		else{
@@ -128,7 +220,6 @@ float Fr(int mode, std::vector<double> lep_info){
 		}
 
 // 		std::cout << "elFR used = " << weight << std::endl;
-// 		std::cout << "Ele -- Mode: " << mode << ", pt: " << pt_el << ", eta: " << eta_el << ", weight: " << weight << ", frModeBehavior(mode): " << frModeBehavior(mode) << ", uFr: " << uFr(lep_info)<< ", weight + uFr(lep_info)*frModeBehavior(mode): " << weight + uFr(lep_info)*frModeBehavior(mode) << endl;
 				
 		return weight; 
 
@@ -139,8 +230,42 @@ float Fr(int mode, std::vector<double> lep_info){
 		double pt_mu = lep_info.at(2);
 		double eta_mu = lep_info.at(3);
 		double weight = 0.0;
+		if(pt_mu>0 && fabs(eta_mu)<2.4){
+			weight = h_mu->GetBinContent(h_mu->GetXaxis()->FindBin(pt_mu),h_mu->GetYaxis()->FindBin(fabs(eta_mu)));
+		}
+		else{
+			weight =  1.;	
+		}
+// 		std::cout << "Mu -- " << " pt: " << pt_mu << ", eta: " << eta_mu << ", weight = " << weight << ", Mode: " << mode << ", frModeBehavior(mode): " << frModeBehavior(mode) << ", uFr: " << uFr(lep_info) << ", weight + uFr(lep_info)*frModeBehavior(mode): " << weight + uFr(lep_info)*frModeBehavior(mode) << endl;
+// 		return weight + uFr(lep_info)*frModeBehavior(mode);
+
+// 		return 0.4673 + uFr(lep_info)*frModeBehavior(mode); //our calculation
+// 		return 0.371 + uFr(lep_info)*frModeBehavior(mode); //Clints
+// 		return 0.426 + uFr(lep_info)*frModeBehavior(mode); //Clints Rate (2015) -https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf
+// 		return 0.427 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) - CMS AN-2016/242
+// 		return 0.338 + uFr(lep_info)*frModeBehavior(mode); //Clints New Rate (2016) - page 34 https://indico.cern.ch/event/555115/contributions/2236687/attachments/1305748/1952803/PreApproval_July_8_2016.pdf (measured with ttbar)- I label this FRv2
 
 		if(lep_info.size()==4) {  //before scan size is 4
+			//weight = 0.427*0.4 + uFr(lep_info)*frModeBehavior(mode); //Ad hoc fix, as test, 60% lower than Clints New Rate (2016) - CMS AN-2016/242 - I label this FRv3 - LJMet80x_3lepTT_2016_10_13_rizki_step1 uses this FR.
+			//weight = 0.16 + uFr(lep_info)*frModeBehavior(mode); //My ddbkg fit measurement! - I label this FRv4 (with old el fr), FRv5 with new El FR
+
+			//weight = 0.27 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement w/1btag! - I label this FRv6			
+			//if(mode==1) weight = 0.41; //fakerate plus mode
+			//if(mode==2) weight = 0.14; //fakerate minue mode
+
+// 			weight = 0.17 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement no btag! - I label this FRv7			
+
+// 			weight = 0.15 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement no btag fixed ST! - I label this FRv8			
+
+// 			weight = 0.16 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement no btag fixed ST looseLepJetlean Full2016! - I label this FRv9!			
+
+// 			weight = 0.31 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement 1 btag fixed ST looseLepJetlean Full2016! - I label this FRv10!			
+
+// 			weight = 0.220 + uFr(lep_info)*frModeBehavior(mode); //Clints AN2016_242_v9 values for MiniIso < 0.1 http://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2016_242_v9.pdf - I label this FRv11
+
+// 			weight = 0.19 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement no btag fixed ST looseLepJetlean Full2016 HLTupdate! - I label this FRv12
+
+// 			weight = 0.30 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement 1 btag fixed ST looseLepJetlean Full2016 HLTupdate! - I label this FRv13
 
 			weight = 0.12 + uFr(lep_info)*frModeBehavior(mode); //My 2D ddbkg fit measurement using PRv2 no btag fixed ST looseLepJetlean Full2016 HLTupdate Mu MiniIso < 0.1 ! - I label this FRv14, FRv14a
 		} 
@@ -149,7 +274,6 @@ float Fr(int mode, std::vector<double> lep_info){
 		}
 		
 // 		std::cout << "muFR used = " << weight << std::endl;
-// 		std::cout << "Mu -- " << " pt: " << pt_mu << ", eta: " << eta_mu << ", weight = " << weight << ", Mode: " << mode << ", frModeBehavior(mode): " << frModeBehavior(mode) << ", uFr: " << uFr(lep_info) << ", weight + uFr(lep_info)*frModeBehavior(mode): " << weight + uFr(lep_info)*frModeBehavior(mode) << endl;
 
 		return weight;
 
@@ -160,6 +284,10 @@ inline float uPr(std::vector<double> lep_info){
 
 	if(lep_info.at(0)==0){
 		//ele prompt rate unc
+// 		return 0.005; //from anthony
+// 		return 0.001; //Clints
+// 		return 0.05; // PRv2a
+// 		return 0.001;// PRv3
 
 		//PRv4 
 		double pt_el = lep_info.at(2);
@@ -172,7 +300,9 @@ inline float uPr(std::vector<double> lep_info){
 	}
 	else{
 		//mu prompt rate unc
-
+// 		return 0.0003; //from anthony
+// 		return 0.001; //Clints
+// 		return 0.03; // PRv2a
 		return 0.001; // PRv3, PRv4
 	}
 }
@@ -180,10 +310,39 @@ inline float uPr(std::vector<double> lep_info){
 inline float uFr(std::vector<double> lep_info){
 	if(lep_info.at(0)==0){
 		//ele fake rate unc
+// 		double pt_el = lep_info.at(2);
+// 		double eta_el = lep_info.at(3);
+// 		return h_el->GetBinError(h_el->GetXaxis()->FindBin(pt_el),h_el->GetYaxis()->FindBin(fabs(eta_el)));
+// 		return 0.017; //our calculation
+// 		return 0.003; //Clints
+// 		return 0.06; //My ddbkg fit measurement! - I label this FRv5
+// 		return 0.0; //My 2D ddbkg fit measurement! - I label this FRv6 - see above this is not used.
+// 		return 0.1; //My 2D ddbkg fit measurement! - I label this FRv7 - this is a placeholder value for AN.
+// 		return 0.03; //My 2D ddbkg fit measurement using Anthony's code! - I label this FRv8.
+// 		return 0.03; //My 2D ddbkg fit measurement using Anthony's code, no btag fixed ST looseLepJetlean Full2016! - I label this FRv9
+// 		return 0.06; //My 2D ddbkg fit measurement using Anthony's code, 1 btag fixed ST looseLepJetlean Full2016! - I label this FRv10
+// 		return 0.003; //Clints AN2016_242_v9 values for MiniIso < 0.1 http://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2016_242_v9.pdf - I label this FRv11
+// 		return 0.03; //My 2D ddbkg fit measurement using Anthony's code, no btag fixed ST looseLepJetlean HLTupdate Full2016! - I label this FRv12
+// 		return 0.06; //My 2D ddbkg fit measurement using Anthony's code, 1 btag fixed ST looseLepJetlean HLTupdate Full2016! - I label this FRv13
+// 		return 0.03; //My 2D ddbkg fit measurement using Anthony's code (based on FRv12!!), no btag fixed ST looseLepJetlean HLTupdate Full2016 Mu MiniIso < 0.1 ! - I label this FRv14
 		return 0.01; //FRv14a more precise unc
 	}
 	else{
 		//mu fake rate unc
+// 		double pt_mu = lep_info.at(2);
+// 		double eta_mu = lep_info.at(3);
+// 		return h_mu->GetBinError(h_mu->GetXaxis()->FindBin(pt_mu),h_mu->GetYaxis()->FindBin(fabs(eta_mu)));
+// 		return 0.0016; //our calculation
+// 		return 0.002; //Clints
+// 		return 0.12; //My ddbkg fit measurement! - I label this FRv4 (with old el FR, FRv5 with new El FR
+// 		return 0.0; //My 2D ddbkg fit measurement! - I label this FRv6 - see above this is not used.
+// 		return 0.1; //My 2D ddbkg fit measurement! - I label this FRv7 - this is a placeholder value for AN.
+// 		return 0.03; //My 2D ddbkg fit measurement using Anthony's code! - I label this FRv8.
+// 		return 0.03; //My 2D ddbkg fit measurement using Anthony's code, no btag fixed ST looseLepJetlean Full2016! - I label this FRv9
+// 		return 0.06; //My 2D ddbkg fit measurement using Anthony's code, 1 btag fixed ST looseLepJetlean Full2016! - I label this FRv10
+// 		return 0.002; //Clints AN2016_242_v9 values for MiniIso < 0.1 http://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2016_242_v9.pdf - I label this FRv11
+// 		return 0.03; //My 2D ddbkg fit measurement using Anthony's code, no btag fixed ST looseLepJetlean HLTupdate Full2016! - I label this FRv12
+// 		return 0.06; //My 2D ddbkg fit measurement using Anthony's code, 1 btag fixed ST looseLepJetlean HLTupdate Full2016! - I label this FRv13
 		return 0.03; //FRv14, FRv14a
 	}
 }

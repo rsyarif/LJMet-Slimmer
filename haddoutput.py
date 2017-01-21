@@ -94,57 +94,88 @@ dirList = [
 	'TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8',	  
 	'TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8',			  
 	'TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8',			  
-	'TT_TuneCUETP8M1_13TeV-powheg-pythia8',				  
-
-	'DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
-	'DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-
-	'WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',   
-	'WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',   
-	'WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',   
-	'WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8', 
-	'WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',   
-	'WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',   
-	'WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',   
-	'WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',  
-
-	'WW_TuneCUETP8M1_13TeV-pythia8',
+# 	'TT_TuneCUETP8M1_13TeV-powheg-pythia8',				  
+# 
+# 	'ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1',	  
+# 	'ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1',	  
+# 	'ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1',	  
+# 	'ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1', 
+# 	'ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1',	  
+# 
+# 	'DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+# 	'DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
+# 	'DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+# 	'DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
+# 
+# 	'WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',   
+# 	'WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',   
+# 	'WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',   
+# 	'WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8', 
+# 	'WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',   
+# 	'WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',   
+# 	'WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',   
+# 	'WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',  
+# 	'WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8', 
+# 
+# 	'WW_TuneCUETP8M1_13TeV-pythia8',
 	'WZ_TuneCUETP8M1_13TeV-pythia8',
 	'ZZ_TuneCUETP8M1_13TeV-pythia8',
-	
-	#Additionally for multilepton:
+# 	
+# # 	Additionally for multilepton:
 	'WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8',
 	'ZZTo4L_13TeV_powheg_pythia8',
-	'WWW_4f_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
+	'WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
 	'WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
 	'WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
 	'ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8',       
     ]
 
 if shift == 'nominal':
-    # These don't need to be run for shifted directories
-    #dirList.append('ST_tW_top_5f_scaleup_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1')
-    #dirList.append('ST_tW_top_5f_scaledown_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1')	      
-    #dirList.append('ST_tW_antitop_5f_scaleup_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1')	      
-    #dirList.append('ST_tW_antitop_5f_scaledown_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1')      
-#     dirList.append('TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8')
-#     dirList.append('TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8')
-#     dirList.append('SingleElectron_PRB1')
-#     dirList.append('SingleMuon_PRB1')
-#     dirList.append('SingleElectron_PRB2')
-#     dirList.append('SingleMuon_PRB2')
-#     dirList.append('SingleElectron_PRC')
-#     dirList.append('SingleMuon_PRC')
-
-	dirList.append('DoubleEG_PRB')
-	dirList.append('DoubleMuon_PRB')
-	dirList.append('MuonEG_PRB')
-	dirList.append('DoubleEG_PRC')
-	dirList.append('DoubleMuon_PRC')
-	dirList.append('MuonEG_PRC')
-	dirList.append('DoubleEG_PRD')
-	dirList.append('DoubleMuon_PRD')
-	dirList.append('MuonEG_PRD')
+#     # These don't need to be run for shifted directories
+#     #dirList.append('ST_tW_top_5f_scaleup_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1')
+#     #dirList.append('ST_tW_top_5f_scaledown_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1')	      
+#     #dirList.append('ST_tW_antitop_5f_scaleup_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1')	      
+#     #dirList.append('ST_tW_antitop_5f_scaledown_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1')      
+# #     dirList.append('TT_TuneCUETP8M1_13TeV-powheg-scaledown-pythia8')
+# #     dirList.append('TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8')
+# #     dirList.append('SingleElectron_PRB1')
+# #     dirList.append('SingleMuon_PRB1')
+# #     dirList.append('SingleElectron_PRB2')
+# #     dirList.append('SingleMuon_PRB2')
+# #     dirList.append('SingleElectron_PRC')
+# #     dirList.append('SingleMuon_PRC')
+# 
+# # 	dirList.append('DoubleEG_PRB')
+# # 	dirList.append('DoubleMuon_PRB')
+# # 	dirList.append('MuonEG_PRB')
+# # 	dirList.append('DoubleEG_PRC')
+# # 	dirList.append('DoubleMuon_PRC')
+# # 	dirList.append('MuonEG_PRC')
+# # 	dirList.append('DoubleEG_PRD')
+# # 	dirList.append('DoubleMuon_PRD')
+# # 	dirList.append('MuonEG_PRD')
+# 
+	dirList.append('DoubleEG_RRB')
+	dirList.append('DoubleMuon_RRB')
+	dirList.append('MuonEG_RRB')
+	dirList.append('DoubleEG_RRC')
+	dirList.append('DoubleMuon_RRC')
+	dirList.append('MuonEG_RRC')
+	dirList.append('DoubleEG_RRD')
+	dirList.append('DoubleMuon_RRD')
+	dirList.append('MuonEG_RRD')
+	dirList.append('DoubleEG_RRE')
+	dirList.append('DoubleMuon_RRE')
+	dirList.append('MuonEG_RRE')
+	dirList.append('DoubleEG_RRF')
+	dirList.append('DoubleMuon_RRF')
+	dirList.append('MuonEG_RRF')
+	dirList.append('DoubleEG_RRG')
+	dirList.append('DoubleMuon_RRG')
+	dirList.append('MuonEG_RRG')
+	dirList.append('DoubleEG_PRH')
+	dirList.append('DoubleMuon_PRH')
+	dirList.append('MuonEG_PRH')
 
 
 for sample in dirList:
