@@ -2050,7 +2050,7 @@ void step1::Loop()
 		  double lEff = 1.0;
 
 		  // Set the initial tagged/untagged state
-		  bool istagged = AK4JetBDisc_singleLepCalc->at(ijet) > 0.800;
+		  bool istagged = AK4JetBDisc_singleLepCalc->at(ijet) > 0.8484; //Medium WP as confirmed by Julie on 20th Jan 2017. But this is updated here on 23rd Jan 2017.
 
 		  if(AK4JetFlav_singleLepCalc->at(ijet) == 5 || AK4JetFlav_singleLepCalc->at(ijet) == 4){	    
 
