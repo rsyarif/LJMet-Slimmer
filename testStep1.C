@@ -2,24 +2,22 @@
 
 void testStep1(){
   
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_2016_8_24_rizki/nominal/MuonEG_PRB/MuonEG_PRB_3.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_2016_8_24_rizki/nominal/DoubleEG_PRB/DoubleEG_PRB_1.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_2016_8_24_rizki/nominal/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8_1.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_2016_8_31_rizki/nominal/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8_1.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_2016_8_31_rizki/nominal/DoubleMuon_PRB/DoubleMuon_PRB_1.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_2016_8_31_rizki/nominal/TprimeTprime_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8/TprimeTprime_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8_1.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_2016_10_13_rizki/nominal/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8_1.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_2016_10_13_rizki/nominal/DoubleEG_PRB/DoubleEG_PRB_1.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_2016_10_13_rizki/nominal/TprimeTprime_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8/TprimeTprime_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8_1.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_2016_12_15_rizki/nominal/MuonEG_RRG/MuonEG_RRG_1.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_2016_12_19_rizki/nominal/MuonEG_RRG/MuonEG_RRG_1.root";
-  TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_HLTupdate_2017_1_11_rizki/nominal/MuonEG_RRG/MuonEG_RRG_1.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_HLTupdate_2017_1_11_rizki/nominal/MuonEG_PRH/MuonEG_PRH_1.root";
+//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_2017_2_24_rizki/nominal/MuonEG_RRG/MuonEG_RRG_1.root";
+//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_2017_2_24_rizki/nominal/TprimeTprime_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8/TprimeTprime_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8_1.root";
+//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_2017_2_24_rizki/nominal/DoubleEG_RRG/DoubleEG_RRG_25.root";
+//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_saveLooseMC_2017_3_4_rizki/nominal/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_1.root";
+//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_saveLooseMC_2017_3_4_rizki/nominal/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_117.root";
+//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_saveLooseMC_2017_3_4_rizki/nominal/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_79.root";
+//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_saveLooseMC_2017_3_4_rizki/nominal/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_96.root";
+//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_saveLooseMC_2017_3_4_rizki/nominal/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_70.root";
+//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_saveLooseMC_2017_3_4_rizki/nominal/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_105.root";
+//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_saveLooseMC_2017_3_4_rizki/nominal/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_113.root";
+// 	TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_2017_2_24_rizki/nominal/BprimeBprime_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8/BprimeBprime_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8_1.root";
+// 	TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_saveLooseMC_2017_3_7_rizki/nominal/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_combined/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_combined_2.root";
+	TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_Full2016_Moriond17_reMiniAOD_nuBTVSF_modMETfilt_2017_2_24_rizki/nominal/DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_1.root";
 
-  //TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_SUSYID_2016_10_28_rizki/nominal/DoubleMuon_PRB/DoubleMuon_PRB_1.root";
-//   TString inputFile="root://cmseos.fnal.gov//store/user/lpcljm/LJMet80x_3lepTT_SUSYID_2016_10_28_rizki/nominal/MuonEG_PRB/MuonEG_PRB_1.root";
-  
   TString outputFile="test.root";
+//   TString outputFile="TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_1.root";
   
   gSystem->AddIncludePath("-I$CMSSW_BASE/src/");
   

@@ -316,6 +316,11 @@ void step1::Loop()
    std::vector<int> theJetAK8Wmatch_JetSubCalc_PtOrdered;
    std::vector<int> NJetsWtagged_0p6_shifts;
    std::vector<float> ddBkgWeights;
+//    std::vector<pair<float,float> > ddBkgWeights_scan;
+//    std::vector<map<float,float> > ddBkgWeights_scan;
+   std::vector<float> ddBkgWeights_scan;
+   std::vector<float> ddBkgWeights_scan_muFR;
+   std::vector<float> ddBkgWeights_scan_elFR;
    
    int MCPastTrigger_trilep;
    int DataPastTrigger_trilep;
@@ -496,6 +501,9 @@ void step1::Loop()
    outputTree->Branch("AK4HT",&AK4HT,"AK4HT/F");
    
    outputTree->Branch("ddBkgWeights",&ddBkgWeights);
+   outputTree->Branch("ddBkgWeights_scan",&ddBkgWeights_scan);
+   outputTree->Branch("ddBkgWeights_scan_muFR",&ddBkgWeights_scan_muFR);
+   outputTree->Branch("ddBkgWeights_scan_elFR",&ddBkgWeights_scan_elFR);
 
    outputTree->Branch("NJets_JetSubCalc",&NJets_JetSubCalc,"NJets_JetSubCalc/I");
    outputTree->Branch("NJetsAK8_JetSubCalc",&NJetsAK8_JetSubCalc,"NJetsAK8_JetSubCalc/I");
@@ -729,9 +737,10 @@ void step1::Loop()
    
    //DEBUG printout switches
    bool DEBUG = false;
-   bool DEBUGleptons = false;
+   bool DEBUGleptons = true;
    bool DEBUGjets = false;
-   bool DEBUGddbkg = false;
+   bool DEBUGddbkg = true;
+   bool DEBUGddbkgScan = false;
    bool DEBUGTriggers = false;
    
    Long64_t nentries = inputTree->GetEntriesFast();
@@ -1143,7 +1152,12 @@ void step1::Loop()
       const int nmodes = 5;
       //mode 0 = nominal. 1 = fakerate plus, 2 = fakerate minus, 3 = passrate plus, 4 = passrate minus
       //see feModeBehavior in fakerate.h
+
       double bkgweights[nmodes] = {0};
+      double bkgweight = 0.;
+      ddBkgWeights.clear();
+      ddBkgWeights_scan.clear();
+
       if(!isMC){
 	
 			vector<double> lep1_info,lep2_info,lep3_info; //at(0): isMu, at(1): isTight, at(2): pt, at(3): eta
@@ -1154,12 +1168,78 @@ void step1::Loop()
 				bkgweights[imode] = GetWeight(imode, lep1_info, lep2_info, lep3_info);
 			}
 			
-		}//end make background weights.
+			//ddbkgweight scan -start
+			
+			//add mu FR at(4) and initialize to be 0.
+			lep1_info.push_back(0.);
+			lep2_info.push_back(0.);
+			lep3_info.push_back(0.);
 
-		if(DEBUGddbkg)for(int imode=0;imode<nmodes;imode++)cout << "bkgweights["<<imode<<"] = "<< bkgweights[imode]<<endl;	
-		
-		ddBkgWeights.clear();
-		for(int imode=0; imode<nmodes;imode++){ddBkgWeights.push_back(bkgweights[imode]);}
+			//add el FR at(5) and initialize to be 0.
+			lep1_info.push_back(0.);
+			lep2_info.push_back(0.);
+			lep3_info.push_back(0.);
+			
+			float increment = 0.01;
+			double initial = 0.0;
+			double end = 0.5;
+			int loop = (int) ( ( end - initial ) / increment ) + 1;
+			
+			double muFR = 0.; 
+			double elFR = 0.; 
+
+			if(DEBUGddbkg) cout << "scanning ddbkg for each muFR and elFR from " << initial << " to " << end << " with increment of "<< increment <<"(" <<loop <<" loops) ." << endl;
+			if(DEBUGddbkg) cout << "" << endl;	
+			int counter = 0;
+			for(float i=0; i < loop; i++){
+				
+				muFR = initial + i*increment;
+				
+				if(DEBUGddbkgScan) cout << "i = " << i << ", muFR = "<< muFR << endl;	
+
+				lep1_info.at(4)=muFR;
+				lep2_info.at(4)=muFR;
+				lep3_info.at(4)=muFR;				
+
+				for(float j=0; j < loop; j++){
+
+					elFR = initial + j*increment;
+				
+					if(DEBUGddbkgScan) cout << "j = " << j << ", elFR = "<< elFR << endl;	
+			
+					lep1_info.at(5)=elFR;
+					lep2_info.at(5)=elFR;
+					lep3_info.at(5)=elFR;				
+				
+					if(DEBUGddbkgScan) cout << "lep1_info.at(4) = "<< lep1_info.at(4) <<", lep1_info.at(5) ="<< lep1_info.at(5) << endl;	
+					if(DEBUGddbkgScan) cout << "lep2_info.at(4) = "<< lep2_info.at(4) <<", lep2_info.at(5) ="<< lep2_info.at(5)   <<endl;	
+					if(DEBUGddbkgScan) cout << "lep3_info.at(4) = "<< lep3_info.at(4) <<", lep3_info.at(5) ="<< lep3_info.at(5)   <<endl;	
+								
+					bkgweight = GetWeight(0, lep1_info, lep2_info, lep3_info);
+				
+					ddBkgWeights_scan.push_back(bkgweight);
+				
+					ddBkgWeights_scan_muFR.push_back(muFR);
+					ddBkgWeights_scan_elFR.push_back(elFR);
+					if(DEBUGddbkgScan) cout << counter <<". bkgweight (muFR = "<< ddBkgWeights_scan_muFR.at(counter) << ", elFR = "<< ddBkgWeights_scan_elFR.at(counter) << ") = "<< ddBkgWeights_scan.at(counter) <<endl;	
+					
+					counter++;
+					
+					if(DEBUGddbkgScan) cout << "" << endl;	
+
+				}
+				
+				double elFR = 0.; 
+				
+			}
+			//ddbkgweight scan -end
+
+      }//end make background weights.
+            
+      if(DEBUGddbkg)for(int imode=0;imode<nmodes;imode++)cout << "bkgweights["<<imode<<"] = "<< bkgweights[imode]<<endl;	
+
+      
+      for(int imode=0; imode<nmodes;imode++){ddBkgWeights.push_back(bkgweights[imode]);}
 			      
       //Determine bkgweights here IF processing DATA. - end
       
