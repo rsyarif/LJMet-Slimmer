@@ -13,7 +13,7 @@
 #include <vector>
 // #include "fakerate_3lep_rizki.h" //added by rizki
 #include "fakerate_3lep_ptEta_rizki.h" //added by rizki
-
+#include <cmath>
 
 using namespace std;
 
@@ -21,8 +21,8 @@ using namespace std;
 // DEBUG printout switches
 // ----------------------------------------------------------------------------
 bool DEBUG = false;
-bool DEBUGleptons = false;
-bool DEBUGjets = false;
+bool DEBUGleptons = true;
+bool DEBUGjets = true;
 bool DEBUGddbkg = false;
 bool DEBUGddbkgScan = false;
 bool DEBUGTriggers = false;
@@ -639,6 +639,8 @@ void step1::Loop()
    outputTree->Branch("minMleppBjet",&minMleppBjet,"minMleppBjet/F");
    outputTree->Branch("minMleppBjet_shifts",&minMleppBjet_shifts);
    outputTree->Branch("minMleppJet",&minMleppJet,"mixnMleppJet/F");
+   outputTree->Branch("minMlllBjet",&minMlllBjet,"minMlllBjet/F");
+   outputTree->Branch("minMlllBjet_shifts",&minMlllBjet_shifts);
    outputTree->Branch("genTopPt",&genTopPt,"genTopPt/F");
    outputTree->Branch("genAntiTopPt",&genAntiTopPt,"genAntiTopPt/F");
    outputTree->Branch("topPtWeight",&topPtWeight,"topPtWeight/F");
@@ -674,12 +676,20 @@ void step1::Loop()
    outputTree->Branch("minDR_lep3Jet",&minDR_lep3Jet,"minDR_lep3Jet/F");
    outputTree->Branch("minDR_lepMET",&minDR_lepMET,"minDR_lepMET/F");
    outputTree->Branch("minDR_METJet",&minDR_METJet,"minDR_METJet/F");
-   outputTree->Branch("ptRel_lepJet",&ptRel_lepJet,"ptRel_lepJet/F");
+   outputTree->Branch("minDPhi_METJet",&minDPhi_METJet,"minDPhi_METJet/F");
+   outputTree->Branch("ptRel_minDRlepJet",&ptRel_minDRlepJet,"ptRel_minDRlepJet/F");
+   outputTree->Branch("ptRel_minDRlep1Jet",&ptRel_minDRlep1Jet,"ptRel_minDRlep1Jet/F");
+   outputTree->Branch("ptRel_minDRlep2Jet",&ptRel_minDRlep2Jet,"ptRel_minDRlep2Jet/F");
+   outputTree->Branch("ptRel_minDRlep3Jet",&ptRel_minDRlep3Jet,"ptRel_minDRlep3Jet/F");
    outputTree->Branch("MT_lepMet",&MT_lepMet,"MT_lepMet/F");
    outputTree->Branch("deltaR_lepJets",&deltaR_lepJets);
    outputTree->Branch("deltaR_lep1Jets",&deltaR_lep1Jets);
    outputTree->Branch("deltaR_lep2Jets",&deltaR_lep2Jets);
    outputTree->Branch("deltaR_lep3Jets",&deltaR_lep3Jets);
+   outputTree->Branch("ptRel_lepJets",&ptRel_lepJets);
+   outputTree->Branch("ptRel_lep1Jets",&ptRel_lep1Jets);
+   outputTree->Branch("ptRel_lep2Jets",&ptRel_lep2Jets);
+   outputTree->Branch("ptRel_lep3Jets",&ptRel_lep3Jets);
    outputTree->Branch("deltaR_lepMETs",&deltaR_lepMETs);
    outputTree->Branch("deltaR_METJets",&deltaR_METJets);
    outputTree->Branch("deltaR_lepBJets",&deltaR_lepBJets);
@@ -730,6 +740,7 @@ void step1::Loop()
    float jetEtaCut=2.4;
    float ak8EtaCut=2.4;
    float jetPtCut=30;
+   float elEtaCut=2.4;//2.1;//2.4;
 
    // counters
    int npass_trigger      = 0;
@@ -766,6 +777,7 @@ void step1::Loop()
    TLorentzVector tjet1_lv;
 //    TLorentzVector lepton_lv;
    std::vector<TLorentzVector> lepton_lv;
+   std::vector<TLorentzVector> lepton_PtOrderedOnly_lv;
    TLorentzVector ak8_lv;
    
    // Muon Trigger & tracking efficiencies
@@ -914,7 +926,7 @@ void step1::Loop()
       if(DEBUG)std::cout<<"Collecting electrons ..."<<std::endl;      
       if(DEBUG)std::cout<<"elPt_singleLepCalc->size() = "<< elPt_singleLepCalc->size() <<std::endl;  
       for(unsigned int iel = 0; iel < elPt_singleLepCalc->size(); iel++){
-		if(elPt_singleLepCalc->at(iel) < lepPtCut || fabs(elEta_singleLepCalc->at(iel)) > 2.4) continue;
+		if(elPt_singleLepCalc->at(iel) < lepPtCut || fabs(elEta_singleLepCalc->at(iel)) > elEtaCut) continue;
 
 		//Explicit check for Tight electrons
 		bool isTightEl = false;
@@ -1455,7 +1467,7 @@ void step1::Loop()
 			
 			float increment = 0.01;
 			double initial = 0.0;
-			double end = 0.5;
+			double end = 1.0; //0.5;
 			int loop = (int) ( ( end - initial ) / increment ) + 1;
 			
 			double muFR = 0.; 
@@ -1984,21 +1996,21 @@ eta:2.5 bin:11
 
 			  // Muon tracking SF -- https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonWorkInProgressAndPagResults#Results_on_the_full_2016_data, Feb 16 version for full data
 			  int ebin = -1;
-			  if(leptonEta_singleLepCalc < -2.1) ebin = 0;
-			  else if(leptonEta_singleLepCalc < -1.6) ebin = 1;
-			  else if(leptonEta_singleLepCalc < -1.2) ebin = 2;
-			  else if(leptonEta_singleLepCalc < -0.9) ebin = 3;
-			  else if(leptonEta_singleLepCalc < -0.6) ebin = 4;
-			  else if(leptonEta_singleLepCalc < -0.3) ebin = 5;
-			  else if(leptonEta_singleLepCalc < -0.2) ebin = 6;
-			  else if(leptonEta_singleLepCalc <  0.2) ebin = 7;
-			  else if(leptonEta_singleLepCalc <  0.3) ebin = 8;
-			  else if(leptonEta_singleLepCalc <  0.6) ebin = 9;
-			  else if(leptonEta_singleLepCalc <  0.9) ebin = 10;
-			  else if(leptonEta_singleLepCalc <  1.2) ebin = 11;
-			  else if(leptonEta_singleLepCalc <  1.6) ebin = 12;
-			  else if(leptonEta_singleLepCalc <  2.1) ebin = 13;
-			  else if(leptonEta_singleLepCalc <  2.4) ebin = 14;
+			  if(lepeta < -2.1) ebin = 0;
+			  else if(lepeta < -1.6) ebin = 1;
+			  else if(lepeta < -1.2) ebin = 2;
+			  else if(lepeta < -0.9) ebin = 3;
+			  else if(lepeta < -0.6) ebin = 4;
+			  else if(lepeta < -0.3) ebin = 5;
+			  else if(lepeta < -0.2) ebin = 6;
+			  else if(lepeta <  0.2) ebin = 7;
+			  else if(lepeta <  0.3) ebin = 8;
+			  else if(lepeta <  0.6) ebin = 9;
+			  else if(lepeta <  0.9) ebin = 10;
+			  else if(lepeta <  1.2) ebin = 11;
+			  else if(lepeta <  1.6) ebin = 12;
+			  else if(lepeta <  2.1) ebin = 13;
+			  else if(lepeta <  2.4) ebin = 14;
 
 			  MuTrkSF *= tracksf[ebin];
 
@@ -2721,6 +2733,8 @@ eta:2.5 bin:11
       double lepM; 
       TLorentzVector lv_temp;
       lepton_lv.clear();
+      TLorentzVector lv_PtOrderedOnly_temp;
+      lepton_PtOrderedOnly_lv.clear();
       //if(AllLeptonPt_PtOrdered.size()<3) std::cout << "Trilepton cut fail!! will segfault when setting lepton_lv 123!!" << std::endl;
       for (unsigned int ilep=0; ilep < AllLeptonPt_PtOrdered.size() ; ilep++){
 //       	std::cout << "AllLeptonPt_PtOrdered.size() : " << AllLeptonPt_PtOrdered.size() << std::endl;
@@ -2729,6 +2743,11 @@ eta:2.5 bin:11
       	lv_temp.SetPtEtaPhiM(AllLeptonPt_PtOrdered.at(ilep),AllLeptonEta_PtOrdered.at(ilep),AllLeptonPhi_PtOrdered.at(ilep),lepM);
       	lepton_lv.push_back(lv_temp);
       	//std::cout << "lep " << ilep+1 << " , flavor :" <<  AllLeptonFlavor_PtOrdered[ilep] << " , pt : " <<AllLeptonPt_PtOrdered.at(ilep) << " ,  eta : "<<AllLeptonEta_PtOrdered.at(ilep) << " , phi : "<<AllLeptonPhi_PtOrdered.at(ilep) << " , mass : " << lepM << std::endl;
+
+		//leptons ordered in pT only
+      	lv_PtOrderedOnly_temp.SetPtEtaPhiM(AllLeptonPt_PtOrderedOnly.at(ilep),AllLeptonEta_PtOrderedOnly.at(ilep),AllLeptonPhi_PtOrderedOnly.at(ilep),lepM);
+      	lepton_PtOrderedOnly_lv.push_back(lv_PtOrderedOnly_temp);
+
       }
 	
       //calculate Mlll - start
@@ -2954,6 +2973,7 @@ eta:2.5 bin:11
       BJetLeadPt = -99;
       minMleppBjet = 1e8;
       minMleppJet = 1e8;
+      minMlllBjet = 1e8;
       deltaRlepJetInMinMljet = -99;
       deltaPhilepJetInMinMljet = -99;
       deltaRlepbJetInMinMlb = -99;
@@ -2962,14 +2982,22 @@ eta:2.5 bin:11
       minDR_lep1Jet = 1e8;
       minDR_lep2Jet = 1e8;
       minDR_lep3Jet = 1e8;
+      ptRel_minDRlepJet = 1e8;
+      ptRel_minDRlep1Jet = 1e8;
+      ptRel_minDRlep2Jet = 1e8;
+      ptRel_minDRlep3Jet = 1e8;
       minDR_lepMET = 1e8;
       minDR_METJet = 1e8;
-      ptRel_lepJet = -99;
+      minDPhi_METJet = 1e8;
       BJetLeadPt_shifts.clear();
       deltaR_lepJets.clear();
       deltaR_lep1Jets.clear();
       deltaR_lep2Jets.clear();
       deltaR_lep3Jets.clear();
+      ptRel_lepJets.clear();
+      ptRel_lep1Jets.clear();
+      ptRel_lep2Jets.clear();
+      ptRel_lep3Jets.clear();
       deltaR_lepMETs.clear();
       deltaR_METJets.clear();
       deltaR_lepBJets.clear();
@@ -2991,12 +3019,14 @@ eta:2.5 bin:11
       mass_lepBJets_lSFdn.clear();
       NJetsBTagwithSF_singleLepCalc_shifts.clear();
       minMleppBjet_shifts.clear();
+      minMlllBjet_shifts.clear();
       deltaRlepbJetInMinMlb_shifts.clear();
       deltaPhilepbJetInMinMlb_shifts.clear();
       for(int i = 0; i < 4; i++){
 		BJetLeadPt_shifts.push_back(-99);
 		NJetsBTagwithSF_singleLepCalc_shifts.push_back(0);
 		minMleppBjet_shifts.push_back(1e8);
+		minMlllBjet_shifts.push_back(1e8);
 		deltaRlepbJetInMinMlb_shifts.push_back(-99);
 		deltaPhilepbJetInMinMlb_shifts.push_back(-99);
       }	
@@ -3016,35 +3046,84 @@ eta:2.5 bin:11
 		mass_lepJets.push_back((lepton_lv + jet_lv).M());
 		*/
 
-		//calculate dR(leps,jets) and min - start
-		for (unsigned int ilep=0; ilep < lepton_lv.size() ; ilep++){
-			if(ilep==0)deltaR_lep1Jets.push_back(jet_lv.DeltaR(lepton_lv.at(0)));
-			if(ilep==1)deltaR_lep2Jets.push_back(jet_lv.DeltaR(lepton_lv.at(1)));
-			if(ilep==2)deltaR_lep3Jets.push_back(jet_lv.DeltaR(lepton_lv.at(2)));
-			deltaR_lepJets.push_back(jet_lv.DeltaR(lepton_lv.at(ilep)));
+		for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
+			if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppJet) {
+			  minMleppJet = fabs((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M());
+			  deltaRlepJetInMinMljet = jet_lv.DeltaR(lepton_PtOrderedOnly_lv.at(ilep));
+			  deltaPhilepJetInMinMljet = jet_lv.DeltaPhi(lepton_PtOrderedOnly_lv.at(ilep));
+			}
+		}
 
-			if(DEBUGjets||DEBUGleptons) std::cout << "dR(lep"<<ilep+1<<",jet"<<ijet+1<<") = "<< jet_lv.DeltaR(lepton_lv.at(ilep)) << std::endl;
+
+		//calculate dR(leps,jets) and min - start
+		for (unsigned int ilep=0; ilep < lepton_PtOrderedOnly_lv.size() ; ilep++){
+			deltaR_lepJets.push_back(jet_lv.DeltaR(lepton_PtOrderedOnly_lv.at(ilep)));
+			ptRel_lepJets.push_back( lepton_PtOrderedOnly_lv.at(ilep).P()*(jet_lv.Vect().Cross(lepton_PtOrderedOnly_lv.at(ilep).Vect()).Mag()/jet_lv.P()/lepton_PtOrderedOnly_lv.at(ilep).P()) );
+			if(ilep==0){
+				deltaR_lep1Jets.push_back(jet_lv.DeltaR(lepton_PtOrderedOnly_lv.at(0)));
+				ptRel_lep1Jets.push_back( lepton_PtOrderedOnly_lv.at(ilep).P()*(jet_lv.Vect().Cross(lepton_PtOrderedOnly_lv.at(ilep).Vect()).Mag()/jet_lv.P()/lepton_PtOrderedOnly_lv.at(ilep).P()) );
+			}
+			if(ilep==1){
+				deltaR_lep2Jets.push_back(jet_lv.DeltaR(lepton_PtOrderedOnly_lv.at(1)));
+				ptRel_lep2Jets.push_back( lepton_PtOrderedOnly_lv.at(ilep).P()*(jet_lv.Vect().Cross(lepton_PtOrderedOnly_lv.at(ilep).Vect()).Mag()/jet_lv.P()/lepton_PtOrderedOnly_lv.at(ilep).P()) );
+			}
+			if(ilep==2){
+				deltaR_lep3Jets.push_back(jet_lv.DeltaR(lepton_PtOrderedOnly_lv.at(2)));
+				ptRel_lep3Jets.push_back( lepton_PtOrderedOnly_lv.at(ilep).P()*(jet_lv.Vect().Cross(lepton_PtOrderedOnly_lv.at(ilep).Vect()).Mag()/jet_lv.P()/lepton_PtOrderedOnly_lv.at(ilep).P()) );
+			}
+
+
+			if(DEBUGjets||DEBUGleptons) std::cout << "dR(lep"<<ilep+1<<",jet"<<ijet+1<<") = "<< jet_lv.DeltaR(lepton_PtOrderedOnly_lv.at(ilep)) << "	ptRel = "<< ptRel_lepJets.at(ijet*lepton_PtOrderedOnly_lv.size() + ilep) <<  std::endl;
 		}
 		//find minimum 
-		vector<double>::const_iterator minDR_lep1Jet_it;  
+		vector<double>::iterator minDR_lep1Jet_it;  
 		minDR_lep1Jet_it = std::min_element(deltaR_lep1Jets.begin(), deltaR_lep1Jets.end());
-		if(minDR_lep1Jet > *minDR_lep1Jet_it) minDR_lep1Jet = *minDR_lep1Jet_it;
+		if(minDR_lep1Jet > *minDR_lep1Jet_it){
+			minDR_lep1Jet = *minDR_lep1Jet_it;
+			int min_at = std::distance(deltaR_lep1Jets.begin(), minDR_lep1Jet_it);
+			ptRel_minDRlep1Jet = ptRel_lep1Jets.at(min_at); 
+		}
 
-		vector<double>::const_iterator minDR_lep2Jet_it;  
+		vector<double>::iterator minDR_lep2Jet_it;  
 		minDR_lep2Jet_it = std::min_element(deltaR_lep2Jets.begin(), deltaR_lep2Jets.end());
-		if(minDR_lep2Jet > *minDR_lep2Jet_it) minDR_lep2Jet = *minDR_lep2Jet_it;
+		if(minDR_lep2Jet > *minDR_lep2Jet_it){
+			minDR_lep2Jet = *minDR_lep2Jet_it;
+			int min_at = std::distance(deltaR_lep2Jets.begin(), minDR_lep2Jet_it);
+			ptRel_minDRlep2Jet = ptRel_lep2Jets.at(min_at); 
+		}
 
-		vector<double>::const_iterator minDR_lep3Jet_it;  
+		vector<double>::iterator minDR_lep3Jet_it;  
 		minDR_lep3Jet_it = std::min_element(deltaR_lep3Jets.begin(), deltaR_lep3Jets.end());
-		if(minDR_lep3Jet > *minDR_lep3Jet_it) minDR_lep3Jet = *minDR_lep3Jet_it;
+		if(minDR_lep3Jet > *minDR_lep3Jet_it){
+			minDR_lep3Jet = *minDR_lep3Jet_it;
+			int min_at = std::distance(deltaR_lep3Jets.begin(), minDR_lep3Jet_it);
+			ptRel_minDRlep3Jet = ptRel_lep3Jets.at(min_at); 
+		}
 
-		vector<double>::const_iterator minDR_lepJet_it;  
+		vector<double>::iterator minDR_lepJet_it;  
 		minDR_lepJet_it = std::min_element(deltaR_lepJets.begin(), deltaR_lepJets.end());
-		if(minDR_lepJet > *minDR_lepJet_it) minDR_lepJet = *minDR_lepJet_it;
+		if(minDR_lepJet > *minDR_lepJet_it){
+			minDR_lepJet = *minDR_lepJet_it;
+			int min_at = std::distance(deltaR_lepJets.begin(), minDR_lepJet_it);
+			ptRel_minDRlepJet = ptRel_lepJets.at(min_at); 
+			
+		}
 		//calculate dR(leps,jets) and min - end
 		
 		//calculate dR(MET,jets) and min - start
 		//calculate dR(MET,jets) and min - end
+
+		//calculate minDPhi(MET,jet) - start
+		if(DEBUG || DEBUGjets) cout << "MET phi = "<< corr_met_phi_singleLepCalc << ", jet ("<< ijet <<") phi = " << jet_lv.Phi()<<endl;
+		double DPhi_METJet_temp = fabs(corr_met_phi_singleLepCalc - jet_lv.Phi());
+		if(DPhi_METJet_temp > M_PI) DPhi_METJet_temp = fabs(DPhi_METJet_temp - 2*M_PI);
+		if(DEBUG || DEBUGjets) cout << "minDPhi_METJet("<< ijet <<") = " << minDPhi_METJet;
+		if(DPhi_METJet_temp < minDPhi_METJet){
+			minDPhi_METJet = DPhi_METJet_temp;
+			if(DEBUG || DEBUGjets) cout << " --> " << minDPhi_METJet;
+			}
+		if(DEBUG || DEBUGjets) cout << "" << endl;
+		//calculate minDPhi(MET,jet) - end
 
 		if(AK4JetBTag_singleLepCalc_PtOrdered.at(ijet) == 1){
 		  NJetsBTagwithSF_singleLepCalc += 1;
@@ -3061,6 +3140,28 @@ eta:2.5 bin:11
 		    deltaPhilepbJetInMinMlb = jet_lv.DeltaPhi(lepton_lv);
 		  }
 		  */
+		  
+		  if(DEBUG || DEBUGleptons) cout << "min M[lep,BJet("<<NJetsBTagwithSF_singleLepCalc<<")] = " ;
+		  if(DEBUG || DEBUGleptons) cout <<  minMleppBjet ; 
+		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
+			  if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppBjet) {
+				minMleppBjet = fabs( (lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() );
+				deltaRlepbJetInMinMlb = jet_lv.DeltaR(lepton_PtOrderedOnly_lv.at(ilep));
+				deltaPhilepbJetInMinMlb = jet_lv.DeltaPhi(lepton_PtOrderedOnly_lv.at(ilep));
+				if(DEBUG || DEBUGleptons) cout << " --> "<<  minMleppBjet ;
+			  }
+		  }
+		  if(DEBUG || DEBUGleptons) cout << "" << endl; 
+		  
+		  if(DEBUG || DEBUGleptons) cout << "min M[lllBJet("<<NJetsBTagwithSF_singleLepCalc<<")] = " ;
+		  double minMlllBjet_temp =(lepton_PtOrderedOnly_lv.at(0)+lepton_PtOrderedOnly_lv.at(1)+lepton_PtOrderedOnly_lv.at(2) + jet_lv).M();
+		  if(DEBUG || DEBUGleptons) cout <<  minMlllBjet ; 
+		  if( minMlllBjet_temp < minMlllBjet) {
+			minMlllBjet = fabs(minMlllBjet_temp);
+			if(DEBUG || DEBUGleptons) cout << " --> "<<  minMlllBjet ; 
+		  }
+		  if(DEBUG || DEBUGleptons) cout << "" << endl; 
+
 		  
 		}
 		if(AK4JetBTag_bSFup_singleLepCalc_PtOrdered.at(ijet) == 1){
@@ -3079,6 +3180,19 @@ eta:2.5 bin:11
 		  }
 		  */
 
+		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
+			  if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppBjet) {
+				minMleppBjet_shifts.at(0) = fabs( (lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() );
+				deltaRlepbJetInMinMlb_shifts.at(0) = jet_lv.DeltaR(lepton_PtOrderedOnly_lv.at(ilep));
+				deltaPhilepbJetInMinMlb_shifts.at(0) = jet_lv.DeltaPhi(lepton_PtOrderedOnly_lv.at(ilep));
+			  }
+		  }
+
+		  double minMlllBjet_temp =(lepton_PtOrderedOnly_lv.at(0)+lepton_PtOrderedOnly_lv.at(1)+lepton_PtOrderedOnly_lv.at(2) + jet_lv).M();
+		  if( minMlllBjet_temp < minMlllBjet) {
+			minMlllBjet_shifts.at(0) = fabs(minMlllBjet_temp);
+		  }
+
 		}
 		if(AK4JetBTag_bSFdn_singleLepCalc_PtOrdered.at(ijet) == 1){
 		  NJetsBTagwithSF_singleLepCalc_shifts.at(1) += 1;
@@ -3095,6 +3209,20 @@ eta:2.5 bin:11
 		    deltaPhilepbJetInMinMlb_shifts.at(1) = jet_lv.DeltaPhi(lepton_lv);
 		  }
 		  */
+
+		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
+			  if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppBjet) {
+				minMleppBjet_shifts.at(1) = fabs( (lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() );
+				deltaRlepbJetInMinMlb_shifts.at(1) = jet_lv.DeltaR(lepton_PtOrderedOnly_lv.at(ilep));
+				deltaPhilepbJetInMinMlb_shifts.at(1) = jet_lv.DeltaPhi(lepton_PtOrderedOnly_lv.at(ilep));
+			  }
+		  }
+
+		  double minMlllBjet_temp =(lepton_PtOrderedOnly_lv.at(0)+lepton_PtOrderedOnly_lv.at(1)+lepton_PtOrderedOnly_lv.at(2) + jet_lv).M();
+		  if( minMlllBjet_temp < minMlllBjet) {
+			minMlllBjet_shifts.at(1) = fabs(minMlllBjet_temp);
+		  }
+
 
 		}
 		if(AK4JetBTag_lSFup_singleLepCalc_PtOrdered.at(ijet) == 1){
@@ -3113,6 +3241,20 @@ eta:2.5 bin:11
 		  }
 		  */
 
+		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
+			  if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppBjet) {
+				minMleppBjet_shifts.at(2) = fabs( (lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() );
+				deltaRlepbJetInMinMlb_shifts.at(2) = jet_lv.DeltaR(lepton_PtOrderedOnly_lv.at(ilep));
+				deltaPhilepbJetInMinMlb_shifts.at(2) = jet_lv.DeltaPhi(lepton_PtOrderedOnly_lv.at(ilep));
+			  }
+		  }
+
+		  double minMlllBjet_temp =(lepton_PtOrderedOnly_lv.at(0)+lepton_PtOrderedOnly_lv.at(1)+lepton_PtOrderedOnly_lv.at(2) + jet_lv).M();
+		  if( minMlllBjet_temp < minMlllBjet) {
+			minMlllBjet_shifts.at(2) = fabs(minMlllBjet_temp);
+		  }
+
+
 		}
 		if(AK4JetBTag_lSFdn_singleLepCalc_PtOrdered.at(ijet) == 1){
 		  NJetsBTagwithSF_singleLepCalc_shifts.at(3) += 1;
@@ -3130,6 +3272,19 @@ eta:2.5 bin:11
 		  }
 		  */
 
+		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
+			  if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppBjet) {
+				minMleppBjet_shifts.at(3) = fabs( (lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() );
+				deltaRlepbJetInMinMlb_shifts.at(3) = jet_lv.DeltaR(lepton_PtOrderedOnly_lv.at(ilep));
+				deltaPhilepbJetInMinMlb_shifts.at(3) = jet_lv.DeltaPhi(lepton_PtOrderedOnly_lv.at(ilep));
+			  }
+		  }
+
+		  double minMlllBjet_temp =(lepton_PtOrderedOnly_lv.at(0)+lepton_PtOrderedOnly_lv.at(1)+lepton_PtOrderedOnly_lv.at(2) + jet_lv).M();
+		  if( minMlllBjet_temp < minMlllBjet) {
+			minMlllBjet_shifts.at(3) = fabs(minMlllBjet_temp);
+		  }
+
 		}
       	
       	/* From SingleLep
@@ -3140,10 +3295,10 @@ eta:2.5 bin:11
 		*/
       }
       
-      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep1,jets) = "<< minDR_lep1Jet << std::endl;
-      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep2,jets) = "<< minDR_lep2Jet << std::endl;
-      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep3,jets) = "<< minDR_lep3Jet << std::endl;
-      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(leps,jets) = "<< minDR_lepJet << std::endl;
+      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep1,jets) = "<< minDR_lep1Jet << "	ptRel = "<< ptRel_minDRlep1Jet << std::endl;
+      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep2,jets) = "<< minDR_lep2Jet << "	ptRel = "<< ptRel_minDRlep2Jet << std::endl;
+      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep3,jets) = "<< minDR_lep3Jet << "	ptRel = "<< ptRel_minDRlep3Jet << std::endl;
+      if(DEBUGjets||DEBUGleptons) std::cout << "min dR(leps,jets) = "<< minDR_lepJet << "	ptRel = "<< ptRel_minDRlepJet << std::endl;
       
       /*
       // ----------------------------------------------------------------------------
