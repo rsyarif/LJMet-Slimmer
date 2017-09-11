@@ -1332,7 +1332,7 @@ void step1::Loop()
 						if(DEBUG || DEBUGleptons) cout << "---> NonPrompt!"<< endl;
 						isNonPrompt=1;
 					}
-					else if (abs(muMother_id_singleLepCalc->at(mom_i))==15){ //not from tau nor mu nor photon
+					else if (abs(muMother_id_singleLepCalc->at(mom_i))==15){ //from tau
 						if(DEBUG || DEBUGleptons) cout << "			----> heavier lepton ";// << '\n';
 						isFromHL=1;
 						if(DEBUG || DEBUGleptons) cout << "---> is it Prompt?"<< endl;
@@ -1359,11 +1359,11 @@ void step1::Loop()
 // 					if(DEBUG || DEBUGleptons) cout << "			---> Prompt! (direct W decay)"<< endl;								  			
 					if(DEBUG || DEBUGleptons) cout << "			---> Prompt! (direct Z decay)"<< endl;								  			
 					if(!isNonPrompt)isPrompt = 1;								  			
-		// 		  	break;
-				}
-				else if(abs(muMother_id_singleLepCalc->at(mom_i))==6){
-					if(DEBUG || DEBUGleptons) cout << "			---> TOP quark found!"<< endl;								  			
 				  	break;
+// 				}
+// 				else if(abs(muMother_id_singleLepCalc->at(mom_i))==6){
+// 					if(DEBUG || DEBUGleptons) cout << "			---> TOP quark found!"<< endl;								  			
+// 				  	break;
 				}
 				else if(abs(muMother_id_singleLepCalc->at(mom_i))==2212){
 					if(DEBUG || DEBUGleptons) cout << "			---> PROTON found!"<< endl;								  			
@@ -2518,21 +2518,21 @@ eta:2.5 bin:11
 
 			  // Muon tracking SF -- https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonWorkInProgressAndPagResults#Results_on_the_full_2016_data, Feb 16 version for full data
 			  int ebin = -1;
-			  if(leptonEta_singleLepCalc < -2.1) ebin = 0;
-			  else if(leptonEta_singleLepCalc < -1.6) ebin = 1;
-			  else if(leptonEta_singleLepCalc < -1.2) ebin = 2;
-			  else if(leptonEta_singleLepCalc < -0.9) ebin = 3;
-			  else if(leptonEta_singleLepCalc < -0.6) ebin = 4;
-			  else if(leptonEta_singleLepCalc < -0.3) ebin = 5;
-			  else if(leptonEta_singleLepCalc < -0.2) ebin = 6;
-			  else if(leptonEta_singleLepCalc <  0.2) ebin = 7;
-			  else if(leptonEta_singleLepCalc <  0.3) ebin = 8;
-			  else if(leptonEta_singleLepCalc <  0.6) ebin = 9;
-			  else if(leptonEta_singleLepCalc <  0.9) ebin = 10;
-			  else if(leptonEta_singleLepCalc <  1.2) ebin = 11;
-			  else if(leptonEta_singleLepCalc <  1.6) ebin = 12;
-			  else if(leptonEta_singleLepCalc <  2.1) ebin = 13;
-			  else if(leptonEta_singleLepCalc <  2.4) ebin = 14;
+			  if(lepeta < -2.1) ebin = 0;
+			  else if(lepeta < -1.6) ebin = 1;
+			  else if(lepeta < -1.2) ebin = 2;
+			  else if(lepeta < -0.9) ebin = 3;
+			  else if(lepeta < -0.6) ebin = 4;
+			  else if(lepeta < -0.3) ebin = 5;
+			  else if(lepeta < -0.2) ebin = 6;
+			  else if(lepeta <  0.2) ebin = 7;
+			  else if(lepeta <  0.3) ebin = 8;
+			  else if(lepeta <  0.6) ebin = 9;
+			  else if(lepeta <  0.9) ebin = 10;
+			  else if(lepeta <  1.2) ebin = 11;
+			  else if(lepeta <  1.6) ebin = 12;
+			  else if(lepeta <  2.1) ebin = 13;
+			  else if(lepeta <  2.4) ebin = 14;
 
 			  MuTrkSF *= tracksf[ebin];
 
