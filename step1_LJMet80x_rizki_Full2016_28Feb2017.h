@@ -103,6 +103,7 @@ public :
    vector<double>  AK4JetEta_singleLepCalc_PtOrdered;
    vector<double>  AK4JetPhi_singleLepCalc_PtOrdered;
    vector<double>  AK4JetEnergy_singleLepCalc_PtOrdered;
+   vector<int>     AK4JetFlav_singleLepCalc_PtOrdered;
    vector<double>  AK4JetBDisc_singleLepCalc_PtOrdered;
    vector<int>     AK4JetBTag_singleLepCalc_PtOrdered;
    vector<int>     AK4JetBTag_bSFup_singleLepCalc_PtOrdered;
