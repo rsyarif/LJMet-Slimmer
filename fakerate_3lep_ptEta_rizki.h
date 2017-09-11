@@ -523,13 +523,13 @@ float Fr(int mode, std::vector<double> lep_info){
 // 			weight = 0.34 + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0)); 
 
 			//FRv45 FRSRHT400low 
-// 			weight = 0.36 + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0)); 
+			weight = 0.36 + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0)); 
 
 			//FRv46 FRSRHT400low2D 
 // 			weight = 0.50 + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0)); 
 
 			//FRv47 FRSRHT400low2Dext 
-			weight = 0.52 + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0)); 
+// 			weight = 0.52 + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0)); 
 
 		}
 		else{
@@ -582,7 +582,7 @@ float Fr(int mode, std::vector<double> lep_info){
 // 			weight = ( 0.15 - 3.849218e-18*eta_mu + 0.0257206*(eta_mu*eta_mu) ) + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0));
 
 			//FRv30CR2,FRv31CR1 - lepPt PRv9 latestLJMEtMar312017 _newRunH, FRv33, FRv35b, FRv39, FRv40, FRv42, FRv45
-// 			weight = 0.16 + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0)); 
+			weight = 0.16 + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0)); 
 
 			//FRvMuEtatest - model after Clints eta dependence - central=FRv30CR2			
 // 			weight = ( 0.16 - 3.849218e-18*eta_mu + 0.0257206*(eta_mu*eta_mu) ) + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0));
@@ -610,7 +610,7 @@ float Fr(int mode, std::vector<double> lep_info){
 // 			weight = 0.36 + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0)); 
 
 			//FRv47 FRSRHT400low2Dext
-			weight = 0.35 + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0)); 
+// 			weight = 0.35 + uFr(lep_info)*frModeBehavior(mode,lep_info.at(0)); 
 
 
 		} 
@@ -739,13 +739,13 @@ inline float uFr(std::vector<double> lep_info){
 // 		return sqrt(0.027*0.027);
 
 	 	//FRv45
-// 		return sqrt(0.026*0.026);
+		return sqrt(0.026*0.026);
 
 	 	//FRv46
 // 		return sqrt(0.03*0.03);
 
 	 	//FRv47
-		return sqrt(0.07*0.07);
+// 		return sqrt(0.07*0.07);
 
 	}
 	else{
@@ -811,13 +811,13 @@ inline float uFr(std::vector<double> lep_info){
 // 		return sqrt(0.028*0.028);
 
 	 	//FRv45
-// 		return sqrt(0.029*0.029);
+		return sqrt(0.029*0.029);
 
 	 	//FRv46
 // 		return sqrt(0.03*0.03);
 
 	 	//FRv47
-		return sqrt(0.1*0.1);
+// 		return sqrt(0.1*0.1);
 
 	}
 }
