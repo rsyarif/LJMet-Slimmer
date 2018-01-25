@@ -610,11 +610,11 @@ void step1::Loop()
 	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele15_IsoVVVL_PFHT400_Gsf_v3" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTrigger = 1;
 	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele15_IsoVVVL_PFHT400_Gsf_v4" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTrigger = 1;
 	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele15_IsoVVVL_PFHT400_Gsf_v5" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTrigger = 1;
-	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele27_WPTight_Gsf_v1" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTriggerAlt = 1;
-	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele27_WPTight_Gsf_v2" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTriggerAlt = 1;
-	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele27_WPTight_Gsf_v3" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTriggerAlt = 1;
-	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele27_WPTight_Gsf_v4" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTriggerAlt = 1;
-	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele27_WPTight_Gsf_v5" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTriggerAlt = 1;
+	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele32_eta2p1_WPTight_Gsf_v1" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTriggerAlt = 1;
+	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele32_eta2p1_WPTight_Gsf_v2" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTriggerAlt = 1;
+	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele32_eta2p1_WPTight_Gsf_v3" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTriggerAlt = 1;
+	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele32_eta2p1_WPTight_Gsf_v4" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTriggerAlt = 1;
+	      if(vsSelMCTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele32_eta2p1_WPTight_Gsf_v5" && viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) MCPastTriggerAlt = 1;
 	    }
 	  }else{
 	    MCPastTrigger = 1;
@@ -650,33 +650,38 @@ void step1::Loop()
 	  else if(lepeta < 2.4) EGammaGsfSF = 0.967;
 	  else EGammaGsfSF = 0.884;
 	  
-	  // Ele27_eta2p1 -- 80X DATA EFFICIENCIES
-	  if(leppt < 45){
-            if(fabs(lepeta) < 0.8) TrigEffWeight = 0.811; // 
-            else if(fabs(lepeta) < 1.442) TrigEffWeight = 0.832;
-            else if(fabs(lepeta) < 1.566) TrigEffWeight = 0.758;
-            else TrigEffWeight = 0.772;
-          }else if(leppt < 50){
-	    if(fabs(lepeta) < 0.8) TrigEffWeight = 0.844; // 
-	    else if(fabs(lepeta) < 1.442) TrigEffWeight = 0.860;
-	    else if(fabs(lepeta) < 1.566) TrigEffWeight = 0.776;
-	    else TrigEffWeight = 0.789;
+	  // Ele27_WPTight -- 80X DATA EFFICIENCIES. SHOULD WORK OK FOR Ele32 given offline cut
+	  if(leppt < 40){
+	    if(fabs(lepeta) < 0.8) TrigEffWeight = 0.604; // 
+	    else if(fabs(lepeta) < 1.442) TrigEffWeight = 0.580;
+	    else if(fabs(lepeta) < 1.566) TrigEffWeight = 0.433;
+	    else TrigEffWeight = 0.562;
+	  }else if(leppt < 50){
+	    if(fabs(lepeta) < 0.8) TrigEffWeight = 0.693; // 
+	    else if(fabs(lepeta) < 1.442) TrigEffWeight = 0.678;
+	    else if(fabs(lepeta) < 1.566) TrigEffWeight = 0.557;
+	    else TrigEffWeight = 0.671;
 	  }else if(leppt < 60){
-	    if(fabs(lepeta) < 0.8) TrigEffWeight = 0.861; // 
-	    else if(fabs(lepeta) < 1.442) TrigEffWeight = 0.873;
-	    else if(fabs(lepeta) < 1.566) TrigEffWeight = 0.782;
-	    else TrigEffWeight = 0.796;
-	  }else if(leppt < 70){
-	    if(fabs(lepeta) < 0.8) TrigEffWeight = 0.877; // 
-	    else if(fabs(lepeta) < 1.442) TrigEffWeight = 0.885;
-	    else if(fabs(lepeta) < 1.566) TrigEffWeight = 0.779;
+	    if(fabs(lepeta) < 0.8) TrigEffWeight = 0.723; // 
+	    else if(fabs(lepeta) < 1.442) TrigEffWeight = 0.710;
+	    else if(fabs(lepeta) < 1.566) TrigEffWeight = 0.579;
 	    else TrigEffWeight = 0.798;
 	  }else if(leppt < 90){
 	    if(fabs(lepeta) < 0.8) TrigEffWeight = 0.887; // 
 	    else if(fabs(lepeta) < 1.442) TrigEffWeight = 0.893;
 	    else if(fabs(lepeta) < 1.566) TrigEffWeight = 0.750;
 	    else TrigEffWeight = 0.799;
-	  }else if(leppt < 130){
+	  }else if(leppt < 120){
+	    if(fabs(lepeta) < 0.8) TrigEffWeight = 0.900; // 
+	    else if(fabs(lepeta) < 1.442) TrigEffWeight = 0.901;
+	    else if(fabs(lepeta) < 1.566) TrigEffWeight = 0.774;
+	    else TrigEffWeight = 0.809;
+	  }else if(leppt < 150){
+	    if(fabs(lepeta) < 0.8) TrigEffWeight = 0.900; // 
+	    else if(fabs(lepeta) < 1.442) TrigEffWeight = 0.901;
+	    else if(fabs(lepeta) < 1.566) TrigEffWeight = 0.774;
+	    else TrigEffWeight = 0.809;
+	  }else if(leppt < 200){
 	    if(fabs(lepeta) < 0.8) TrigEffWeight = 0.900; // 
 	    else if(fabs(lepeta) < 1.442) TrigEffWeight = 0.901;
 	    else if(fabs(lepeta) < 1.566) TrigEffWeight = 0.774;
@@ -726,7 +731,7 @@ void step1::Loop()
 	    else isoSF = 1.001;
 	  }
 	  
-	  //MVA-based ID scale factors (non-triggering): http://fcouderc.web.cern.ch/fcouderc/EGamma/scaleFactors/ichep2016_80X//resultsEleID/runBCD/passingMVA80/egammaEffi.txt_egammaPlots.pdf
+	  //MVA-based ID scale factors for 76X-trained MVA (NOT the "new one"): http://fcouderc.web.cern.ch/fcouderc/EGamma/scaleFactors/ichep2016_80X//resultsEleID/runBCD/passingMVA80/egammaEffi.txt_egammaPlots.pdf 
 	  if(lepeta < -2.0){
 	    if(leppt < 30) lepIdSF = 0.863;
 	    else if(leppt < 40) lepIdSF = 0.915;
@@ -863,64 +868,66 @@ void step1::Loop()
 
 	  MuTrkSF = tracksf[ebin];
 
-	  //Mini-iso < 0.2 SFs from SUSY Lepton SF: https://jrgonzal.web.cern.ch/jrgonzal/MuonSF/4.MiniIso0.2_Loose/TnP_MuonID_NUM_MiniIsoTight_DENOM_LooseID_VAR_map_pt_eta.png
+	  //Mini-iso < 0.2 scale factors for ReReco B-H / Spring16MC from Clint's Dec 4th workshop talk
 	  if(leppt < 40){
-	    if(fabs(lepeta) < 0.9) isoSF= 0.999;
-	    else if(fabs(lepeta) <  1.2) isoSF= 1.000;
-	    else if(fabs(lepeta) <  2.1) isoSF= 0.999;
-	    else if(fabs(lepeta) <  2.4) isoSF= 1.000;
+	    if(fabs(lepeta) < 0.9) isoSF= 0.996;
+	    else if(fabs(lepeta) <  1.2) isoSF= 0.996;
+	    else if(fabs(lepeta) <  2.1) isoSF= 0.997;
+	    else if(fabs(lepeta) <  2.4) isoSF= 0.998;
 	  }
 	  else if(leppt < 50){
-	    if(fabs(lepeta) < 0.9) isoSF= 1.000;
-	    else if(fabs(lepeta) <  1.2) isoSF= 1.000;
+	    if(fabs(lepeta) < 0.9) isoSF= 0.999;
+	    else if(fabs(lepeta) <  1.2) isoSF= 0.998;
 	    else if(fabs(lepeta) <  2.1) isoSF= 0.999;
-	    else if(fabs(lepeta) <  2.4) isoSF= 1.000;
+	    else if(fabs(lepeta) <  2.4) isoSF= 0.999;
 	  }
 	  else if(leppt < 60){
-	    if(fabs(lepeta) < 0.9) isoSF= 1.000;
-	    else if(fabs(lepeta) <  1.2) isoSF= 1.000;
-	    else if(fabs(lepeta) <  2.1) isoSF= 1.000;
+	    if(fabs(lepeta) < 0.9) isoSF= 0.999;
+	    else if(fabs(lepeta) <  1.2) isoSF= 0.999;
+	    else if(fabs(lepeta) <  2.1) isoSF= 0.999;
+	    else if(fabs(lepeta) <  2.4) isoSF= 0.999;
+	  }
+	  else if(leppt < 100){
+	    if(fabs(lepeta) < 0.9) isoSF= 0.999;
+	    else if(fabs(lepeta) <  1.2) isoSF= 0.999;
+	    else if(fabs(lepeta) <  2.1) isoSF= 0.999;
 	    else if(fabs(lepeta) <  2.4) isoSF= 1.000;
 	  }
 	  else{
 	    if(fabs(lepeta) < 0.9) isoSF= 1.000;
-	    else if(fabs(lepeta) <  1.2) isoSF= 0.999;
+	    else if(fabs(lepeta) <  1.2) isoSF= 1.000;
 	    else if(fabs(lepeta) <  2.1) isoSF= 1.000;
-	    else if(fabs(lepeta) <  2.4) isoSF= 0.999;
+	    else if(fabs(lepeta) <  2.4) isoSF= 1.000;
 	  }
 	  
-	  //Cut-based ID scale factors from POG TWiki 7.6/fb: https://cmsdoc.cern.ch/cms/Physics/muon/ReferenceEfficiencies/Run2016/25ns/proviSFs_7p65/MuonID_Z_RunBCD_prompt80X_7p65.root
+	  //Cut-based Tight scale factors for ReReco B-H / Spring16MC from Clint's Dec 4th workshop talk
 	  if(fabs(lepeta) < 0.9){
-	    if(leppt < 30) lepIdSF = 0.971;
-	    else if(leppt < 40) lepIdSF = 0.976;
-	    else if(leppt < 50) lepIdSF = 0.976;
-	    else if(leppt < 60) lepIdSF = 0.972;
-	    else if(leppt < 100) lepIdSF = 0.974;
-	    else lepIdSF = 0.988;
+	    if(leppt < 40) lepIdSF = 0.953;
+	    else if(leppt < 50) lepIdSF = 0.954;
+	    else if(leppt < 60) lepIdSF = 0.947;
+	    else if(leppt < 100) lepIdSF = 0.932;
+	    else lepIdSF = 0.966;
 	  }
 	  else if(fabs(lepeta) < 1.2){
-	    if(leppt < 30) lepIdSF = 0.967;
-	    else if(leppt < 40) lepIdSF = 0.972;
-	    else if(leppt < 50) lepIdSF = 0.971;
-	    else if(leppt < 60) lepIdSF = 0.971;
-	    else if(leppt < 100) lepIdSF = 0.968;
-	    else lepIdSF = 1.027;
+	    if(leppt < 40) lepIdSF = 0.948;
+	    else if(leppt < 50) lepIdSF = 0.950;
+	    else if(leppt < 60) lepIdSF = 0.950;
+	    else if(leppt < 100) lepIdSF = 0.938;
+	    else lepIdSF = 0.962;
 	  }
 	  else if(fabs(lepeta) < 2.1){
-	    if(leppt < 30) lepIdSF = 0.990;
-	    else if(leppt < 40) lepIdSF = 0.990;
-	    else if(leppt < 50) lepIdSF = 0.991;
-	    else if(leppt < 60) lepIdSF = 0.992;
-	    else if(leppt < 100) lepIdSF = 0.990;
-	    else lepIdSF = 1.013;
+	    if(leppt < 40) lepIdSF = 0.975;
+	    else if(leppt < 50) lepIdSF = 0.976;
+	    else if(leppt < 60) lepIdSF = 0.972;
+	    else if(leppt < 100) lepIdSF = 0.958;
+	    else lepIdSF = 0.987;
 	  }
 	  else {
-	    if(leppt < 30) lepIdSF = 0.976;
-	    else if(leppt < 40) lepIdSF = 0.974;
-	    else if(leppt < 50) lepIdSF = 0.970;
-	    else if(leppt < 60) lepIdSF = 0.981;
-	    else if(leppt < 100) lepIdSF = 0.975;
-	    else lepIdSF = 0.918;
+	    if(leppt < 40) lepIdSF = 0.945;
+	    else if(leppt < 50) lepIdSF = 0.944;
+	    else if(leppt < 60) lepIdSF = 0.939;
+	    else if(leppt < 100) lepIdSF = 0.926;
+	    else lepIdSF = 0.944;
 	  }
 	}
       	DataPastTrigger = 1;
@@ -935,11 +942,11 @@ void step1::Loop()
 	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele15_IsoVVVL_PFHT400_v4" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTrigger = 1;
 	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele15_IsoVVVL_PFHT400_v5" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTrigger = 1;
 	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele15_IsoVVVL_PFHT400_v6" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTrigger = 1;
-	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele27_WPTight_Gsf_v1" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTriggerAlt = 1;
-	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele27_WPTight_Gsf_v2" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTriggerAlt = 1;
-	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele27_WPTight_Gsf_v3" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTriggerAlt = 1;
-	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele27_WPTight_Gsf_v4" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTriggerAlt = 1;
-	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele27_WPTight_Gsf_v5" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTriggerAlt = 1;
+	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele32_eta2p1_WPTight_Gsf_v1" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTriggerAlt = 1;
+	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele32_eta2p1_WPTight_Gsf_v2" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTriggerAlt = 1;
+	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele32_eta2p1_WPTight_Gsf_v3" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTriggerAlt = 1;
+	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele32_eta2p1_WPTight_Gsf_v4" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTriggerAlt = 1;
+	    if(vsSelTriggersEl_singleLepCalc->at(itrig) == "HLT_Ele32_eta2p1_WPTight_Gsf_v5" && viSelTriggersEl_singleLepCalc->at(itrig) > 0) DataPastTriggerAlt = 1;
 	  }
 	}
 	if(isMuon){

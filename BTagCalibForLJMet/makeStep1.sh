@@ -38,3 +38,7 @@ do
   fi
   rm ${FILE}
 done
+
+rm *.csv
+
+echo "FINISHED"
