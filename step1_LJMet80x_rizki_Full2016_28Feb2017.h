@@ -435,6 +435,7 @@ public :
    vector<double>  *elHcalPFClusterIso_singleLepCalc;
    vector<double>  *elHoE_singleLepCalc;
    vector<double>  *elMVAValue_singleLepCalc;
+   vector<double>  *elMVAValue_alt_singleLepCalc;
    vector<double>  *elMatchedEnergy_singleLepCalc;
    vector<double>  *elMatchedEta_singleLepCalc;
    vector<double>  *elMatchedPhi_singleLepCalc;
@@ -765,6 +766,7 @@ public :
    TBranch        *b_elHcalPFClusterIso_singleLepCalc;   //!
    TBranch        *b_elHoE_singleLepCalc;   //!
    TBranch        *b_elMVAValue_singleLepCalc;   //!
+   TBranch        *b_elMVAValue_alt_singleLepCalc;   //!
    TBranch        *b_elMatchedEnergy_singleLepCalc;   //!
    TBranch        *b_elMatchedEta_singleLepCalc;   //!
    TBranch        *b_elMatchedPhi_singleLepCalc;   //!
@@ -1154,6 +1156,7 @@ void step1::Init(TTree *tree)
    elHcalPFClusterIso_singleLepCalc = 0;
    elHoE_singleLepCalc = 0;
    elMVAValue_singleLepCalc = 0;
+   elMVAValue_alt_singleLepCalc = 0;
    elMatchedEnergy_singleLepCalc = 0;
    elMatchedEta_singleLepCalc = 0;
    elMatchedPhi_singleLepCalc = 0;
@@ -1489,6 +1492,7 @@ void step1::Init(TTree *tree)
    inputTree->SetBranchAddress("elHcalPFClusterIso_singleLepCalc", &elHcalPFClusterIso_singleLepCalc, &b_elHcalPFClusterIso_singleLepCalc);
    inputTree->SetBranchAddress("elHoE_singleLepCalc", &elHoE_singleLepCalc, &b_elHoE_singleLepCalc);
    inputTree->SetBranchAddress("elMVAValue_singleLepCalc", &elMVAValue_singleLepCalc, &b_elMVAValue_singleLepCalc);
+   inputTree->SetBranchAddress("elMVAValue_alt_singleLepCalc", &elMVAValue_alt_singleLepCalc, &b_elMVAValue_alt_singleLepCalc);
    inputTree->SetBranchAddress("elMatchedEnergy_singleLepCalc", &elMatchedEnergy_singleLepCalc, &b_elMatchedEnergy_singleLepCalc);
    inputTree->SetBranchAddress("elMatchedEta_singleLepCalc", &elMatchedEta_singleLepCalc, &b_elMatchedEta_singleLepCalc);
    inputTree->SetBranchAddress("elMatchedPhi_singleLepCalc", &elMatchedPhi_singleLepCalc, &b_elMatchedPhi_singleLepCalc);
