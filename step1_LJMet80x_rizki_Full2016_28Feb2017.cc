@@ -123,7 +123,9 @@ void step1::Loop()
    inputTree->SetBranchStatus("elMiniIso_singleLepCalc",1);
    inputTree->SetBranchStatus("elRelIso_singleLepCalc",1);
    inputTree->SetBranchStatus("elMVAValue_singleLepCalc",1);
+   inputTree->SetBranchStatus("elMVAValue_alt_singleLepCalc",1);
    inputTree->SetBranchStatus("elDxy_singleLepCalc",1);
+   inputTree->SetBranchStatus("elD0_singleLepCalc",1);
    inputTree->SetBranchStatus("elDZ_singleLepCalc",1);
    inputTree->SetBranchStatus("elCharge_singleLepCalc",1);
    inputTree->SetBranchStatus("elDEtaSCTkAtVtx_singleLepCalc",1);
@@ -133,7 +135,8 @@ void step1::Loop()
    inputTree->SetBranchStatus("elHoE_singleLepCalc",1);
    inputTree->SetBranchStatus("elEcalPFClusterIso_singleLepCalc",1);
    inputTree->SetBranchStatus("elHcalPFClusterIso_singleLepCalc",1);
-   
+   inputTree->SetBranchStatus("elNotConversion_singleLepCalc",1);
+
    //muons
    inputTree->SetBranchStatus("muPt_singleLepCalc",1);
    inputTree->SetBranchStatus("muEta_singleLepCalc",1);
@@ -284,7 +287,7 @@ void step1::Loop()
    std::vector<float> theJetAK8NjettinessTau3_JetSubCalc_PtOrdered;
    std::vector<float> theJetAK8MaxSubCSV_JetSubCalc_PtOrdered;
 
-//DEBUG - start
+   //ID and PtOrdered
    std::vector<float> AllLeptonElPt_PtOrdered;
    std::vector<float> AllLeptonElEta_PtOrdered;
    std::vector<float> AllLeptonElPhi_PtOrdered;
@@ -292,6 +295,8 @@ void step1::Loop()
    std::vector<float> AllLeptonElMiniIso_PtOrdered;
    std::vector<int> AllLeptonElFlavor_PtOrdered;
    std::vector<int> AllLeptonElIsTight_PtOrdered;
+   std::vector<float> AllLeptonElDxy_PtOrdered;
+   std::vector<float> AllLeptonElDz_PtOrdered;
    int AllLeptonElCount_PtOrdered;
 
    std::vector<float> AllLeptonMuPt_PtOrdered;
@@ -301,9 +306,9 @@ void step1::Loop()
    std::vector<float> AllLeptonMuMiniIso_PtOrdered;
    std::vector<int> AllLeptonMuFlavor_PtOrdered;
    std::vector<int> AllLeptonMuIsTight_PtOrdered;
+   std::vector<float> AllLeptonMuDxy_PtOrdered;
+   std::vector<float> AllLeptonMuDz_PtOrdered;
    int AllLeptonMuCount_PtOrdered;
-
-//DEBUG - end
 
    std::vector<float> AllLeptonPt_PtOrdered;
    std::vector<float> AllLeptonEta_PtOrdered;
@@ -314,6 +319,8 @@ void step1::Loop()
    std::vector<int> AllLeptonIsTight_PtOrdered;
    std::vector<int> AllLeptonCharge_PtOrdered;
    std::vector<int> AllLeptonIdx_PtOrdered;
+   std::vector<float> AllLeptonDxy_PtOrdered;
+   std::vector<float> AllLeptonDz_PtOrdered;
    int AllLeptonCount_PtOrdered;
    
    //PtOrderedOnly
@@ -324,6 +331,8 @@ void step1::Loop()
    std::vector<float> AllLeptonElMiniIso_PtOrderedOnly;
    std::vector<int> AllLeptonElFlavor_PtOrderedOnly;
    std::vector<int> AllLeptonElIsTight_PtOrderedOnly;
+   std::vector<float> AllLeptonElDxy_PtOrderedOnly;
+   std::vector<float> AllLeptonElDz_PtOrderedOnly;
 
    std::vector<float> AllLeptonMuPt_PtOrderedOnly;
    std::vector<float> AllLeptonMuEta_PtOrderedOnly;
@@ -332,6 +341,8 @@ void step1::Loop()
    std::vector<float> AllLeptonMuMiniIso_PtOrderedOnly;
    std::vector<int> AllLeptonMuFlavor_PtOrderedOnly;
    std::vector<int> AllLeptonMuIsTight_PtOrderedOnly;
+   std::vector<float> AllLeptonMuDxy_PtOrderedOnly;
+   std::vector<float> AllLeptonMuDz_PtOrderedOnly;
 
    std::vector<float> AllLeptonPt_PtOrderedOnly;
    std::vector<float> AllLeptonEta_PtOrderedOnly;
@@ -342,6 +353,8 @@ void step1::Loop()
    std::vector<int> AllLeptonIsTight_PtOrderedOnly;
    std::vector<int> AllLeptonCharge_PtOrderedOnly;
    std::vector<int> AllLeptonIdx_PtOrderedOnly;
+   std::vector<float> AllLeptonDxy_PtOrderedOnly;
+   std::vector<float> AllLeptonDz_PtOrderedOnly;
 
    //PtOrderedOnly_top3 (of default) -> re-sorting top 3 of default ordering.
    std::vector<float> AllLeptonElPt_PtOrderedOnly_top3;
@@ -486,8 +499,9 @@ void step1::Loop()
    outputTree->Branch("leptonDz_singleLepCalc",&leptonDz_singleLepCalc,"leptonDz_singleLepCalc/F");
    outputTree->Branch("leptonCharge_singleLepCalc",&leptonCharge_singleLepCalc,"leptonCharge_singleLepCalc/I");
    outputTree->Branch("elTrigPresel_singleLepCalc",&elTrigPresel_singleLepCalc,"elTrigPresel_singleLepCalc/I");
+   outputTree->Branch("elNotConversion_singleLepCalc",&elNotConversion_singleLepCalc,"elNotConversion_singleLepCalc/I");
 
-//DEBUG-start
+//electrons, ID and pt ordered
    outputTree->Branch("AllLeptonElPt_PtOrdered",&AllLeptonElPt_PtOrdered);
    outputTree->Branch("AllLeptonElEta_PtOrdered",&AllLeptonElEta_PtOrdered);
    outputTree->Branch("AllLeptonElPhi_PtOrdered",&AllLeptonElPhi_PtOrdered);
@@ -496,7 +510,10 @@ void step1::Loop()
    outputTree->Branch("AllLeptonElFlavor_PtOrdered",&AllLeptonElFlavor_PtOrdered);
    outputTree->Branch("AllLeptonElIsTight_PtOrdered",&AllLeptonElIsTight_PtOrdered);
    outputTree->Branch("AllLeptonElCount_PtOrdered",&AllLeptonElCount_PtOrdered,"AllLeptonElCount_PtOrdered/I");
+   outputTree->Branch("AllLeptonElDxy_PtOrdered",&AllLeptonElDxy_PtOrdered);
+   outputTree->Branch("AllLeptonElDz_PtOrdered",&AllLeptonElDz_PtOrdered);
 
+//electrons, pt ordered
    outputTree->Branch("AllLeptonElPt_PtOrderedOnly",&AllLeptonElPt_PtOrderedOnly);
    outputTree->Branch("AllLeptonElEta_PtOrderedOnly",&AllLeptonElEta_PtOrderedOnly);
    outputTree->Branch("AllLeptonElPhi_PtOrderedOnly",&AllLeptonElPhi_PtOrderedOnly);
@@ -504,7 +521,10 @@ void step1::Loop()
    outputTree->Branch("AllLeptonElMiniIso_PtOrderedOnly",&AllLeptonElMiniIso_PtOrderedOnly);
    outputTree->Branch("AllLeptonElFlavor_PtOrderedOnly",&AllLeptonElFlavor_PtOrderedOnly);
    outputTree->Branch("AllLeptonElIsTight_PtOrderedOnly",&AllLeptonElIsTight_PtOrderedOnly);
+   outputTree->Branch("AllLeptonElDxy_PtOrderedOnly",&AllLeptonElDxy_PtOrderedOnly);
+   outputTree->Branch("AllLeptonElDz_PtOrderedOnly",&AllLeptonElDz_PtOrderedOnly);
 
+//electrons, pt ordered only for top3
    outputTree->Branch("AllLeptonElPt_PtOrderedOnly_top3",&AllLeptonElPt_PtOrderedOnly_top3);
    outputTree->Branch("AllLeptonElEta_PtOrderedOnly_top3",&AllLeptonElEta_PtOrderedOnly_top3);
    outputTree->Branch("AllLeptonElPhi_PtOrderedOnly_top3",&AllLeptonElPhi_PtOrderedOnly_top3);
@@ -513,6 +533,7 @@ void step1::Loop()
    outputTree->Branch("AllLeptonElFlavor_PtOrderedOnly_top3",&AllLeptonElFlavor_PtOrderedOnly_top3);
    outputTree->Branch("AllLeptonElIsTight_PtOrderedOnly_top3",&AllLeptonElIsTight_PtOrderedOnly_top3);
 
+//muons, ID and pt ordered
    outputTree->Branch("AllLeptonMuPt_PtOrdered",&AllLeptonMuPt_PtOrdered);
    outputTree->Branch("AllLeptonMuEta_PtOrdered",&AllLeptonMuEta_PtOrdered);
    outputTree->Branch("AllLeptonMuPhi_PtOrdered",&AllLeptonMuPhi_PtOrdered);
@@ -521,7 +542,10 @@ void step1::Loop()
    outputTree->Branch("AllLeptonMuFlavor_PtOrdered",&AllLeptonMuFlavor_PtOrdered);
    outputTree->Branch("AllLeptonMuIsTight_PtOrdered",&AllLeptonMuIsTight_PtOrdered);
    outputTree->Branch("AllLeptonMuCount_PtOrdered",&AllLeptonMuCount_PtOrdered,"AllLeptonMuCount_PtOrdered/I");
+   outputTree->Branch("AllLeptonMuDxy_PtOrdered",&AllLeptonMuDxy_PtOrdered);
+   outputTree->Branch("AllLeptonMuDz_PtOrdered",&AllLeptonMuDz_PtOrdered);
 
+//muons, pt ordered
    outputTree->Branch("AllLeptonMuPt_PtOrderedOnly",&AllLeptonMuPt_PtOrderedOnly);
    outputTree->Branch("AllLeptonMuEta_PtOrderedOnly",&AllLeptonMuEta_PtOrderedOnly);
    outputTree->Branch("AllLeptonMuPhi_PtOrderedOnly",&AllLeptonMuPhi_PtOrderedOnly);
@@ -529,7 +553,10 @@ void step1::Loop()
    outputTree->Branch("AllLeptonMuMiniIso_PtOrderedOnly",&AllLeptonMuMiniIso_PtOrderedOnly);
    outputTree->Branch("AllLeptonMuFlavor_PtOrderedOnly",&AllLeptonMuFlavor_PtOrderedOnly);
    outputTree->Branch("AllLeptonMuIsTight_PtOrderedOnly",&AllLeptonMuIsTight_PtOrderedOnly);
+   outputTree->Branch("AllLeptonMuDxy_PtOrderedOnly",&AllLeptonMuDxy_PtOrderedOnly);
+   outputTree->Branch("AllLeptonMuDz_PtOrderedOnly",&AllLeptonMuDz_PtOrderedOnly);
 
+//muons, pt ordered only for top3
    outputTree->Branch("AllLeptonMuPt_PtOrderedOnly_top3",&AllLeptonMuPt_PtOrderedOnly_top3);
    outputTree->Branch("AllLeptonMuEta_PtOrderedOnly_top3",&AllLeptonMuEta_PtOrderedOnly_top3);
    outputTree->Branch("AllLeptonMuPhi_PtOrderedOnly_top3",&AllLeptonMuPhi_PtOrderedOnly_top3);
@@ -537,8 +564,8 @@ void step1::Loop()
    outputTree->Branch("AllLeptonMuMiniIso_PtOrderedOnly_top3",&AllLeptonMuMiniIso_PtOrderedOnly_top3);
    outputTree->Branch("AllLeptonMuFlavor_PtOrderedOnly_top3",&AllLeptonMuFlavor_PtOrderedOnly_top3);
    outputTree->Branch("AllLeptonMuIsTight_PtOrderedOnly_top3",&AllLeptonMuIsTight_PtOrderedOnly_top3);
-//DEBUG-end
 
+//leptons, ID and pt ordered
    outputTree->Branch("AllLeptonPt_PtOrdered",&AllLeptonPt_PtOrdered);
    outputTree->Branch("AllLeptonEta_PtOrdered",&AllLeptonEta_PtOrdered);
    outputTree->Branch("AllLeptonPhi_PtOrdered",&AllLeptonPhi_PtOrdered);
@@ -548,7 +575,11 @@ void step1::Loop()
    outputTree->Branch("AllLeptonIsTight_PtOrdered",&AllLeptonIsTight_PtOrdered);
    outputTree->Branch("AllLeptonCharge_PtOrdered",&AllLeptonCharge_PtOrdered);
    outputTree->Branch("AllLeptonCount_PtOrdered",&AllLeptonCount_PtOrdered,"AllLeptonCount_PtOrdered/I");
+   outputTree->Branch("AllLeptonDxy_PtOrdered",&AllLeptonDxy_PtOrdered);
+   outputTree->Branch("AllLeptonDz_PtOrdered",&AllLeptonDz_PtOrdered);
 
+
+//leptons, pt ordered
    outputTree->Branch("AllLeptonPt_PtOrderedOnly",&AllLeptonPt_PtOrderedOnly);
    outputTree->Branch("AllLeptonEta_PtOrderedOnly",&AllLeptonEta_PtOrderedOnly);
    outputTree->Branch("AllLeptonPhi_PtOrderedOnly",&AllLeptonPhi_PtOrderedOnly);
@@ -557,7 +588,10 @@ void step1::Loop()
    outputTree->Branch("AllLeptonFlavor_PtOrderedOnly",&AllLeptonFlavor_PtOrderedOnly);
    outputTree->Branch("AllLeptonIsTight_PtOrderedOnly",&AllLeptonIsTight_PtOrderedOnly);
    outputTree->Branch("AllLeptonCharge_PtOrderedOnly",&AllLeptonCharge_PtOrderedOnly);
+   outputTree->Branch("AllLeptonDxy_PtOrderedOnly",&AllLeptonDxy_PtOrderedOnly);
+   outputTree->Branch("AllLeptonDz_PtOrderedOnly",&AllLeptonDz_PtOrderedOnly);
 
+//leptons, pt ordered only for top3
    outputTree->Branch("AllLeptonPt_PtOrderedOnly_top3",&AllLeptonPt_PtOrderedOnly_top3);
    outputTree->Branch("AllLeptonEta_PtOrderedOnly_top3",&AllLeptonEta_PtOrderedOnly_top3);
    outputTree->Branch("AllLeptonPhi_PtOrderedOnly_top3",&AllLeptonPhi_PtOrderedOnly_top3);
@@ -889,6 +923,8 @@ void step1::Loop()
       std::vector<int> TightLeptonFlavor; // 0 - electron, 1 - muon
       std::vector<int> TightLeptonCharge; // 0 - electron, 1 - muon
       std::vector<int> TightLeptonIdx; // index in LJMet ntuple
+      std::vector<double> TightLeptonDxy;
+      std::vector<double> TightLeptonDz;
       std::vector<pair<double,int>> tightlepptindpair;      
 
       std::vector<double> LooseNotTightLeptonPt;
@@ -899,6 +935,8 @@ void step1::Loop()
       std::vector<int> LooseNotTightLeptonFlavor; // 0 - electron, 1 - muon
       std::vector<int> LooseNotTightLeptonCharge; // 0 - electron, 1 - muon
       std::vector<int> LooseNotTightLeptonIdx; // index in LJMet ntuple
+      std::vector<double> LooseNotTightLeptonDxy;
+      std::vector<double> LooseNotTightLeptonDz;
       std::vector<pair<double,int>> loosenottightlepptindpair;      
 
       std::vector<double> AllLeptonPt;
@@ -910,6 +948,8 @@ void step1::Loop()
       std::vector<int> AllLeptonIsTight; 
       std::vector<int> AllLeptonCharge;       
       std::vector<int> AllLeptonIdx; // index in LJMet ntuple
+      std::vector<double> AllLeptonDxy;
+      std::vector<double> AllLeptonDz;
       int AllLeptonCount = 0; 
       AllLeptonCount_PtOrdered = 0;
       AllLeptonElCount_PtOrdered = 0;
@@ -933,9 +973,13 @@ void step1::Loop()
 		bool isTightEl = false;
 		if(elMiniIso_singleLepCalc->at(iel) < 0.1){
 			//tight_electron_mva_cuts  = cms.vdouble(0.674,0.744,0.170), # 80X WP80 to recover efficiency of 74X WP80 - from LJMET
-		  if(fabs(elEta_singleLepCalc->at(iel)) <= 0.8 && elMVAValue_singleLepCalc->at(iel) > 0.674) isTightEl = true;
-		  else if(fabs(elEta_singleLepCalc->at(iel)) > 0.8 && fabs(elEta_singleLepCalc->at(iel)) <= 1.479 && elMVAValue_singleLepCalc->at(iel) > 0.744) isTightEl = true;
-		  else if(fabs(elEta_singleLepCalc->at(iel)) > 1.479 && fabs(elEta_singleLepCalc->at(iel)) <= 2.5 && elMVAValue_singleLepCalc->at(iel) > 0.170) isTightEl = true;
+// 		  if(fabs(elEta_singleLepCalc->at(iel)) <= 0.8 && elMVAValue_singleLepCalc->at(iel) > 0.674) isTightEl = true;
+// 		  else if(fabs(elEta_singleLepCalc->at(iel)) > 0.8 && fabs(elEta_singleLepCalc->at(iel)) <= 1.479 && elMVAValue_singleLepCalc->at(iel) > 0.744) isTightEl = true;
+// 		  else if(fabs(elEta_singleLepCalc->at(iel)) > 1.479 && fabs(elEta_singleLepCalc->at(iel)) <= 2.5 && elMVAValue_singleLepCalc->at(iel) > 0.170) isTightEl = true;
+		  //use MVAvalue_alt
+		  if(fabs(elEta_singleLepCalc->at(iel)) <= 0.8 && elMVAValue_alt_singleLepCalc->at(iel) > 0.674) isTightEl = true;
+		  else if(fabs(elEta_singleLepCalc->at(iel)) > 0.8 && fabs(elEta_singleLepCalc->at(iel)) <= 1.479 && elMVAValue_alt_singleLepCalc->at(iel) > 0.744) isTightEl = true;
+		  else if(fabs(elEta_singleLepCalc->at(iel)) > 1.479 && fabs(elEta_singleLepCalc->at(iel)) <= 2.5 && elMVAValue_alt_singleLepCalc->at(iel) > 0.170) isTightEl = true;
 		}
 		if(isTightEl){
 		  TightLeptonPt.push_back(elPt_singleLepCalc->at(iel));
@@ -946,6 +990,8 @@ void step1::Loop()
 		  TightLeptonFlavor.push_back(0);
 		  TightLeptonCharge.push_back(elCharge_singleLepCalc->at(iel));
 		  TightLeptonIdx.push_back(iel);
+		  TightLeptonDxy.push_back(elD0_singleLepCalc->at(iel));
+		  TightLeptonDz.push_back(elDZ_singleLepCalc->at(iel));
 
 		  tightlepptindpair.push_back(std::make_pair(elPt_singleLepCalc->at(iel),tightlepindex));
 		  tightlepindex++;
@@ -959,6 +1005,8 @@ void step1::Loop()
 		  AllLeptonCharge.push_back(elCharge_singleLepCalc->at(iel));
 		  AllLeptonIsTight.push_back(1);
 		  AllLeptonIdx.push_back(iel);
+		  AllLeptonDxy.push_back(elD0_singleLepCalc->at(iel));
+		  AllLeptonDz.push_back(elDZ_singleLepCalc->at(iel));
 
 		  alllepptindpair.push_back(std::make_pair(elPt_singleLepCalc->at(iel),alllepindex));
 		  alllepindex++;
@@ -968,9 +1016,13 @@ void step1::Loop()
 		bool isLooseEl = false;
 		if(elMiniIso_singleLepCalc->at(iel) < 0.4){
 			//loose_electron_mva_cuts  = cms.vdouble(-0.041,0.383,-0.515), # 80X WP90 to recover efficiency of 74X WP90 - from LJMET
-		  if(fabs(elEta_singleLepCalc->at(iel)) <= 0.8 && elMVAValue_singleLepCalc->at(iel) > -0.041) isLooseEl = true;
-		  else if(fabs(elEta_singleLepCalc->at(iel)) > 0.8 && fabs(elEta_singleLepCalc->at(iel)) <= 1.479 && elMVAValue_singleLepCalc->at(iel) > 0.383) isLooseEl = true;
-		  else if(fabs(elEta_singleLepCalc->at(iel)) > 1.479 && fabs(elEta_singleLepCalc->at(iel)) <= 2.5 && elMVAValue_singleLepCalc->at(iel) > -0.515) isLooseEl = true;
+// 		  if(fabs(elEta_singleLepCalc->at(iel)) <= 0.8 && elMVAValue_singleLepCalc->at(iel) > -0.041) isLooseEl = true;
+// 		  else if(fabs(elEta_singleLepCalc->at(iel)) > 0.8 && fabs(elEta_singleLepCalc->at(iel)) <= 1.479 && elMVAValue_singleLepCalc->at(iel) > 0.383) isLooseEl = true;
+// 		  else if(fabs(elEta_singleLepCalc->at(iel)) > 1.479 && fabs(elEta_singleLepCalc->at(iel)) <= 2.5 && elMVAValue_singleLepCalc->at(iel) > -0.515) isLooseEl = true;
+		  //use MVAValue_alt
+		  if(fabs(elEta_singleLepCalc->at(iel)) <= 0.8 && elMVAValue_alt_singleLepCalc->at(iel) > -0.041) isLooseEl = true;
+		  else if(fabs(elEta_singleLepCalc->at(iel)) > 0.8 && fabs(elEta_singleLepCalc->at(iel)) <= 1.479 && elMVAValue_alt_singleLepCalc->at(iel) > 0.383) isLooseEl = true;
+		  else if(fabs(elEta_singleLepCalc->at(iel)) > 1.479 && fabs(elEta_singleLepCalc->at(iel)) <= 2.5 && elMVAValue_alt_singleLepCalc->at(iel) > -0.515) isLooseEl = true;
 		}
 		if(!isTightEl && isLooseEl){
 		  LooseNotTightLeptonPt.push_back(elPt_singleLepCalc->at(iel));
@@ -981,6 +1033,8 @@ void step1::Loop()
 		  LooseNotTightLeptonFlavor.push_back(0);
 		  LooseNotTightLeptonCharge.push_back(elCharge_singleLepCalc->at(iel));
 		  LooseNotTightLeptonIdx.push_back(iel);
+		  LooseNotTightLeptonDxy.push_back(elD0_singleLepCalc->at(iel));
+		  LooseNotTightLeptonDz.push_back(elDZ_singleLepCalc->at(iel));
 		  
 		  loosenottightlepptindpair.push_back(std::make_pair(elPt_singleLepCalc->at(iel),loosenottightlepindex));
 		  loosenottightlepindex++;
@@ -994,6 +1048,8 @@ void step1::Loop()
 		  AllLeptonCharge.push_back(elCharge_singleLepCalc->at(iel));
 		  AllLeptonIsTight.push_back(0);
 		  AllLeptonIdx.push_back(iel);
+		  AllLeptonDxy.push_back(elD0_singleLepCalc->at(iel));
+		  AllLeptonDz.push_back(elDZ_singleLepCalc->at(iel));
 
 		  alllepptindpair.push_back(std::make_pair(elPt_singleLepCalc->at(iel),alllepindex));
 		  alllepindex++;
@@ -1022,6 +1078,8 @@ void step1::Loop()
 		  TightLeptonFlavor.push_back(1);
 		  TightLeptonCharge.push_back(muCharge_singleLepCalc->at(imu));
 		  TightLeptonIdx.push_back(imu);
+		  TightLeptonDxy.push_back(muDxy_singleLepCalc->at(imu));
+		  TightLeptonDz.push_back(muDz_singleLepCalc->at(imu));
 
 		  tightlepptindpair.push_back(std::make_pair(muPt_singleLepCalc->at(imu),tightlepindex));
 		  tightlepindex++;
@@ -1035,6 +1093,8 @@ void step1::Loop()
 		  AllLeptonCharge.push_back(muCharge_singleLepCalc->at(imu));
 		  AllLeptonIsTight.push_back(1);
 		  AllLeptonIdx.push_back(imu);
+		  AllLeptonDxy.push_back(muDxy_singleLepCalc->at(imu));
+		  AllLeptonDz.push_back(muDz_singleLepCalc->at(imu));
 
 		  alllepptindpair.push_back(std::make_pair(muPt_singleLepCalc->at(imu),alllepindex));
 		  alllepindex++;
@@ -1054,6 +1114,8 @@ void step1::Loop()
 		  LooseNotTightLeptonFlavor.push_back(1);
 		  LooseNotTightLeptonCharge.push_back(muCharge_singleLepCalc->at(imu));
 		  LooseNotTightLeptonIdx.push_back(imu);
+		  LooseNotTightLeptonDxy.push_back(muDxy_singleLepCalc->at(imu));
+		  LooseNotTightLeptonDz.push_back(muDz_singleLepCalc->at(imu));
 		  
 		  loosenottightlepptindpair.push_back(std::make_pair(muPt_singleLepCalc->at(imu),loosenottightlepindex));
 		  loosenottightlepindex++;
@@ -1067,6 +1129,8 @@ void step1::Loop()
 		  AllLeptonCharge.push_back(muCharge_singleLepCalc->at(imu));
 		  AllLeptonIsTight.push_back(0);
 		  AllLeptonIdx.push_back(imu);
+		  AllLeptonDxy.push_back(muDxy_singleLepCalc->at(imu));
+		  AllLeptonDz.push_back(muDz_singleLepCalc->at(imu));
 
 		  alllepptindpair.push_back(std::make_pair(muPt_singleLepCalc->at(imu),alllepindex));
 		  alllepindex++;
@@ -1092,6 +1156,8 @@ void step1::Loop()
       AllLeptonIsTight_PtOrdered.clear();      
       AllLeptonCharge_PtOrdered.clear();      
       AllLeptonIdx_PtOrdered.clear();      
+      AllLeptonDxy_PtOrdered.clear();      
+      AllLeptonDz_PtOrdered.clear();      
  
       //Pt ordering - for Tight leptons - then add to All leptons list/vector
       int Nel_tight = 0;
@@ -1128,6 +1194,8 @@ void step1::Loop()
       	AllLeptonIsTight_PtOrdered.push_back(1);
       	AllLeptonCharge_PtOrdered.push_back(TightLeptonCharge.at(tightlepptindpair[ilep].second));				
       	AllLeptonIdx_PtOrdered.push_back(TightLeptonIdx.at(tightlepptindpair[ilep].second));				
+		AllLeptonDxy_PtOrdered.push_back(TightLeptonDxy.at(tightlepptindpair[ilep].second));
+		AllLeptonDz_PtOrdered.push_back(TightLeptonDz.at(tightlepptindpair[ilep].second));
       	
       	if(alllepindex_top3 < 3) alllepptindpair_top3.push_back(std::make_pair(TightLeptonPt.at(tightlepptindpair[ilep].second),alllepindex_top3));
       	if(DEBUG)cout<<"appending Tight         :"<<"alllepindex_top3="<<alllepindex_top3<<", alllepptindpair_top3["<<alllepindex_top3<<"].first = "<<alllepptindpair_top3[alllepindex_top3].first<<", alllepptindpair_top3["<<alllepindex_top3<<"].second = "<<alllepptindpair_top3[alllepindex_top3].second<<endl;
@@ -1148,6 +1216,8 @@ void step1::Loop()
       	AllLeptonFlavor_PtOrdered.push_back(LooseNotTightLeptonFlavor.at(loosenottightlepptindpair[ilep].second));
       	AllLeptonIsTight_PtOrdered.push_back(0);
       	AllLeptonCharge_PtOrdered.push_back(LooseNotTightLeptonCharge.at(loosenottightlepptindpair[ilep].second));
+		AllLeptonDxy_PtOrdered.push_back(LooseNotTightLeptonDxy.at(loosenottightlepptindpair[ilep].second));
+		AllLeptonDz_PtOrdered.push_back(LooseNotTightLeptonDz.at(loosenottightlepptindpair[ilep].second));
 
       	if(alllepindex_top3 < 3) alllepptindpair_top3.push_back(std::make_pair(LooseNotTightLeptonPt.at(loosenottightlepptindpair[ilep].second),alllepindex_top3));
       	if(DEBUG)cout<<"appending LooseNotTight : alllepindex_top3="<<alllepindex_top3<<", alllepptindpair_top3["<<alllepindex_top3<<"].first = "<<alllepptindpair_top3[alllepindex_top3].first<<", alllepptindpair_top3["<<alllepindex_top3<<"].second = "<<alllepptindpair_top3[alllepindex_top3].second<<endl;
@@ -1163,6 +1233,8 @@ void step1::Loop()
       AllLeptonElMiniIso_PtOrdered.clear();
       AllLeptonElFlavor_PtOrdered.clear();
       AllLeptonElIsTight_PtOrdered.clear();      
+      AllLeptonElDxy_PtOrdered.clear();
+      AllLeptonElDz_PtOrdered.clear();
 
       AllLeptonMuPt_PtOrdered.clear();
       AllLeptonMuEta_PtOrdered.clear();
@@ -1171,6 +1243,8 @@ void step1::Loop()
       AllLeptonMuMiniIso_PtOrdered.clear();
       AllLeptonMuFlavor_PtOrdered.clear();
       AllLeptonMuIsTight_PtOrdered.clear();      
+      AllLeptonMuDxy_PtOrdered.clear();
+      AllLeptonMuDz_PtOrdered.clear();
       
       for(unsigned int ilep=0; ilep < AllLeptonPt_PtOrdered.size(); ilep++){
       	if(AllLeptonFlavor_PtOrdered.at(ilep)==0){
@@ -1181,6 +1255,8 @@ void step1::Loop()
 		  AllLeptonElMiniIso_PtOrdered.push_back(AllLeptonMiniIso_PtOrdered.at(ilep));
 		  AllLeptonElFlavor_PtOrdered.push_back(AllLeptonFlavor_PtOrdered.at(ilep));
 		  AllLeptonElIsTight_PtOrdered.push_back(AllLeptonIsTight_PtOrdered.at(ilep));            	
+		  AllLeptonElDxy_PtOrdered.push_back(AllLeptonDxy_PtOrdered.at(ilep));
+		  AllLeptonElDz_PtOrdered.push_back(AllLeptonDz_PtOrdered.at(ilep));
 		  AllLeptonElCount_PtOrdered++;            	
       	}
       	else{
@@ -1191,6 +1267,8 @@ void step1::Loop()
 		  AllLeptonMuMiniIso_PtOrdered.push_back(AllLeptonMiniIso_PtOrdered.at(ilep));
 		  AllLeptonMuFlavor_PtOrdered.push_back(AllLeptonFlavor_PtOrdered.at(ilep));
 		  AllLeptonMuIsTight_PtOrdered.push_back(AllLeptonIsTight_PtOrdered.at(ilep));            	      	
+		  AllLeptonMuDxy_PtOrdered.push_back(AllLeptonDxy_PtOrdered.at(ilep));
+		  AllLeptonMuDz_PtOrdered.push_back(AllLeptonDz_PtOrdered.at(ilep));
 		  AllLeptonMuCount_PtOrdered++;            	
       	}
       }
@@ -1210,6 +1288,8 @@ void step1::Loop()
       AllLeptonCharge_PtOrderedOnly.clear();
       AllLeptonIsTight_PtOrderedOnly.clear();
       AllLeptonIdx_PtOrderedOnly.clear();
+      AllLeptonDxy_PtOrderedOnly.clear();
+      AllLeptonDz_PtOrderedOnly.clear();
       if(DEBUG)cout<<"alllepptindpair.size() = "<<alllepptindpair.size()<<endl;
       for(unsigned int ilep=0; ilep < alllepptindpair.size(); ilep++){
       	if(DEBUG)cout<<"alllepptindpair["<<ilep<<"].first = "<<alllepptindpair[ilep].first<<", alllepptindpair["<<ilep<<"].second = "<<alllepptindpair[ilep].second<<endl;
@@ -1222,6 +1302,8 @@ void step1::Loop()
       	AllLeptonCharge_PtOrderedOnly.push_back(AllLeptonCharge.at(alllepptindpair[ilep].second));
       	AllLeptonIsTight_PtOrderedOnly.push_back(AllLeptonIsTight.at(alllepptindpair[ilep].second));
       	AllLeptonIdx_PtOrderedOnly.push_back(AllLeptonIdx.at(alllepptindpair[ilep].second));
+      	AllLeptonDxy_PtOrderedOnly.push_back(AllLeptonDxy.at(alllepptindpair[ilep].second));
+      	AllLeptonDz_PtOrderedOnly.push_back(AllLeptonDz.at(alllepptindpair[ilep].second));
       }           
 
       AllLeptonElPt_PtOrderedOnly.clear();
@@ -1231,6 +1313,8 @@ void step1::Loop()
       AllLeptonElMiniIso_PtOrderedOnly.clear();
       AllLeptonElFlavor_PtOrderedOnly.clear();
       AllLeptonElIsTight_PtOrderedOnly.clear();      
+      AllLeptonElDxy_PtOrderedOnly.clear();
+      AllLeptonElDz_PtOrderedOnly.clear();
 
       AllLeptonMuPt_PtOrderedOnly.clear();
       AllLeptonMuEta_PtOrderedOnly.clear();
@@ -1239,6 +1323,8 @@ void step1::Loop()
       AllLeptonMuMiniIso_PtOrderedOnly.clear();
       AllLeptonMuFlavor_PtOrderedOnly.clear();
       AllLeptonMuIsTight_PtOrderedOnly.clear();      
+      AllLeptonMuDxy_PtOrderedOnly.clear();
+      AllLeptonMuDz_PtOrderedOnly.clear();
 
       for(unsigned int ilep=0; ilep < AllLeptonPt_PtOrderedOnly.size(); ilep++){
       	if(AllLeptonFlavor_PtOrderedOnly.at(ilep)==0){
@@ -1249,6 +1335,8 @@ void step1::Loop()
 		  AllLeptonElMiniIso_PtOrderedOnly.push_back(AllLeptonMiniIso_PtOrderedOnly.at(ilep));
 		  AllLeptonElFlavor_PtOrderedOnly.push_back(AllLeptonFlavor_PtOrderedOnly.at(ilep));
 		  AllLeptonElIsTight_PtOrderedOnly.push_back(AllLeptonIsTight_PtOrderedOnly.at(ilep));            	
+		  AllLeptonElDxy_PtOrderedOnly.push_back(AllLeptonDxy_PtOrderedOnly.at(ilep));
+		  AllLeptonElDz_PtOrderedOnly.push_back(AllLeptonDz_PtOrderedOnly.at(ilep));
       	}
       	else{
 		  AllLeptonMuPt_PtOrderedOnly.push_back(AllLeptonPt_PtOrderedOnly.at(ilep));
@@ -1258,6 +1346,8 @@ void step1::Loop()
 		  AllLeptonMuMiniIso_PtOrderedOnly.push_back(AllLeptonMiniIso_PtOrderedOnly.at(ilep));
 		  AllLeptonMuFlavor_PtOrderedOnly.push_back(AllLeptonFlavor_PtOrderedOnly.at(ilep));
 		  AllLeptonMuIsTight_PtOrderedOnly.push_back(AllLeptonIsTight_PtOrderedOnly.at(ilep));            	      	
+		  AllLeptonMuDxy_PtOrderedOnly.push_back(AllLeptonDxy_PtOrderedOnly.at(ilep));
+		  AllLeptonMuDz_PtOrderedOnly.push_back(AllLeptonDz_PtOrderedOnly.at(ilep));
       	}
       }
       if(DEBUG)cout<<"DONE sorting all leps by pt only"<<endl;
@@ -1346,7 +1436,7 @@ void step1::Loop()
       			if(AllLeptonIsTight_PtOrdered.at(ilep)==1) Nmu_tight_top3++;
       		}
       	}
-      	if(DEBUGleptons)std::cout<< "DEFAULT ordering: ilep = " << ilep << ", flavor = " << AllLeptonFlavor_PtOrdered.at(ilep) << ", charge = " << AllLeptonCharge_PtOrdered.at(ilep) << ", pT = "<< AllLeptonPt_PtOrdered.at(ilep)  << ", Eta = "<< AllLeptonEta_PtOrdered.at(ilep)  << ", isTight = " << AllLeptonIsTight_PtOrdered.at(ilep) <<", miniIso = " << AllLeptonMiniIso_PtOrdered.at(ilep) << endl; 
+      	if(DEBUGleptons)std::cout<< "DEFAULT ordering: ilep = " << ilep << ", flavor = " << AllLeptonFlavor_PtOrdered.at(ilep) << ", charge = " << AllLeptonCharge_PtOrdered.at(ilep) << ", pT = "<< AllLeptonPt_PtOrdered.at(ilep)  << ", Eta = "<< AllLeptonEta_PtOrdered.at(ilep)  << ", isTight = " << AllLeptonIsTight_PtOrdered.at(ilep) <<", miniIso = " << AllLeptonMiniIso_PtOrdered.at(ilep) <<", Dxy = " << AllLeptonDxy_PtOrdered.at(ilep) <<", Dz = " << AllLeptonDz_PtOrdered.at(ilep) << endl; 
       }
 
       if(DEBUGleptons){ for(unsigned int ilep=0; ilep < AllLeptonPt_PtOrderedOnly.size(); ilep++){std::cout<< "PT ORDERED ONLY : ilep = " << ilep << ", flavor = " << AllLeptonFlavor_PtOrderedOnly.at(ilep) << ", charge = " << AllLeptonCharge_PtOrderedOnly.at(ilep) << ", pT = "<< AllLeptonPt_PtOrderedOnly.at(ilep)  << ", Eta = "<< AllLeptonEta_PtOrderedOnly.at(ilep)  << ", isTight = " << AllLeptonIsTight_PtOrderedOnly.at(ilep) <<", miniIso = " << AllLeptonMiniIso_PtOrderedOnly.at(ilep) << endl; } }
