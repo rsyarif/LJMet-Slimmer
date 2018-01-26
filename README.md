@@ -1,4 +1,4 @@
-# LJMet-Slimmer
+# LJMet-Slimmer - implementing XCone in single lepton -  25 January, 2018. - Rizki
 
 Code (step1.cc/.h) to slim LJMet trees. Built on ROOT's MakeClass.
 
