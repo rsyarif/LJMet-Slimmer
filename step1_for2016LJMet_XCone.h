@@ -269,6 +269,7 @@ public :
    vector<double>  theXConeJetPhi_XConeCalc_PtOrdered;
    vector<double>  theXConeJetEnergy_XConeCalc_PtOrdered;
    vector<double>  theXConeJetArea_XConeCalc_PtOrdered;
+   vector<double>  theXConeJetPseudoBTag_XConeCalc_PtOrdered;
    Int_t           NXConePUPPIJets;
    Double_t        XConePUPPIHT;
    vector<double>  theXConePUPPIJetPt_XConeCalc_PtOrdered;
@@ -276,6 +277,31 @@ public :
    vector<double>  theXConePUPPIJetPhi_XConeCalc_PtOrdered;
    vector<double>  theXConePUPPIJetEnergy_XConeCalc_PtOrdered;
    vector<double>  theXConePUPPIJetArea_XConeCalc_PtOrdered;   
+
+   Float_t        maxMlep3XConeJets;
+   Float_t        Mlep3closeXConeJets;
+   Float_t        MlepClosestXConeJet;
+   Float_t        minMleppXConeJet;
+   Float_t        minDR_lepXConeJet;
+   Float_t        ptRel_lepXConeJet;
+   vector<double>  deltaR_lepXConeJets;
+   vector<double>  deltaR_lepClosestXConeSys_XConeJets;
+   Float_t        MassWcand1CloseXCone;
+   Float_t        MassWcand2CloseXCone;
+   Float_t        MassWcand1XCone1;
+   Float_t        MassWcand1XCone2;
+   Float_t        MassWcand1XCone3;
+   Float_t        MassWcand2XCone1;
+   Float_t        MassWcand2XCone2;
+   Float_t        MassWcand2XCone3;
+   Float_t        MassWcandAveXCone1;
+   Float_t        MassWcandAveXCone2;
+   Float_t        MassWcandAveXCone3;
+   Float_t        MassWcand1BTagXCone;
+   Float_t        MassWcand2BTagXCone;
+   Float_t        Mass1XCone123;
+   Float_t        Mass2XCone123;
+   Float_t        M_WcandBTagXCone_XCone123;
    //XCone -end
 
 

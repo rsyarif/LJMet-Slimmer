@@ -28,6 +28,12 @@ ls -l *.root
 echo "xrdcp output for condor"
 for FILE in *.root
 do
+  #added by rizki - start
+  if [ "$FILE" == "puppiCorr.root" ]; then
+      echo "Not copying $FILE."
+  continue
+  fi
+  #added by rizki - end
   echo "xrdcp -f ${FILE} root://cmseos.fnal.gov/${outputDir}/${FILE}"
   xrdcp -f ${FILE} root://cmseos.fnal.gov/${outputDir}/${FILE} 2>&1
   XRDEXIT=$?

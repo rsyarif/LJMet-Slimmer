@@ -19,6 +19,8 @@ using namespace std;
 // Define functions
 // ----------------------------------------------------------------------------
 
+bool DEBUG = false;
+
 bool comparepair( const std::pair<double,int> a, const std::pair<double,int> b) { return a.first > b.first; }
 
 TRandom3 Rand;
@@ -652,6 +654,7 @@ void step1::Loop()
    outputTree->Branch("theXConeJetPhi_XConeCalc_PtOrdered",&theXConeJetPhi_XConeCalc_PtOrdered);
    outputTree->Branch("theXConeJetEnergy_XConeCalc_PtOrdered",&theXConeJetEnergy_XConeCalc_PtOrdered);
    outputTree->Branch("theXConeJetArea_XConeCalc_PtOrdered",&theXConeJetArea_XConeCalc_PtOrdered);
+   outputTree->Branch("theXConeJetPseudoBTag_XConeCalc_PtOrdered",&theXConeJetPseudoBTag_XConeCalc_PtOrdered);
    outputTree->Branch("theXConePUPPIJetPt_XConeCalc_PtOrdered",&theXConePUPPIJetPt_XConeCalc_PtOrdered);
    outputTree->Branch("theXConePUPPIJetEta_XConeCalc_PtOrdered",&theXConePUPPIJetEta_XConeCalc_PtOrdered);
    outputTree->Branch("theXConePUPPIJetPhi_XConeCalc_PtOrdered",&theXConePUPPIJetPhi_XConeCalc_PtOrdered);
@@ -668,6 +671,33 @@ void step1::Loop()
    outputTree->Branch("TrigEffWeightRMA",&TrigEffWeightRMA,"TrigEffWeightRMA/D");
    outputTree->Branch("TrigEffWeightRMAUncert",&TrigEffWeightRMAUncert,"TrigEffWeightRMAUncert/D");
    //taken from Julie's step2: /user_data/jhogan/CMSSW_7_4_14/src/step2_slim80X.cc - end
+   
+   //attempt to add some mas reconstruction with XCone - start
+   outputTree->Branch("maxMlep3XConeJets",&maxMlep3XConeJets,"maxMlep3XConeJets/F");
+   outputTree->Branch("Mlep3closeXConeJets",&Mlep3closeXConeJets,"Mlep3closeXConeJets/F");
+   outputTree->Branch("MlepClosestXConeJet",&MlepClosestXConeJet,"MlepClosestXConeJet/F");
+   outputTree->Branch("minMleppXConeJet",&minMleppXConeJet,"minMleppXConeJet/F");
+   outputTree->Branch("minDR_lepXConeJet",&minDR_lepXConeJet,"minDR_lepXConeJet/F");
+   outputTree->Branch("ptRel_lepXConeJet",&ptRel_lepXConeJet,"ptRel_lepXConeJet/F");
+   outputTree->Branch("deltaR_lepXConeJets",&deltaR_lepXConeJets);
+   outputTree->Branch("MassWcand1CloseXCone",&MassWcand1CloseXCone,"MassWcand1CloseXCone/F");
+   outputTree->Branch("MassWcand2CloseXCone",&MassWcand2CloseXCone,"MassWcand2CloseXCone/F");
+   outputTree->Branch("MassWcand1XCone1",&MassWcand1XCone1,"MassWcand1XCone1/F");
+   outputTree->Branch("MassWcand1XCone2",&MassWcand1XCone2,"MassWcand1XCone2/F");
+   outputTree->Branch("MassWcand1XCone3",&MassWcand1XCone3,"MassWcand1XCone3/F");
+   outputTree->Branch("MassWcand2XCone1",&MassWcand2XCone1,"MassWcand2XCone1/F");
+   outputTree->Branch("MassWcand2XCone2",&MassWcand2XCone2,"MassWcand2XCone2/F");
+   outputTree->Branch("MassWcand2XCone3",&MassWcand2XCone3,"MassWcand2XCone3/F");
+   outputTree->Branch("MassWcandAveXCone1",&MassWcandAveXCone1,"MassWcandAveXCone1/F");
+   outputTree->Branch("MassWcandAveXCone2",&MassWcandAveXCone2,"MassWcandAveXCone2/F");
+   outputTree->Branch("MassWcandAveXCone3",&MassWcandAveXCone3,"MassWcandAveXCone3/F");
+   outputTree->Branch("MassWcand1BTagXCone",&MassWcand1BTagXCone,"MassWcand1BTagXCone/F");
+   outputTree->Branch("MassWcand2BTagXCone",&MassWcand2BTagXCone,"MassWcand2BTagXCone/F");
+   outputTree->Branch("Mass1XCone123",&Mass1XCone123,"Mass1XCone123/F");
+   outputTree->Branch("Mass2XCone123",&Mass1XCone123,"Mass1XCone123/F");
+   outputTree->Branch("M_WcandBTagXCone_XCone123",&M_WcandBTagXCone_XCone123,"M_WcandBTagXCone_XCone123/F");
+   //attempt to add some mas reconstruction with XCone - end
+
 
   // ----------------------------------------------------------------------------
   // Define and initialize objects / cuts / efficiencies
@@ -1832,6 +1862,44 @@ void step1::Loop()
       }
 
       // ----------------------------------------------------------------------------
+      // Apply PseudoBtagging to XCone - by matching with Btagged AK4
+      // ----------------------------------------------------------------------------
+      if(DEBUG)std::cout << "----------------------------------------------------------------------------"<< std::endl; 
+      if(DEBUG)std::cout << "Apply PseudoBtagging to XCone - by matching with Btagged AK4"<<std::endl; 
+      if(DEBUG)std::cout << "----------------------------------------------------------------------------"<< std::endl; 
+
+      TLorentzVector xconejet_lv;
+      
+      //initialize
+      theXConeJetPseudoBTag_XConeCalc_PtOrdered.clear(); //initialize
+      for(int ixjet=0; ixjet < theXConeJetPt_XConeCalc_PtOrdered.size();ixjet++) theXConeJetPseudoBTag_XConeCalc_PtOrdered.push_back(0);//initialize
+
+      //loop ovef ak4 jet
+      if(DEBUG)std::cout << ""<< std::endl;; 
+      for(unsigned int iak4jet=0; iak4jet < theJetPt_JetSubCalc_PtOrdered.size(); iak4jet++){
+      	if(DEBUG)std::cout << iak4jet+1 << ". Ak4 pT: " << theJetPt_JetSubCalc_PtOrdered.at(iak4jet) << ", eta: " << theJetEta_JetSubCalc_PtOrdered.at(iak4jet) << ", isBTag: "<< theJetBTag_JetSubCalc_PtOrdered.at(iak4jet) << std::endl;
+      
+      	jet_lv.SetPtEtaPhiE(theJetPt_JetSubCalc_PtOrdered.at(iak4jet),theJetEta_JetSubCalc_PtOrdered.at(iak4jet),theJetPhi_JetSubCalc_PtOrdered.at(iak4jet),theJetEnergy_JetSubCalc_PtOrdered.at(iak4jet));
+
+		//find matching xcone jet and the index
+      	float minDR_ak4_xcone=1e8;
+      	int minDR_xcone_index=-999;
+		for(unsigned int ixjet=0; ixjet < theXConeJetPt_XConeCalc_PtOrdered.size(); ixjet++){
+			xconejet_lv.SetPtEtaPhiE(theXConeJetPt_XConeCalc_PtOrdered.at(ixjet),theXConeJetEta_XConeCalc_PtOrdered.at(ixjet),theXConeJetPhi_XConeCalc_PtOrdered.at(ixjet),theXConeJetEnergy_XConeCalc_PtOrdered.at(ixjet));
+			if(jet_lv.DeltaR(xconejet_lv) < minDR_ak4_xcone){ //minDR criteria
+				minDR_ak4_xcone = jet_lv.DeltaR(xconejet_lv);
+				minDR_xcone_index = ixjet;
+			}
+      		if(DEBUG)std::cout << " 			---> CHECKING WITH  XCone (DR:"<<jet_lv.DeltaR(xconejet_lv)<<") pT: " << theXConeJetPt_XConeCalc_PtOrdered.at(ixjet) << ", eta: " << theXConeJetEta_XConeCalc_PtOrdered.at(ixjet) << ", isBTag: "<< theXConeJetPseudoBTag_XConeCalc_PtOrdered.at(ixjet)<< std::endl;
+		}
+
+		if(theJetBTag_JetSubCalc_PtOrdered.at(iak4jet) && minDR_xcone_index>=0 ) theXConeJetPseudoBTag_XConeCalc_PtOrdered.at(minDR_xcone_index)=1; 		
+
+      	if(DEBUG && minDR_xcone_index>=0)std::cout << "  ---> match to ---> XCone pT: " << theXConeJetPt_XConeCalc_PtOrdered.at(minDR_xcone_index) << ", eta: " << theXConeJetEta_XConeCalc_PtOrdered.at(minDR_xcone_index) << ", isBTag: "<< theXConeJetPseudoBTag_XConeCalc_PtOrdered.at(minDR_xcone_index)<< std::endl;
+      	else if(DEBUG)std::cout << "no matching xcone found !" << std::endl;
+      }
+
+      // ----------------------------------------------------------------------------
       // Loop over XConePUPPI jets for calculations and pt ordering pair
       // ----------------------------------------------------------------------------
 
@@ -2132,7 +2200,7 @@ void step1::Loop()
         float SFantitop13TeV = TMath::Exp(0.0615-0.0005*genAntiTopPt);
         topPtWeight13TeV = TMath::Sqrt(SFtop13TeV*SFantitop13TeV);
       }
-/* commented by rizki     
+///* commented by rizki     
       // ----------------------------------------------------------------------------
       // W --> l nu with mass constraint
       // ----------------------------------------------------------------------------
@@ -2153,32 +2221,32 @@ void step1::Loop()
       
       TLorentzVector Wlv_1, Wlv_2, Wlv,lvTop, lvXTF;
       if(DETtmp >= 0) {
-	nuPz_1 = (-Btmp+TMath::Sqrt(DETtmp))/(2.0*Atmp);
-	nuPz_2 = (-Btmp-TMath::Sqrt(DETtmp))/(2.0*Atmp);
-	TLorentzVector Nulv_1(metpx,metpy,nuPz_1,TMath::Sqrt((metpt)*(metpt)+(nuPz_1)*(nuPz_1)));
-	TLorentzVector Nulv_2(metpx,metpy,nuPz_2,TMath::Sqrt((metpt)*(metpt)+(nuPz_2)*(nuPz_2)));
-	Wlv_1 = Nulv_1+lepton_lv;
-	Wlv_2 = Nulv_2+lepton_lv;
+		nuPz_1 = (-Btmp+TMath::Sqrt(DETtmp))/(2.0*Atmp);
+		nuPz_2 = (-Btmp-TMath::Sqrt(DETtmp))/(2.0*Atmp);
+		TLorentzVector Nulv_1(metpx,metpy,nuPz_1,TMath::Sqrt((metpt)*(metpt)+(nuPz_1)*(nuPz_1)));
+		TLorentzVector Nulv_2(metpx,metpy,nuPz_2,TMath::Sqrt((metpt)*(metpt)+(nuPz_2)*(nuPz_2)));
+		Wlv_1 = Nulv_1+lepton_lv;
+		Wlv_2 = Nulv_2+lepton_lv;
       }
       if(DETtmp < 0) {
-	nuPz_1 = (-Btmp)/(2.0*Atmp);
-	nuPz_2 = (-Btmp)/(2.0*Atmp);
-	double alpha = (lepton_lv.Px())*(metpx)/(metpt)+(lepton_lv.Py())*(metpy)/(metpt);
-	double Delta = (MW*MW)-(lepM*lepM);
-	Atmp = 4.0*((lepton_lv.Pz())*(lepton_lv.Pz())-(lepton_lv.Energy())*(lepton_lv.Energy())+(alpha*alpha));
-	Btmp = 4.0*alpha*Delta;
-	Ctmp = Delta*Delta;
-	DETtmp = Btmp*Btmp-4.0*Atmp*Ctmp;
-	double pTnu_1 = (-Btmp+TMath::Sqrt(DETtmp))/(2.0*Atmp);
-	double pTnu_2 = (-Btmp-TMath::Sqrt(DETtmp))/(2.0*Atmp);
-	TLorentzVector Nulv_1(metpx*(pTnu_1)/(metpt),metpy*(pTnu_1)/(metpt),nuPz_1,TMath::Sqrt((pTnu_1)*(pTnu_1)+(nuPz_1)*(nuPz_1)));
-	TLorentzVector Nulv_2(metpx*(pTnu_2)/(metpt),metpy*(pTnu_2)/(metpt),nuPz_2,TMath::Sqrt((pTnu_2)*(pTnu_2)+(nuPz_2)*(nuPz_2)));
-	Wlv_1 = Nulv_1+lepton_lv;
-	Wlv_2 = Nulv_2+lepton_lv;
-	if (fabs(Wlv_1.M()-MW) < fabs(Wlv_2.M()-MW)) Wlv_2 = Wlv_1;
-	else Wlv_1 = Wlv_2;
+		nuPz_1 = (-Btmp)/(2.0*Atmp);
+		nuPz_2 = (-Btmp)/(2.0*Atmp);
+		double alpha = (lepton_lv.Px())*(metpx)/(metpt)+(lepton_lv.Py())*(metpy)/(metpt);
+		double Delta = (MW*MW)-(lepM*lepM);
+		Atmp = 4.0*((lepton_lv.Pz())*(lepton_lv.Pz())-(lepton_lv.Energy())*(lepton_lv.Energy())+(alpha*alpha));
+		Btmp = 4.0*alpha*Delta;
+		Ctmp = Delta*Delta;
+		DETtmp = Btmp*Btmp-4.0*Atmp*Ctmp;
+		double pTnu_1 = (-Btmp+TMath::Sqrt(DETtmp))/(2.0*Atmp);
+		double pTnu_2 = (-Btmp-TMath::Sqrt(DETtmp))/(2.0*Atmp);
+		TLorentzVector Nulv_1(metpx*(pTnu_1)/(metpt),metpy*(pTnu_1)/(metpt),nuPz_1,TMath::Sqrt((pTnu_1)*(pTnu_1)+(nuPz_1)*(nuPz_1)));
+		TLorentzVector Nulv_2(metpx*(pTnu_2)/(metpt),metpy*(pTnu_2)/(metpt),nuPz_2,TMath::Sqrt((pTnu_2)*(pTnu_2)+(nuPz_2)*(nuPz_2)));
+		Wlv_1 = Nulv_1+lepton_lv;
+		Wlv_2 = Nulv_2+lepton_lv;
+		if (fabs(Wlv_1.M()-MW) < fabs(Wlv_2.M()-MW)) Wlv_2 = Wlv_1;
+		else Wlv_1 = Wlv_2;
       }
-      
+/* commented by rizki           
       // ----------------------------------------------------------------------------
       // top --> W b --> l nu b using W from above
       // ----------------------------------------------------------------------------
@@ -2188,26 +2256,26 @@ void step1::Loop()
       bool firstW = true;
       double MTop_1, MTop_2;
       for(unsigned int ijet=0; ijet < theJetPt_JetSubCalc_PtOrdered.size(); ijet++){
-	jet_lv.SetPtEtaPhiE(theJetPt_JetSubCalc_PtOrdered.at(ijet),theJetEta_JetSubCalc_PtOrdered.at(ijet),theJetPhi_JetSubCalc_PtOrdered.at(ijet),theJetEnergy_JetSubCalc_PtOrdered.at(ijet));
-	MTop_1 = (jet_lv + Wlv_1).M();
-	MTop_2 = (jet_lv + Wlv_2).M();
-	if(fabs(MTop_1 - MTOP) < dMTOP) {
-	  if(fabs(MTop_1 - MTOP) < fabs(MTop_2 - MTOP)) {
-	    firstW = true;
-	    topIndex = ijet;
-	    dMTOP = fabs(MTop_1 - MTOP);
-	  }
-	  else {
-	    firstW = false;
-	    topIndex = ijet;
-	    dMTOP = fabs(MTop_2 - MTOP);
-	  }
-	}
-	else if(fabs(MTop_2 - MTOP) < dMTOP) {
-	  firstW = false;
-	  topIndex = ijet;
-	  dMTOP = fabs(MTop_2 - MTOP);
-	}
+		jet_lv.SetPtEtaPhiE(theJetPt_JetSubCalc_PtOrdered.at(ijet),theJetEta_JetSubCalc_PtOrdered.at(ijet),theJetPhi_JetSubCalc_PtOrdered.at(ijet),theJetEnergy_JetSubCalc_PtOrdered.at(ijet));
+		MTop_1 = (jet_lv + Wlv_1).M();
+		MTop_2 = (jet_lv + Wlv_2).M();
+		if(fabs(MTop_1 - MTOP) < dMTOP) {
+		  if(fabs(MTop_1 - MTOP) < fabs(MTop_2 - MTOP)) {
+			firstW = true;
+			topIndex = ijet;
+			dMTOP = fabs(MTop_1 - MTOP);
+		  }
+		  else {
+			firstW = false;
+			topIndex = ijet;
+			dMTOP = fabs(MTop_2 - MTOP);
+		  }
+		}
+		else if(fabs(MTop_2 - MTOP) < dMTOP) {
+		  firstW = false;
+		  topIndex = ijet;
+		  dMTOP = fabs(MTop_2 - MTOP);
+		}
       }
 
       if(firstW) {Wlv = Wlv_1;}
@@ -2220,7 +2288,164 @@ void step1::Loop()
       topMass = lvTop.M();
       topPtGen = genTopPt;
       if(fabs(lvTop.Pt() - genTopPt) > fabs(lvTop.Pt() - genAntiTopPt)) topPtGen = genAntiTopPt;
-*/
+/*/
+      // ----------------------------------------------------------------------------
+      // Mass: W b --> l nu b using W from above + XCone -- added by Rizki
+      // ----------------------------------------------------------------------------
+      if(DEBUG)std::cout << "----------------------------------------------------------------------------"<< std::endl; 
+      if(DEBUG)std::cout << "Mass: W b --> l nu b using W from above + XCone -- added by Rizki"<<std::endl; 
+      if(DEBUG)std::cout << "----------------------------------------------------------------------------"<< std::endl; 
+
+//       TLorentzVector xconejet_lv;
+
+      int minDR_xcone_Wlv1 = 1e8;
+      int minDR_xcone_Wlv2 = 1e8;
+      TLorentzVector Wcand1BTagXCone_lv;
+      TLorentzVector Wcand2BTagXCone_lv;
+      MassWcand1BTagXCone = -99999;
+      MassWcand2BTagXCone = -99999;
+      int Wcand1BTagXCone_index = -1; //to keep record which xcone is already matched to Wcand1
+      int Wcand2BTagXCone_index = -1; //to keep record which xcone is already matched to Wcand2
+      for(unsigned int ijet=0; ijet < theXConeJetPt_XConeCalc_PtOrdered.size(); ijet++){
+		xconejet_lv.SetPtEtaPhiE(theXConeJetPt_XConeCalc_PtOrdered.at(ijet),theXConeJetEta_XConeCalc_PtOrdered.at(ijet),theXConeJetPhi_XConeCalc_PtOrdered.at(ijet),theXConeJetEnergy_XConeCalc_PtOrdered.at(ijet));
+
+		//atempt1 - closest xconeJet to Wlv.
+		if(xconejet_lv.DeltaR(Wlv_1)<minDR_xcone_Wlv1){
+			minDR_xcone_Wlv1 = xconejet_lv.DeltaR(Wlv_1);
+			MassWcand1CloseXCone = (xconejet_lv + Wlv_1).M();
+		}
+		if(xconejet_lv.DeltaR(Wlv_2)<minDR_xcone_Wlv2){
+			minDR_xcone_Wlv1 = xconejet_lv.DeltaR(Wlv_2);
+			MassWcand2CloseXCone = (xconejet_lv + Wlv_2).M();
+		}
+
+		//atempt2 - 3 highest pt XconeJets.
+		if(ijet==0){
+			MassWcand1XCone1 = (xconejet_lv + Wlv_1).M();
+			MassWcand2XCone1 = (xconejet_lv + Wlv_2).M();
+			MassWcandAveXCone1 = (MassWcand1XCone1+MassWcand2XCone1) / 2;
+		}
+		if(ijet==1){
+			MassWcand1XCone2 = (xconejet_lv + Wlv_1).M();
+			MassWcand2XCone2 = (xconejet_lv + Wlv_2).M();
+			MassWcandAveXCone2 = (MassWcand1XCone2+MassWcand2XCone2) / 2;
+		}
+		if(ijet==2){
+			MassWcand1XCone3 = (xconejet_lv + Wlv_1).M();
+			MassWcand2XCone3 = (xconejet_lv + Wlv_2).M();
+			MassWcandAveXCone3 = (MassWcand1XCone3+MassWcand2XCone3) / 2;
+		}
+
+		//atempt3 - closest pseudoBTagged xconeJet to Wlv.
+		if(theXConeJetPseudoBTag_XConeCalc_PtOrdered.at(ijet)==0) continue;
+		if(xconejet_lv.DeltaR(Wlv_1)<minDR_xcone_Wlv1){
+			minDR_xcone_Wlv1 = xconejet_lv.DeltaR(Wlv_1);
+			Wcand1BTagXCone_lv = (xconejet_lv + Wlv_1);
+			MassWcand1BTagXCone = (xconejet_lv + Wlv_1).M();
+			Wcand1BTagXCone_index = ijet;
+		}
+		if(xconejet_lv.DeltaR(Wlv_2)<minDR_xcone_Wlv2){
+			minDR_xcone_Wlv1 = xconejet_lv.DeltaR(Wlv_2);
+			Wcand2BTagXCone_lv = (xconejet_lv + Wlv_2);
+			MassWcand2BTagXCone = (xconejet_lv + Wlv_2).M();
+			Wcand2BTagXCone_index = ijet;
+		}
+
+      }
+
+      if(DEBUG)std::cout << "isSig		: "<< isSig  << std::endl;; 
+      if(DEBUG)std::cout << ""<< std::endl;; 
+
+      if(DEBUG)std::cout << "MassWcand1CloseXCone	: "<< MassWcand1CloseXCone << " GeV" << std::endl;; 
+      if(DEBUG)std::cout << "MassWcand2CloseXCone	: "<< MassWcand2CloseXCone << " GeV" << std::endl;; 
+      if(DEBUG)std::cout << ""<< std::endl;; 
+      if(DEBUG)std::cout << "MassWcandAveXCone1	: "<< MassWcandAveXCone1 << " GeV" << std::endl;; 
+      if(DEBUG)std::cout << "MassWcandAveXCone2	: "<< MassWcandAveXCone2 << " GeV" << std::endl;; 
+      if(DEBUG)std::cout << "MassWcandAveXCone3	: "<< MassWcandAveXCone3 << " GeV" << std::endl;; 
+      if(DEBUG)std::cout << ""<< std::endl;; 
+      if(DEBUG)std::cout << "MassWcand1XCone1	: "<< MassWcand1XCone1 << " GeV" << std::endl;; 
+      if(DEBUG)std::cout << "MassWcand1XCone2	: "<< MassWcand1XCone2 << " GeV" << std::endl;; 
+      if(DEBUG)std::cout << "MassWcand1XCone3	: "<< MassWcand1XCone3 << " GeV" << std::endl;; 
+      if(DEBUG)std::cout << ""<< std::endl;; 
+      if(DEBUG)std::cout << "MassWcand2XCone1	: "<< MassWcand2XCone1 << " GeV"<<std::endl;; 
+      if(DEBUG)std::cout << "MassWcand2XCone2	: "<< MassWcand2XCone2 << " GeV"<<std::endl;; 
+      if(DEBUG)std::cout << "MassWcand2XCone3	: "<< MassWcand2XCone3 << " GeV"<<std::endl;; 
+      if(DEBUG)std::cout << ""<< std::endl;; 
+      if(DEBUG)std::cout << "MassWcand1BTagXCone	: "<< MassWcand1BTagXCone << " GeV"<<std::endl;; 
+      if(DEBUG)std::cout << "MassWcand2BTagXCone	: "<< MassWcand2BTagXCone << " GeV"<<std::endl;; 
+
+      // ----------------------------------------------------------------------------
+      // Mass: Wcand + b + XCones  -- added by Rizki
+      // ----------------------------------------------------------------------------
+      if(DEBUG)std::cout << "----------------------------------------------------------------------------"<< std::endl; 
+      if(DEBUG)std::cout << "Mass: Wcand + b + XCones  -- added by Rizki"<<std::endl; 
+      if(DEBUG)std::cout << "----------------------------------------------------------------------------"<< std::endl; 
+
+      TLorentzVector xconejet_lv1,xconejet_lv2,xconejet_lv3;
+      Mass1XCone123 = -99999; // Mass of 3 hardest XCone excluding BTagXCone paired with Wcand1 -- intended be combined with with MassWcand1BTagXCone
+      Mass2XCone123 = -99999; // Mass of 3 hardest XCone excluding BTagXCone paired with Wcand2 -- intended be combined with with MassWcand2BTagXCone
+      int Mass1XCone123_indices[3]={-1,-1,-1};
+      int Mass2XCone123_indices[3]={-1,-1,-1};
+      float minDiff_MWcand1BXcone_M1XCone123=1e8;
+      float minDiff_MWcand2BXcone_M2XCone123=1e8;
+      if(DEBUG)std::cout << "XCone "<< Wcand1BTagXCone_index << " and " << Wcand2BTagXCone_index << " already  paired with Wcand1 and Wcand2 resp." << std::endl;
+      for(unsigned int ijet=0; ijet < theXConeJetPt_XConeCalc_PtOrdered.size(); ijet++){
+		xconejet_lv1.SetPtEtaPhiE(theXConeJetPt_XConeCalc_PtOrdered.at(ijet),theXConeJetEta_XConeCalc_PtOrdered.at(ijet),theXConeJetPhi_XConeCalc_PtOrdered.at(ijet),theXConeJetEnergy_XConeCalc_PtOrdered.at(ijet));	
+
+		for(unsigned int jjet=ijet+1; jjet < theXConeJetPt_XConeCalc_PtOrdered.size(); jjet++){
+			xconejet_lv2.SetPtEtaPhiE(theXConeJetPt_XConeCalc_PtOrdered.at(jjet),theXConeJetEta_XConeCalc_PtOrdered.at(jjet),theXConeJetPhi_XConeCalc_PtOrdered.at(jjet),theXConeJetEnergy_XConeCalc_PtOrdered.at(jjet));	
+
+			for(unsigned int kjet=jjet+1; kjet < theXConeJetPt_XConeCalc_PtOrdered.size(); kjet++){
+				xconejet_lv3.SetPtEtaPhiE(theXConeJetPt_XConeCalc_PtOrdered.at(kjet),theXConeJetEta_XConeCalc_PtOrdered.at(kjet),theXConeJetPhi_XConeCalc_PtOrdered.at(kjet),theXConeJetEnergy_XConeCalc_PtOrdered.at(kjet));	
+
+				if(DEBUG)std::cout << "CHECKING XCones : " << ijet << ", "<<jjet<< ", "<<kjet <<std::endl;
+				//skip xcone that already been paired with Wcand1
+				if(ijet!=Wcand1BTagXCone_index&&jjet!=Wcand1BTagXCone_index&&jjet!=Wcand1BTagXCone_index){
+					//only care about xcone combination that is closest to M(Wcand1+BXcone) 
+					if(fabs(Mass1XCone123-MassWcand1BTagXCone)<minDiff_MWcand1BXcone_M1XCone123){
+						if(DEBUG)std::cout << "	---> considering 3 XCones for Wcand1: " << ijet << ", "<<jjet<< ", "<<kjet <<std::endl;
+						Mass1XCone123 = (xconejet_lv1+xconejet_lv2+xconejet_lv3).M();
+						minDiff_MWcand1BXcone_M1XCone123 = fabs(Mass1XCone123-MassWcand1BTagXCone);
+						if(DEBUG)std::cout << "			---> minDiff_MWcand1BXcone_M2XCone123: " << minDiff_MWcand1BXcone_M1XCone123 <<std::endl;
+						Mass1XCone123_indices[0]=ijet;
+						Mass1XCone123_indices[1]=jjet;
+						Mass1XCone123_indices[2]=kjet;
+					}
+				}
+
+				//skip xcone that already been paired with Wcand1
+				if(ijet!=Wcand2BTagXCone_index&&jjet!=Wcand2BTagXCone_index&&jjet!=Wcand2BTagXCone_index){
+					//only care about xcone combination that is closest to M(Wcand1+BXcone) 
+					if(fabs(Mass2XCone123-MassWcand2BTagXCone)<minDiff_MWcand2BXcone_M2XCone123){
+						if(DEBUG)std::cout << "	---> considering 3 XCones for Wcand2: " << ijet << ", "<<jjet<< ", "<<kjet <<std::endl;
+						Mass2XCone123 = (xconejet_lv1+xconejet_lv2+xconejet_lv3).M();
+						minDiff_MWcand2BXcone_M2XCone123 = fabs(Mass2XCone123-MassWcand2BTagXCone);
+						if(DEBUG)std::cout << "			---> minDiff_MWcand2BXcone_M2XCone123: " << minDiff_MWcand2BXcone_M2XCone123 <<std::endl;
+						Mass2XCone123_indices[0]=ijet;
+						Mass2XCone123_indices[1]=jjet;
+						Mass2XCone123_indices[2]=kjet;
+					}
+				}
+			}
+		}
+      }
+
+      if(fabs(minDiff_MWcand1BXcone_M1XCone123)<fabs(minDiff_MWcand2BXcone_M2XCone123)){
+      	M_WcandBTagXCone_XCone123 = MassWcand1BTagXCone+Mass1XCone123;
+      }
+      else{
+      	M_WcandBTagXCone_XCone123 = MassWcand2BTagXCone+Mass2XCone123;
+      }
+      
+      if(M_WcandBTagXCone_XCone123 < 0) M_WcandBTagXCone_XCone123 = -999999;
+
+      if(DEBUG)std::cout << ""<< std::endl;			 
+      if(DEBUG)std::cout << "Mass1XCone"<<Mass1XCone123_indices[0]<<Mass1XCone123_indices[1]<<Mass1XCone123_indices[2]<<" = "<< Mass1XCone123 <<" GeV	| MassWcand1BTagXCone	: "<< MassWcand1BTagXCone << " GeV"<<std::endl;
+      if(DEBUG)std::cout << "Mass2XCone"<<Mass2XCone123_indices[0]<<Mass2XCone123_indices[1]<<Mass2XCone123_indices[2]<<" = "<< Mass2XCone123 <<" GeV	| MassWcand2BTagXCone	: "<< MassWcand2BTagXCone << " GeV"<<std::endl;
+
+      if(DEBUG)std::cout << "M_WcandBTagXCone_XCone123 = "<< M_WcandBTagXCone_XCone123<< " GeV" <<std::endl;			 
+      if(DEBUG)std::cout << ""<< std::endl;			 
+
       // ----------------------------------------------------------------------------
       // AK8 Jet - lepton associations, Top and W taggging
       // ----------------------------------------------------------------------------
@@ -3091,6 +3316,135 @@ void step1::Loop()
 	  ptRel_lepJet = lepton_lv.P()*(jet_lv.Vect().Cross(lepton_lv.Vect()).Mag()/jet_lv.P()/lepton_lv.P());
 	}
       }
+
+      // ----------------------------------------------------------------------------
+      // XCone Jet - lepton associations
+      // ----------------------------------------------------------------------------
+//       std::cout << "----------------------------------------------------------------------------"<< std::endl; 
+//       std::cout << "XCone Jet - lepton associations"<<std::endl; 
+//       std::cout << "----------------------------------------------------------------------------"<< std::endl; 
+
+      maxMlep3XConeJets = -1e8;
+      Mlep3closeXConeJets = -1e8;
+      MlepClosestXConeJet = -1e8;
+      minMleppXConeJet = 1e8;
+      minDR_lepXConeJet = 1e8;
+      ptRel_lepXConeJet = -99;
+      deltaR_lepXConeJets.clear();
+      deltaR_lepClosestXConeSys_XConeJets.clear();
+      
+      //TLorentzVector xconejet_lv;
+      TLorentzVector lepClosestXCone_lv;
+      TLorentzVector lep3closeXCone_lv;
+      TLorentzVector lep3XCone_lv;
+      TLorentzVector xconejet_2nd_lv;
+      TLorentzVector xconejet_3rd_lv;
+
+      int minDR_lepXConeJet_index = -99;
+
+      for(unsigned int ijet=0; ijet < theXConeJetPt_XConeCalc_PtOrdered.size(); ijet++){
+        xconejet_lv.SetPtEtaPhiE(theXConeJetPt_XConeCalc_PtOrdered.at(ijet),theXConeJetEta_XConeCalc_PtOrdered.at(ijet),theXConeJetPhi_XConeCalc_PtOrdered.at(ijet),theXConeJetEnergy_XConeCalc_PtOrdered.at(ijet));
+		if((lepton_lv + xconejet_lv).M() < minMleppXConeJet) {
+		  minMleppXConeJet = fabs((lepton_lv + xconejet_lv).M());
+		}
+
+		deltaR_lepXConeJets.push_back(lepton_lv.DeltaR(xconejet_lv));
+
+		if(deltaR_lepXConeJets[ijet] < minDR_lepXConeJet) {
+		  minDR_lepXConeJet = deltaR_lepXConeJets[ijet];
+		  ptRel_lepXConeJet = lepton_lv.P()*(xconejet_lv.Vect().Cross(lepton_lv.Vect()).Mag()/xconejet_lv.P()/lepton_lv.P());
+		  
+		  lepClosestXCone_lv = xconejet_lv + lepton_lv;
+		  minDR_lepXConeJet_index = ijet;
+		  lep3closeXCone_lv = xconejet_lv + lepton_lv;
+// 		  std::cout << "minDR_lepXConeJet_index	: "<< ijet ; 
+// 		  std::cout << ",	minDR_lepXConeJet	: "<< minDR_lepXConeJet << std::endl; 
+		}
+      }
+
+      //now find 2 XCone jets closest to lepClosestXConeJet system:
+      float minDR_XCone2Jet = 1e8;
+      int minDR_XCone2Jet_index = -99;
+      float minDR_XCone3Jet = 1e8;
+      int minDR_XCone3Jet_index = -99;
+
+//       std::cout << "Looping Xcone again to look for 2nd closest XCone jets to lep+closestXCone system: "<< std::endl; 
+      for(unsigned int ijet=0; ijet < theXConeJetPt_XConeCalc_PtOrdered.size(); ijet++){
+        xconejet_lv.SetPtEtaPhiE(theXConeJetPt_XConeCalc_PtOrdered.at(ijet),theXConeJetEta_XConeCalc_PtOrdered.at(ijet),theXConeJetPhi_XConeCalc_PtOrdered.at(ijet),theXConeJetEnergy_XConeCalc_PtOrdered.at(ijet));
+        
+		deltaR_lepClosestXConeSys_XConeJets.push_back(lepClosestXCone_lv.DeltaR(xconejet_lv));
+                
+        if(ijet == minDR_lepXConeJet_index){
+//         	std::cout << "skipping jet no	: "<< ijet ; 
+//         	std::cout << ",	dR	: "<< deltaR_lepXConeJets[ijet] << std::endl; 
+	        continue; //skip closest xconejet (to lepton).
+	    }
+
+		if( lepClosestXCone_lv.DeltaR(xconejet_lv) < minDR_XCone2Jet) {		  
+		  minDR_XCone2Jet_index = ijet;
+		  minDR_XCone2Jet = lepClosestXCone_lv.DeltaR(xconejet_lv);
+// 		  std::cout << "minDR_XCone2Jet_index	: "<< ijet ; 
+// 		  std::cout << ",	minDR_XCone2Jet	: "<< minDR_XCone2Jet << std::endl; 
+
+		  lep3closeXCone_lv = xconejet_lv + lepClosestXCone_lv; //adding 2nd XCone
+		}
+      }
+
+//       std::cout << "Looping Xcone again to look for 3rd closest XCone jets to lep+closestXCone system: "<< std::endl; 
+      for(unsigned int ijet=0; ijet < theXConeJetPt_XConeCalc_PtOrdered.size(); ijet++){
+        xconejet_lv.SetPtEtaPhiE(theXConeJetPt_XConeCalc_PtOrdered.at(ijet),theXConeJetEta_XConeCalc_PtOrdered.at(ijet),theXConeJetPhi_XConeCalc_PtOrdered.at(ijet),theXConeJetEnergy_XConeCalc_PtOrdered.at(ijet));
+                        
+        if(ijet == minDR_lepXConeJet_index){
+//         	std::cout << "skipping jet no	: "<< ijet ; 
+//         	std::cout << ",	dR	: "<< deltaR_lepXConeJets[ijet] << std::endl; 
+	        continue; //skip closest xconejet (to lepton).
+	    }
+
+        if(ijet == minDR_XCone2Jet_index){
+//         	std::cout << "skipping jet no	: "<< ijet; 
+//         	std::cout << ",	dR	: "<< deltaR_lepClosestXConeSys_XConeJets[ijet] << std::endl; 
+	        continue; //skip 2nd closest xconejet (to lepton+closestXconejet).
+	    }
+
+		if( lepClosestXCone_lv.DeltaR(xconejet_lv) < minDR_XCone3Jet) {		  
+		  minDR_XCone3Jet_index = ijet;
+		  minDR_XCone3Jet = lepClosestXCone_lv.DeltaR(xconejet_lv);
+// 		  std::cout << "minDR_XCone3Jet_index	: "<< ijet ; 
+// 		  std::cout << ",	minDR_XCone3Jet	: "<< minDR_XCone3Jet << std::endl; 
+
+		  lep3closeXCone_lv = xconejet_lv + lepClosestXCone_lv; //adding 3nd XCone
+		  Mlep3closeXConeJets = lep3closeXCone_lv.M();
+		}
+      }
+            
+//       std::cout << "Mlep3closeXConeJets	: "<< Mlep3closeXConeJets << std::endl; 
+
+      //alternatively,
+      for(unsigned int ijet=0; ijet < theXConeJetPt_XConeCalc_PtOrdered.size(); ijet++){
+        xconejet_2nd_lv.SetPtEtaPhiE(theXConeJetPt_XConeCalc_PtOrdered.at(ijet),theXConeJetEta_XConeCalc_PtOrdered.at(ijet),theXConeJetPhi_XConeCalc_PtOrdered.at(ijet),theXConeJetEnergy_XConeCalc_PtOrdered.at(ijet));
+                        
+        if(ijet == minDR_lepXConeJet_index){
+//         	std::cout << "skipping jet no	: "<< ijet ; 
+//         	std::cout << ",	dR	: "<< deltaR_lepXConeJets[ijet] << std::endl; 
+	        continue; //skip closest xconejet (to lepton).
+	    }
+
+	    for(unsigned int jjet=0; jjet < theXConeJetPt_XConeCalc_PtOrdered.size(); jjet++){
+	    	xconejet_3rd_lv.SetPtEtaPhiE(theXConeJetPt_XConeCalc_PtOrdered.at(jjet),theXConeJetEta_XConeCalc_PtOrdered.at(jjet),theXConeJetPhi_XConeCalc_PtOrdered.at(jjet),theXConeJetEnergy_XConeCalc_PtOrdered.at(jjet));
+	    	
+	    	if(jjet == minDR_lepXConeJet_index || jjet == ijet ) continue;
+
+		  	if( fabs( (lepClosestXCone_lv + xconejet_2nd_lv + xconejet_3rd_lv).M() ) > maxMlep3XConeJets ){
+		  		maxMlep3XConeJets  = fabs( (lepClosestXCone_lv + xconejet_2nd_lv + xconejet_3rd_lv).M() );
+//         		std::cout << " M(lep, xcone"<< minDR_lepXConeJet_index <<", xone"<< ijet <<", xcone"<< jjet <<")	: "<< maxMlep3XConeJets << std::endl;
+        	} 
+		  	
+		}
+
+      }
+
+//       std::cout << "maxMlep3XConeJets	: "<< maxMlep3XConeJets << std::endl; 
+
 
       // ----------------------------------------------------------------------------
       // PDF and Matrix Element energy scale weights
