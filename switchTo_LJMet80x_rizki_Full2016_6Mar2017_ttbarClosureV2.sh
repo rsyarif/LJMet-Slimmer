@@ -1,2 +1,0 @@
-cp -v step1_LJMet80x_rizki_Full2016_6Mar2017_ttbarClosureV2.cc step1.cc
-cp -v step1_LJMet80x_rizki_Full2016_6Mar2017_ttbarClosureV2.h step1.h

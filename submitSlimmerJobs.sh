@@ -6,14 +6,7 @@
 
 date
 
-# source switchTo_LJMet80x_rizki_Full2016_28Feb2017.sh #default for data 2016 analysis
-
-# source switchTo_LJMet80x_rizki_Full2016_6Mar2017_ttbarClosureV2.sh
-# source switchTo_LJMet80x_rizki_Full2016_15Mar2017_mcClosure.sh
-# source switchTo_LJMet80x_rizki_Full2016_18Apr2017_ttbarClosureV3.sh #use this for 1orMoreLeps -- Closure test
-# source switchTo_LJMet80x_rizki_Full2016_ddbkg_30Apr2017_ttbarClosureV4.sh #use this for ddbkg ttbar (3leps or more)
-# source switchTo_LJMet80x_rizki_Full2016_1orMoreLeps_10May2017_DYClosure.sh
-source switchTo_LJMet80x_rizki_Full2016_7Dec2017_ttG.sh #specifically looking at conversion rates
+source switchTo_LJMet94x_rizki_2017data_8Nov2018.sh #specifically looking at conversion rates
 
 echo "SUBMITTING nominal"
 

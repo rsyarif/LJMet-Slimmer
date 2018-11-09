@@ -11,8 +11,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-// #include "fakerate_3lep_rizki.h" //added by rizki
-#include "fakerate_3lep_ptEta_rizki.h" //added by rizki
+#include "fakerate.h" //added by rizki
 #include <cmath>
 
 using namespace std;
@@ -90,6 +89,8 @@ void step1::Loop()
    inputTree->SetBranchStatus("nPV_singleLepCalc",1);
    inputTree->SetBranchStatus("nTrueInteractions_singleLepCalc",1);
    inputTree->SetBranchStatus("MCWeight_singleLepCalc",1);
+   inputTree->SetBranchStatus("LHEweightids_singleLepCalc",1);
+   inputTree->SetBranchStatus("LHEweights_singleLepCalc",1);
 
    inputTree->SetBranchStatus("isTHBW_TpTpCalc",1);
    inputTree->SetBranchStatus("isTHTH_TpTpCalc",1);
@@ -103,6 +104,7 @@ void step1::Loop()
    inputTree->SetBranchStatus("isBZTW_TpTpCalc",1);
    inputTree->SetBranchStatus("isBZBH_TpTpCalc",1);
    inputTree->SetBranchStatus("isBZBZ_TpTpCalc",1);
+   inputTree->SetBranchStatus("tPrimePt_TpTpCalc",1);
    inputTree->SetBranchStatus("NLeptonDecays_TpTpCalc",1);
    
    //triggers
@@ -120,34 +122,36 @@ void step1::Loop()
    inputTree->SetBranchStatus("elEta_singleLepCalc",1);
    inputTree->SetBranchStatus("elPhi_singleLepCalc",1);
    inputTree->SetBranchStatus("elEnergy_singleLepCalc",1);
-   inputTree->SetBranchStatus("elMiniIso_singleLepCalc",1);
-   inputTree->SetBranchStatus("elRelIso_singleLepCalc",1);
-   inputTree->SetBranchStatus("elMVAValue_singleLepCalc",1);
-   inputTree->SetBranchStatus("elMVAValue_alt_singleLepCalc",1);
    inputTree->SetBranchStatus("elDxy_singleLepCalc",1);
    inputTree->SetBranchStatus("elD0_singleLepCalc",1);
    inputTree->SetBranchStatus("elDZ_singleLepCalc",1);
    inputTree->SetBranchStatus("elCharge_singleLepCalc",1);
-   inputTree->SetBranchStatus("elDEtaSCTkAtVtx_singleLepCalc",1);
-   inputTree->SetBranchStatus("elDPhiSCTkAtVtx_singleLepCalc",1);
-   inputTree->SetBranchStatus("elDR03TkSumPt_singleLepCalc",1);
-   inputTree->SetBranchStatus("elSihih_singleLepCalc",1);
-   inputTree->SetBranchStatus("elHoE_singleLepCalc",1);
-   inputTree->SetBranchStatus("elEcalPFClusterIso_singleLepCalc",1);
-   inputTree->SetBranchStatus("elHcalPFClusterIso_singleLepCalc",1);
-   inputTree->SetBranchStatus("elNotConversion_singleLepCalc",1);
+   inputTree->SetBranchStatus("elMVAValue_singleLepCalc",1);
+   inputTree->SetBranchStatus("elIsMVATight_singleLepCalc",1);
+   inputTree->SetBranchStatus("elIsMVALoose_singleLepCalc",1);
+   inputTree->SetBranchStatus("elMiniIso_singleLepCalc",1);
+   inputTree->SetBranchStatus("elIsTightBarrel_singleLepCalc",1);
+   inputTree->SetBranchStatus("elIsMediumBarrel_singleLepCalc",1);
+   inputTree->SetBranchStatus("elIsLooseBarrel_singleLepCalc",1);
+   inputTree->SetBranchStatus("elIsVetoBarrel_singleLepCalc",1);
+   inputTree->SetBranchStatus("elIsTIghtEndCap_singleLepCalc",1);
+   inputTree->SetBranchStatus("elIsMediumEndCap_singleLepCalc",1);
+   inputTree->SetBranchStatus("elIsLooseEndCap_singleLepCalc",1);
+   inputTree->SetBranchStatus("elIsVetoEndCap_singleLepCalc",1);
 
    //muons
    inputTree->SetBranchStatus("muPt_singleLepCalc",1);
    inputTree->SetBranchStatus("muEta_singleLepCalc",1);
    inputTree->SetBranchStatus("muPhi_singleLepCalc",1);
    inputTree->SetBranchStatus("muEnergy_singleLepCalc",1);
-   inputTree->SetBranchStatus("muMiniIso_singleLepCalc",1);
-   inputTree->SetBranchStatus("muRelIso_singleLepCalc",1);
-   inputTree->SetBranchStatus("muIsTight_singleLepCalc",1);
    inputTree->SetBranchStatus("muDxy_singleLepCalc",1);
    inputTree->SetBranchStatus("muDz_singleLepCalc",1);
    inputTree->SetBranchStatus("muCharge_singleLepCalc",1);
+   inputTree->SetBranchStatus("muMiniIso_singleLepCalc",1);
+   inputTree->SetBranchStatus("muIsTight_singleLepCalc",1);
+   inputTree->SetBranchStatus("muIsMedium_singleLepCalc",1);
+   inputTree->SetBranchStatus("muIsMediumPrompt_singleLepCalc",1);
+   inputTree->SetBranchStatus("muIsLoose_singleLepCalc",1);
 
    //missing et
    inputTree->SetBranchStatus("corr_met_singleLepCalc",1);
@@ -193,46 +197,19 @@ void step1::Loop()
    inputTree->SetBranchStatus("AK4JetPhi_singleLepCalc",1);
    inputTree->SetBranchStatus("AK4JetEnergy_singleLepCalc",1);
    inputTree->SetBranchStatus("AK4JetBDisc_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetBTag_singleLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBDeepCSVb_singleLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBDeepCSVbb_singleLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBDeepCSVudsg_singleLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBTag_singleLepCalc",1); // --> POSSIBLY INCORRECTLY IMPLEMENTED IN LJMET. CHECK! 9 Nov 2018 (https://github.com/jmhogan/Ljmet-Com/blob/CMSSW_9_4_X/src/singleLepCalc.cc#L1206)
+   inputTree->SetBranchStatus("theJetBTag_JetSubCalc",1); // ---> USE THIS INSTEAD FOR NOW, 9 NOV 2018.
    inputTree->SetBranchStatus("AK4JetBTag_bSFup_singleLepCalc",1);
    inputTree->SetBranchStatus("AK4JetBTag_bSFdn_singleLepCalc",1);
    inputTree->SetBranchStatus("AK4JetBTag_lSFup_singleLepCalc",1);
    inputTree->SetBranchStatus("AK4JetBTag_lSFdn_singleLepCalc",1);
-   inputTree->SetBranchStatus("theJetAK8Pt_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8Eta_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8Phi_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8Mass_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8Energy_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8NjettinessTau1_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8NjettinessTau2_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8NjettinessTau3_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8PrunedMass_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8PrunedMassWtagUncerts_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SoftDropMass_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8PrunedTau21Tag_JetSubCalc",1);
-
-   inputTree->SetBranchStatus("theJetAK8SDSubjetNCSVMSF_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetNCSVM_bSFdn_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetNCSVM_bSFup_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetNCSVM_lSFdn_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetNCSVM_lSFup_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetPt_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetEta_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetPhi_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetMass_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetCSV_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetBTag_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetIndex_JetSubCalc",1);
-   inputTree->SetBranchStatus("theJetAK8SDSubjetSize_JetSubCalc",1);
+   
    
    //top
    inputTree->SetBranchStatus("ttbarMass_TTbarMassCalc",1);
-   inputTree->SetBranchStatus("topEnergy_TTbarMassCalc",1);
-   inputTree->SetBranchStatus("topEta_TTbarMassCalc",1);
-   inputTree->SetBranchStatus("topMass_TTbarMassCalc",1);
-   inputTree->SetBranchStatus("topPhi_TTbarMassCalc",1);
-   inputTree->SetBranchStatus("topPt_TTbarMassCalc",1);
-   inputTree->SetBranchStatus("topID_TTbarMassCalc",1);
    
    //LHE weights
    inputTree->SetBranchStatus("LHEweightids_singleLepCalc",1);
@@ -276,11 +253,6 @@ void step1::Loop()
    float MllOS_allComb_max; 
    float Mlll; //inv mass top 3 leptons
 
-   float JetSF_pTNbwflat;
-   float JetSFup_pTNbwflat;
-   float JetSFdn_pTNbwflat;
-   float JetSFupwide_pTNbwflat;
-   float JetSFdnwide_pTNbwflat;
    std::vector<float> leadWJetPtak8_shifts;
    std::vector<float> pdfWeights;
    std::vector<float> theJetAK8SoftDropMass_JetSubCalc_PtOrdered;
@@ -392,7 +364,6 @@ void step1::Loop()
    std::vector<int> TightLeptonCharge_PtOrdered;
    std::vector<int> TightLeptonIdx_PtOrdered;
    
-//    std::vector<int> theJetBTagBuggy_JetSubCalc_PtOrdered;
    std::vector<int> theJetAK8Wmatch_JetSubCalc_PtOrdered;
    std::vector<int> NJetsWtagged_0p6_shifts;
    std::vector<float> ddBkgWeights;
@@ -402,14 +373,8 @@ void step1::Loop()
    std::vector<float> ddBkgWeights_scan_muFR;
    std::vector<float> ddBkgWeights_scan_elFR;
    
-   int MCPastTrigger_trilep;
-   int DataPastTrigger_trilep;
    int MCPastTrigger_dilep;
    int DataPastTrigger_dilep;
-   int MCPastTrigger_dilepDZ4runH;
-   int DataPastTrigger_dilepDZ4runH;
-   int MCPastTrigger_dilepHT;
-   int DataPastTrigger_dilepHT;
 
    outputTree->Branch("event_CommonCalc",&event_CommonCalc,"event_CommonCalc/I");
    outputTree->Branch("run_CommonCalc",&run_CommonCalc,"run_CommonCalc/I");
@@ -419,9 +384,7 @@ void step1::Loop()
    outputTree->Branch("isElectron",&isElectron,"isElectron/I");
    outputTree->Branch("isMuon",&isMuon,"isMuon/I");
    outputTree->Branch("MCPastTrigger",&MCPastTrigger,"MCPastTrigger/I");
-   outputTree->Branch("MCPastTriggerAlt",&MCPastTriggerAlt,"MCPastTriggerAlt/I");
    outputTree->Branch("DataPastTrigger",&DataPastTrigger,"DataPastTrigger/I");
-   outputTree->Branch("DataPastTriggerAlt",&DataPastTriggerAlt,"DataPastTriggerAlt/I");
    outputTree->Branch("isTHBW_TpTpCalc",&isTHBW_TpTpCalc,"isTHBW_TpTpCalc/O");
    outputTree->Branch("isTHTH_TpTpCalc",&isTHTH_TpTpCalc,"isTHTH_TpTpCalc/O");
    outputTree->Branch("isBWBW_TpTpCalc",&isBWBW_TpTpCalc,"isBWBW_TpTpCalc/O");
@@ -434,15 +397,11 @@ void step1::Loop()
    outputTree->Branch("isBZTW_TpTpCalc",&isBZTW_TpTpCalc,"isBZTW_TpTpCalc/O");
    outputTree->Branch("isBZBH_TpTpCalc",&isBZBH_TpTpCalc,"isBZBH_TpTpCalc/O");
    outputTree->Branch("isBZBZ_TpTpCalc",&isBZBZ_TpTpCalc,"isBZBZ_TpTpCalc/O");
+   outputTree->Branch("tPrimePt_TpTpCalc",&tPrimePt_TpTpCalc,"tPrimePt_TpTpCalc/O");
    outputTree->Branch("NLeptonDecays_TpTpCalc",&NLeptonDecays_TpTpCalc,"NLeptonDecays_TpTpCalc/I");
    outputTree->Branch("MCWeight_singleLepCalc",&MCWeight_singleLepCalc,"MCWeight_singleLepCalc/D");
    outputTree->Branch("renormWeights",&renormWeights);
    outputTree->Branch("pdfWeights",&pdfWeights);
-   outputTree->Branch("JetSF_pTNbwflat",&JetSF_pTNbwflat,"JetSF_pTNbwflat/F");
-   outputTree->Branch("JetSFup_pTNbwflat",&JetSFup_pTNbwflat,"JetSFup_pTNbwflat/F");
-   outputTree->Branch("JetSFdn_pTNbwflat",&JetSFdn_pTNbwflat,"JetSFdn_pTNbwflat/F");
-   outputTree->Branch("JetSFupwide_pTNbwflat",&JetSFupwide_pTNbwflat,"JetSFupwide_pTNbwflat/F");
-   outputTree->Branch("JetSFdnwide_pTNbwflat",&JetSFdnwide_pTNbwflat,"JetSFdnwide_pTNbwflat/F");
    outputTree->Branch("pileupWeight",&pileupWeight,"pileupWeight/F");
    outputTree->Branch("pileupWeightUp",&pileupWeightUp,"pileupWeightUp/F");
    outputTree->Branch("pileupWeightDown",&pileupWeightDown,"pileupWeightDown/F");
@@ -469,21 +428,10 @@ void step1::Loop()
    outputTree->Branch("isLLL",&isLLL,"isLLL/I");
    
    outputTree->Branch("MCPastTrigger",&MCPastTrigger,"MCPastTrigger/I");
-   outputTree->Branch("MCPastTriggerAlt",&MCPastTriggerAlt,"MCPastTriggerAlt/I");
    outputTree->Branch("DataPastTrigger",&DataPastTrigger,"DataPastTrigger/I");
-   outputTree->Branch("DataPastTriggerAlt",&DataPastTriggerAlt,"DataPastTriggerAlt/I");
 
    outputTree->Branch("MCPastTrigger_dilep",&MCPastTrigger_dilep,"MCPastTrigger_dilep/I");
    outputTree->Branch("DataPastTrigger_dilep",&DataPastTrigger_dilep,"DataPastTrigger_dilep/I");
-
-   outputTree->Branch("MCPastTrigger_dilepDZ4runH",&MCPastTrigger_dilepDZ4runH,"MCPastTrigger_dilepDZ4runH/I");
-   outputTree->Branch("DataPastTrigger_dilepDZ4runH",&DataPastTrigger_dilepDZ4runH,"DataPastTrigger_dilepDZ4runH/I");
-
-   outputTree->Branch("MCPastTrigger_dilepHT",&MCPastTrigger_dilepHT,"MCPastTrigger_dilepHT/I");
-   outputTree->Branch("DataPastTrigger_dilepHT",&DataPastTrigger_dilepHT,"DataPastTrigger_dilepHT/I");
-
-   outputTree->Branch("MCPastTrigger_trilep",&MCPastTrigger_trilep,"MCPastTrigger_trilep/I");
-   outputTree->Branch("DataPastTrigger_trilep",&DataPastTrigger_trilep,"DataPastTrigger_trilep/I");
 
 
    outputTree->Branch("ttbarMass_TTbarMassCalc",&ttbarMass_TTbarMassCalc,"ttbarMass_TTbarMassCalc/D");
@@ -616,7 +564,7 @@ void step1::Loop()
    outputTree->Branch("AK4JetPhi_singleLepCalc_PtOrdered",&AK4JetPhi_singleLepCalc_PtOrdered);
    outputTree->Branch("AK4JetEnergy_singleLepCalc_PtOrdered",&AK4JetEnergy_singleLepCalc_PtOrdered);
    outputTree->Branch("AK4JetFlav_singleLepCalc_PtOrdered",&AK4JetFlav_singleLepCalc_PtOrdered);
-   outputTree->Branch("AK4JetBTag_singleLepCalc_PtOrdered",&AK4JetBTag_singleLepCalc_PtOrdered);
+   outputTree->Branch("AK4JetBTag_singleLepCalc_PtOrdered",&AK4JetBTag_singleLepCalc_PtOrdered); 
    outputTree->Branch("AK4JetBTag_bSFup_singleLepCalc_PtOrdered",&AK4JetBTag_bSFup_singleLepCalc_PtOrdered);
    outputTree->Branch("AK4JetBTag_bSFdn_singleLepCalc_PtOrdered",&AK4JetBTag_bSFdn_singleLepCalc_PtOrdered);
    outputTree->Branch("AK4JetBTag_lSFup_singleLepCalc_PtOrdered",&AK4JetBTag_lSFup_singleLepCalc_PtOrdered);
@@ -626,22 +574,6 @@ void step1::Loop()
    outputTree->Branch("HadronicVHtEta_JetSubCalc",&HadronicVHtEta_JetSubCalc);
    outputTree->Branch("HadronicVHtPhi_JetSubCalc",&HadronicVHtPhi_JetSubCalc);
    outputTree->Branch("HadronicVHtEnergy_JetSubCalc",&HadronicVHtEnergy_JetSubCalc);
-   outputTree->Branch("theJetAK8Pt_JetSubCalc_PtOrdered",&theJetAK8Pt_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8Eta_JetSubCalc_PtOrdered",&theJetAK8Eta_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8Phi_JetSubCalc_PtOrdered",&theJetAK8Phi_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8Energy_JetSubCalc_PtOrdered",&theJetAK8Energy_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8PrunedMass_JetSubCalc_PtOrdered",&theJetAK8PrunedMass_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8PrunedMassWtagUncerts_JetSubCalc_PtOrdered",&theJetAK8PrunedMassWtagUncerts_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8SoftDropMass_JetSubCalc_PtOrdered",&theJetAK8SoftDropMass_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8MaxSubCSV_JetSubCalc_PtOrdered",&theJetAK8MaxSubCSV_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8NjettinessTau1_JetSubCalc_PtOrdered",&theJetAK8NjettinessTau1_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8NjettinessTau2_JetSubCalc_PtOrdered",&theJetAK8NjettinessTau2_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8NjettinessTau3_JetSubCalc_PtOrdered",&theJetAK8NjettinessTau3_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8Wmatch_JetSubCalc_PtOrdered",&theJetAK8Wmatch_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8Tmatch_JetSubCalc_PtOrdered",&theJetAK8Tmatch_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8Zmatch_JetSubCalc_PtOrdered",&theJetAK8Zmatch_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8Hmatch_JetSubCalc_PtOrdered",&theJetAK8Hmatch_JetSubCalc_PtOrdered);
-   outputTree->Branch("theJetAK8MatchedPt_JetSubCalc_PtOrdered",&theJetAK8MatchedPt_JetSubCalc_PtOrdered);
    outputTree->Branch("genJetPt_singleLepCalc",&genJetPt_singleLepCalc);
    outputTree->Branch("genJetEta_singleLepCalc",&genJetEta_singleLepCalc);
    outputTree->Branch("genJetPhi_singleLepCalc",&genJetPhi_singleLepCalc);
@@ -662,12 +594,11 @@ void step1::Loop()
 
    outputTree->Branch("NJets_singleLepCalc",&NJets_singleLepCalc,"NJets_singleLepCalc/I");
    outputTree->Branch("NJetsAK8_JetSubCalc",&NJetsAK8_JetSubCalc,"NJetsAK8_JetSubCalc/I");
+   outputTree->Branch("NJetsBTag_singleLepCalc",&NJetsBTag_singleLepCalc,"NJetsBTag_singleLepCalc/I");
    outputTree->Branch("NJetsBTagwithSF_singleLepCalc",&NJetsBTagwithSF_singleLepCalc,"NJetsBTagwithSF_singleLepCalc/I");
-   outputTree->Branch("NJetsBTagwithSF_singleLepCalc_noLepCorr",&NJetsBTagwithSF_singleLepCalc_noLepCorr,"NJetsBTagwithSF_singleLepCalc_noLepCorr/I");
    outputTree->Branch("NJetsBTagwithSF_singleLepCalc_shifts",&NJetsBTagwithSF_singleLepCalc_shifts);
+   outputTree->Branch("NJetsBTagwithSF_singleLepCalc_noLepCorr",&NJetsBTagwithSF_singleLepCalc_noLepCorr,"NJetsBTagwithSF_singleLepCalc_noLepCorr/I");
    outputTree->Branch("NJetsBTagwithSF_singleLepCalc_noLepCorr_shifts",&NJetsBTagwithSF_singleLepCalc_noLepCorr_shifts);
-   outputTree->Branch("NJetsHtagged",&NJetsHtagged,"NJetsHtagged/I");
-   outputTree->Branch("NJetsHtagged_shifts",&NJetsHtagged_shifts);
    outputTree->Branch("topPt",&topPt,"topPt/F");
    outputTree->Branch("topPtGen",&topPtGen,"topPtGen/F");
    outputTree->Branch("topMass",&topMass,"topMass/F");
@@ -769,7 +700,6 @@ void step1::Loop()
    float metCut=20;
    int   njetsCut=0;
    float JetLeadPtCut=0;
-   float JetSubLeadPtCut=0;
    float lepPtCut=30;
    //float elEtaCut=2.1;
    float jetEtaCut=2.4;
@@ -783,8 +713,7 @@ void step1::Loop()
    int npass_met          = 0;
    int npass_njets        = 0;
    int npass_nHjets       = 0;
-   int npass_JetLeadPt    = 0;
-   int npass_JetSubLeadPt = 0;
+   int npass_JetPt    = 0;
    int npass_trilepPt     = 0;
    int npass_ElEta        = 0;
    int npass_all          = 0;
@@ -971,16 +900,7 @@ void step1::Loop()
 
 		//Explicit check for Tight electrons
 		bool isTightEl = false;
-		if(elMiniIso_singleLepCalc->at(iel) < 0.1){
-			//tight_electron_mva_cuts  = cms.vdouble(0.674,0.744,0.170), # 80X WP80 to recover efficiency of 74X WP80 - from LJMET
-// 		  if(fabs(elEta_singleLepCalc->at(iel)) <= 0.8 && elMVAValue_singleLepCalc->at(iel) > 0.674) isTightEl = true;
-// 		  else if(fabs(elEta_singleLepCalc->at(iel)) > 0.8 && fabs(elEta_singleLepCalc->at(iel)) <= 1.479 && elMVAValue_singleLepCalc->at(iel) > 0.744) isTightEl = true;
-// 		  else if(fabs(elEta_singleLepCalc->at(iel)) > 1.479 && fabs(elEta_singleLepCalc->at(iel)) <= 2.5 && elMVAValue_singleLepCalc->at(iel) > 0.170) isTightEl = true;
-		  //use MVAvalue_alt
-		  if(fabs(elEta_singleLepCalc->at(iel)) <= 0.8 && elMVAValue_alt_singleLepCalc->at(iel) > 0.674) isTightEl = true;
-		  else if(fabs(elEta_singleLepCalc->at(iel)) > 0.8 && fabs(elEta_singleLepCalc->at(iel)) <= 1.479 && elMVAValue_alt_singleLepCalc->at(iel) > 0.744) isTightEl = true;
-		  else if(fabs(elEta_singleLepCalc->at(iel)) > 1.479 && fabs(elEta_singleLepCalc->at(iel)) <= 2.5 && elMVAValue_alt_singleLepCalc->at(iel) > 0.170) isTightEl = true;
-		}
+		if(elMiniIso_singleLepCalc->at(iel) < 0.1 && elIsMVATight_singleLepCalc->at(iel) > 0){isTightEl = true;}
 		if(isTightEl){
 		  TightLeptonPt.push_back(elPt_singleLepCalc->at(iel));
 		  TightLeptonEta.push_back(elEta_singleLepCalc->at(iel));
@@ -1012,18 +932,9 @@ void step1::Loop()
 		  alllepindex++;
 		}
 
-		//Explicit check for Loose electrons (there is a mistake in LJMet 052716, miniIso flag not applied!)
+		//Explicit check for Loose electrons 
 		bool isLooseEl = false;
-		if(elMiniIso_singleLepCalc->at(iel) < 0.4){
-			//loose_electron_mva_cuts  = cms.vdouble(-0.041,0.383,-0.515), # 80X WP90 to recover efficiency of 74X WP90 - from LJMET
-// 		  if(fabs(elEta_singleLepCalc->at(iel)) <= 0.8 && elMVAValue_singleLepCalc->at(iel) > -0.041) isLooseEl = true;
-// 		  else if(fabs(elEta_singleLepCalc->at(iel)) > 0.8 && fabs(elEta_singleLepCalc->at(iel)) <= 1.479 && elMVAValue_singleLepCalc->at(iel) > 0.383) isLooseEl = true;
-// 		  else if(fabs(elEta_singleLepCalc->at(iel)) > 1.479 && fabs(elEta_singleLepCalc->at(iel)) <= 2.5 && elMVAValue_singleLepCalc->at(iel) > -0.515) isLooseEl = true;
-		  //use MVAValue_alt
-		  if(fabs(elEta_singleLepCalc->at(iel)) <= 0.8 && elMVAValue_alt_singleLepCalc->at(iel) > -0.041) isLooseEl = true;
-		  else if(fabs(elEta_singleLepCalc->at(iel)) > 0.8 && fabs(elEta_singleLepCalc->at(iel)) <= 1.479 && elMVAValue_alt_singleLepCalc->at(iel) > 0.383) isLooseEl = true;
-		  else if(fabs(elEta_singleLepCalc->at(iel)) > 1.479 && fabs(elEta_singleLepCalc->at(iel)) <= 2.5 && elMVAValue_alt_singleLepCalc->at(iel) > -0.515) isLooseEl = true;
-		}
+		if(elMiniIso_singleLepCalc->at(iel) < 0.4 && elIsMVALoose_singleLepCalc->at(iel) > 0){isLooseEl = true;}
 		if(!isTightEl && isLooseEl){
 		  LooseNotTightLeptonPt.push_back(elPt_singleLepCalc->at(iel));
 		  LooseNotTightLeptonEta.push_back(elEta_singleLepCalc->at(iel));
@@ -1062,13 +973,10 @@ void step1::Loop()
       if(DEBUG)std::cout<<"muPt_singleLepCalc->size() = "<< muPt_singleLepCalc->size() <<std::endl;  
       for(unsigned int imu = 0; imu < muPt_singleLepCalc->size(); imu++){
 		if(muPt_singleLepCalc->at(imu) < lepPtCut || fabs(muEta_singleLepCalc->at(imu)) > 2.4) continue;
-		//if(muPt_singleLepCalc->at(imu) > 500 && fabs(muEta_singleLepCalc->at(imu)) > 1.2) continue; // --->>  No need for FULL2016 dataset! not mentioned anymore in pog twiki
 		
 		//Explicit check for tight muons
 		bool isTightMu = false;
-		//ATTENTION: for Morion 2017 Clints tighten his MiniIso cut to 0.1 because of efficiency gain. 
 		if(muMiniIso_singleLepCalc->at(imu) < 0.1 && muIsTight_singleLepCalc->at(imu) > 0) isTightMu = true;
-
 		if(isTightMu){
 		  TightLeptonPt.push_back(muPt_singleLepCalc->at(imu));
 		  TightLeptonEta.push_back(muEta_singleLepCalc->at(imu));
@@ -1102,10 +1010,8 @@ void step1::Loop()
 		
 		//Explicit check for Loose muons
 		bool isLooseMu = false;
-		if(muMiniIso_singleLepCalc->at(imu) < 0.4 && muIsTight_singleLepCalc->at(imu) == 0) isLooseMu = true;
-
-// 		if(!isTightMu && isLooseMu){ //ATTENTION: WHICH ONE iS CORRECT???
-		if(!isTightMu){ ////ATTENTION: WHICH ONE iS CORRECT???
+		if(muMiniIso_singleLepCalc->at(imu) < 0.4 && muIsLoose_singleLepCalc->at(imu) > 0) isLooseMu = true;
+		if(!isTightMu && isLooseMu){ 
 		  LooseNotTightLeptonPt.push_back(muPt_singleLepCalc->at(imu));
 		  LooseNotTightLeptonEta.push_back(muEta_singleLepCalc->at(imu));
 		  LooseNotTightLeptonPhi.push_back(muPhi_singleLepCalc->at(imu));
@@ -1658,9 +1564,7 @@ void step1::Loop()
       // ----------------------------------------------------------------------------
 
       DataPastTrigger = 0;
-      DataPastTriggerAlt = 0;
       MCPastTrigger = 0;
-      MCPastTriggerAlt = 0;
       TrigEffAltWeight = 1.0;
       TrigEffWeight = 1.0;
       TrigEffWeightUncert = 1.0;
@@ -1674,18 +1578,10 @@ void step1::Loop()
       if(DEBUG)std::cout<<"Rizki B - start"<<std::endl;      
 
       int   isPastTrig = 0;
-      int   isPastTrigAlt = 0;
       int   isPastTrigMC = 0;
-      int   isPastTrigMCAlt = 0;
  
-      int   isPastTrig_trilep = 0;
-      int   isPastTrigMC_trilep = 0;
       int   isPastTrig_dilep = 0;
       int   isPastTrigMC_dilep = 0;
-      int   isPastTrig_dilepDZ4runH = 0;
-      int   isPastTrigMC_dilepDZ4runH = 0;
-      int   isPastTrig_dilepHT = 0;
-      int   isPastTrigMC_dilepHT = 0;
 
       float TrigEffAlt = 1.0;
       float TrigEff = 1.0;
@@ -1711,34 +1607,9 @@ void step1::Loop()
 						//exclusively electron triggers
 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
 
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
 					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrigMC = 1;
 					isPastTrigMC_dilep = 1;
-					isPastTrigMC_dilepDZ4runH = 1;
-				}
-				if( ( 
-						//exclusively electron triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v") != std::string::npos) //||
-
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
-					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrigMC = 1;
-					isPastTrigMC_dilepHT = 1;
-				}
-				if( (
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v") != std::string::npos) //||
-
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos)
-
-					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrigMC = 1;
-					isPastTrigMC_trilep = 1;
 				}
 			}
 	  	}
@@ -1749,54 +1620,12 @@ void step1::Loop()
 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
 
 						//el&mu triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) //||
+						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
+						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
 						
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
 					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrigMC = 1;
 					isPastTrigMC_dilep = 1;
-				}
-				if( ( //with DZ cut for runH : attention in LJMET sone are saved as DZ not DZ_v !!!
-						//exclusively electron triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
-
-						//el&mu triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) || //use DZ for run2016H has this version
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //|| //use DZ for run2016H has this version
-						
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
-					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrigMC = 1;
-					isPastTrigMC_dilepDZ4runH = 1;
-				}
-				if( ( 
-						//exclusively electron triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v") != std::string::npos) ||
-
-						//el&mu triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v") != std::string::npos) //||
-						
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
-					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrigMC = 1;
-					isPastTrigMC_dilepHT = 1;
-				}
-				if( (
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v") != std::string::npos)  //||
-
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
-					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrigMC = 1;
-					isPastTrigMC_trilep = 1;
 				}
 			}
 	  	}
@@ -1804,57 +1633,15 @@ void step1::Loop()
 		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersMu_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) || 	
+						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) || 	
 
 						//el&mu triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) //||
-
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
+						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
+						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
 
 					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrigMC = 1;
 					isPastTrigMC_dilep = 1;
-				}
-				if( ( //with DZ cut for runH : attention in LJMET sone are saved as DZ not DZ_v !!!
-						//exclusively muon triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ") != std::string::npos) || //use DZ for run2016H has this version 	
-
-						//el&mu triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) || //ATTENTION!! //use DZ for run2016H has this version
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //|| //use DZ for run2016H has this version
-
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
-					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrigMC = 1;
-					isPastTrigMC_dilepDZ4runH = 1;
-				}
-				if( ( 
-						//exclusively muon triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleMu8_Mass8_PFHT300_v") != std::string::npos) || 	
-
-						//el&mu triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v") != std::string::npos) //||
-
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
-					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrigMC = 1;
-					isPastTrigMC_dilepHT = 1;
-				}
-				if( (
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v") != std::string::npos) //||
-
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
-					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrigMC = 1;
-					isPastTrigMC_trilep = 1;
 				}
 			}
 	  	}
@@ -1862,60 +1649,18 @@ void step1::Loop()
 		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersMu_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) //|| 	
-
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
+						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) //|| 	
 
 					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrigMC = 1;
 					isPastTrigMC_dilep = 1;
 		  			if(DEBUGTriggers)std::cout << "vsSelMCTriggersMu_singleLepCalc->at(itrig) = " << vsSelMCTriggersMu_singleLepCalc->at(itrig) << std::endl;
-					if(DEBUGTriggers)std::cout << "isPastTrigMC ="<< isPastTrigMC << ", isPastTrigMC_dilep = " << isPastTrigMC_dilep << ", isPastTrigMC_trilep = " << isPastTrigMC_trilep << std::endl;
-				}
-				if( ( //with DZ cut for runH : attention in LJMET sone are saved as DZ not DZ_v !!!
-						//exclusively muon triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ") != std::string::npos) //|| //use DZ for run2016H has this version
-
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
-					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrigMC = 1;
-					isPastTrigMC_dilepDZ4runH = 1;
-		  			if(DEBUGTriggers)std::cout << "vsSelMCTriggersMu_singleLepCalc->at(itrig) = " << vsSelMCTriggersMu_singleLepCalc->at(itrig) << std::endl;
-					if(DEBUGTriggers)std::cout << "isPastTrigMC ="<< isPastTrigMC << ", isPastTrigMC_dilepDZ4runH = " << isPastTrigMC_dilepDZ4runH << ", isPastTrigMC_trilep = " << isPastTrigMC_trilep << std::endl;
-				}
-				if( ( 
-						//exclusively muon triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleMu8_Mass8_PFHT300_v") != std::string::npos) //|| 	
-
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
-					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrigMC = 1;
-					isPastTrigMC_dilepHT = 1;
-		  			if(DEBUGTriggers)std::cout << "vsSelMCTriggersMu_singleLepCalc->at(itrig) = " << vsSelMCTriggersMu_singleLepCalc->at(itrig) << std::endl;
-					if(DEBUGTriggers)std::cout << "isPastTrigMC ="<< isPastTrigMC << ", isPastTrigMC_dilep = " << isPastTrigMC_dilep << ", isPastTrigMC_trilep = " << isPastTrigMC_trilep << std::endl;
-				}
-				if( (
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_TripleMu_12_10_5_v") != std::string::npos) //||
-
-						//ATTENTION! --> Moriond MC BKG now has trigger info ! MC Signal has trig info.
-// 						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("digitisation_step") != std::string::npos) 	
-
-					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrigMC = 1;
-					isPastTrigMC_trilep = 1;
-		  			if(DEBUGTriggers)std::cout << "vsSelMCTriggersMu_singleLepCalc->at(itrig) = " << vsSelMCTriggersMu_singleLepCalc->at(itrig) << std::endl;
-					if(DEBUGTriggers)std::cout << "isPastTrigMC ="<< isPastTrigMC << ", isPastTrigMC_dilep = " << isPastTrigMC_dilep << ", isPastTrigMC_trilep = " << isPastTrigMC_trilep << std::endl;
+					if(DEBUGTriggers)std::cout << "isPastTrigMC ="<< isPastTrigMC << ", isPastTrigMC_dilep = " << isPastTrigMC_dilep << std::endl;
 				}
 			}
 	  	}
 
 		if(DEBUG||DEBUGTriggers)std::cout<< "isPastTrigMC_dilep = " << isPastTrigMC_dilep <<std::endl;  
-		if(DEBUG||DEBUGTriggers)std::cout<< "isPastTrigMC_dilepHT = " << isPastTrigMC_dilepHT <<std::endl;  
 
 		if(DEBUG)std::cout<<"Done matching with desired MC trigger selection..."<<std::endl;  
 
@@ -2171,12 +1916,9 @@ eta:2.5 bin:11
 		}
 		
 		isPastTrig = 1;
-		isPastTrigAlt = 1; 
-		isPastTrig_trilep = 1;
 		isPastTrig_dilep = 1;
-		isPastTrig_dilepDZ4runH = 1;
-		isPastTrig_dilepHT = 1;
 		
+		if(isPastTrigMC) npass_trigger+=1;
       }
       else{ //Data triggers check
 
@@ -2200,21 +1942,6 @@ eta:2.5 bin:11
 					) &&  viSelTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
 					isPastTrig_dilep = 1;
-					isPastTrig_dilepDZ4runH = 1;
-				}
-				if( ( 
-						//exclusively electron triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v") != std::string::npos) //||
-
-					) &&  viSelTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrig = 1;
-					isPastTrig_dilepHT = 1;
-				}
-				if( (
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v") != std::string::npos) 
-					) &&  viSelTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrig = 1;
-					isPastTrig_trilep = 1;
 				}
 			}
 	  	}
@@ -2225,41 +1952,12 @@ eta:2.5 bin:11
 						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
 
 						//el&mu triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) //||
+						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
+						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
 
 					) &&  viSelTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
 					isPastTrig_dilep = 1;
-				}
-				if( ( //with DZ cut for runH : attention in LJMET sone are saved as DZ not DZ_v !!!
-						//exclusively electron triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
-
-						//el&mu triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) || //only run2016H has this version!!
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //|| //use DZ for run2016H has this version
-
-					) &&  viSelTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrig = 1;
-					isPastTrig_dilepDZ4runH = 1;
-				}
-				if( ( 
-						//exclusively electron triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v") != std::string::npos) ||
-
-						//el&mu triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v") != std::string::npos) //||
-
-					) &&  viSelTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrig = 1;
-					isPastTrig_dilepHT = 1;
-				}
-				if( (
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v") != std::string::npos) 
-					) &&  viSelTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrig = 1;
-					isPastTrig_trilep = 1;
 				}
 			}
 	  	}
@@ -2267,43 +1965,15 @@ eta:2.5 bin:11
 		  	for(unsigned int itrig=0; itrig < vsSelTriggersMu_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) || 	
+						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) || 	
 
 						//el&mu triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) ||
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v") != std::string::npos) //||
+						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
+						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
 
 					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
 					isPastTrig_dilep = 1;
-				}
-				if( ( //with DZ cut for runH : attention in LJMET sone are saved as DZ not DZ_v !!!
-						//exclusively muon triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ") != std::string::npos) || //use DZ for run2016H has this version
-
-						//el&mu triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) || //use DZ for run2016H has this version
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //|| //use DZ for run2016H has this version
-
-					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrig = 1;
-					isPastTrig_dilepDZ4runH = 1;
-				}
-				if( ( 
-						//exclusively muon triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleMu8_Mass8_PFHT300_v") != std::string::npos) || 	
-
-						//el&mu triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT300_v") != std::string::npos) //||
-					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrig = 1;
-					isPastTrig_dilepHT = 1;
-				}
-				if( (
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v") != std::string::npos) 
-					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrig = 1;
-					isPastTrig_trilep = 1;
 				}
 			}
 	  	}
@@ -2311,62 +1981,29 @@ eta:2.5 bin:11
 		  	for(unsigned int itrig=0; itrig < vsSelTriggersMu_singleLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v") != std::string::npos) //|| 	
+						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) //|| 	
 
 					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
 					isPastTrig_dilep = 1;
 		  			if(DEBUGTriggers)std::cout << "vsSelTriggersMu_singleLepCalc->at(itrig) = " << vsSelTriggersMu_singleLepCalc->at(itrig) << std::endl;
-					if(DEBUGTriggers)std::cout << "isPastTrig ="<< isPastTrig << ", isPastTrig_dilep = " << isPastTrig_dilep << ", isPastTrig_trilep = " << isPastTrig_trilep << std::endl;
-				}
-				if( ( //with DZ cut for runH : attention in LJMET sone are saved as DZ not DZ_v !!!
-						//exclusively muon triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ") != std::string::npos) //|| //use DZ for run2016H has this version 	
-
-					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrig = 1;
-					isPastTrig_dilepDZ4runH = 1;
-		  			if(DEBUGTriggers)std::cout << "vsSelTriggersMu_singleLepCalc->at(itrig) = " << vsSelTriggersMu_singleLepCalc->at(itrig) << std::endl;
-					if(DEBUGTriggers)std::cout << "isPastTrig ="<< isPastTrig << ", isPastTrig_dilepDZ4runH = " << isPastTrig_dilepDZ4runH << ", isPastTrig_trilep = " << isPastTrig_trilep << std::endl;
-				}
-				if( ( 
-						//exclusively muon triggers                      
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_DoubleMu8_Mass8_PFHT300_v") != std::string::npos) //|| 	
-					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrig = 1;
-					isPastTrig_dilepHT = 1;
-		  			if(DEBUGTriggers)std::cout << "vsSelTriggersMu_singleLepCalc->at(itrig) = " << vsSelTriggersMu_singleLepCalc->at(itrig) << std::endl;
-					if(DEBUGTriggers)std::cout << "isPastTrig ="<< isPastTrig << ", isPastTrig_dilep = " << isPastTrig_dilep << ", isPastTrig_trilep = " << isPastTrig_trilep << std::endl;
-				}
-				if( (
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_TripleMu_12_10_5_v") != std::string::npos) 
-					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
-					isPastTrig = 1;
-					isPastTrig_trilep = 1;
-		  			if(DEBUGTriggers)std::cout << "vsSelTriggersMu_singleLepCalc->at(itrig) = " << vsSelTriggersMu_singleLepCalc->at(itrig) << std::endl;
-					if(DEBUGTriggers)std::cout << "isPastTrig ="<< isPastTrig << ", isPastTrig_dilep = " << isPastTrig_dilep << ", isPastTrig_trilep = " << isPastTrig_trilep << std::endl;
+					if(DEBUGTriggers)std::cout << "isPastTrig ="<< isPastTrig << ", isPastTrig_dilep = " << isPastTrig_dilep << std::endl;
 				}
 			}
 	  	}
 
 		if(DEBUG||DEBUGTriggers)std::cout<< "isPastTrig_dilep = " << isPastTrig_dilep <<std::endl;  
-		if(DEBUG||DEBUGTriggers)std::cout<< "isPastTrig_dilepDZ4runH = " << isPastTrig_dilepDZ4runH <<std::endl;  
-		if(DEBUG||DEBUGTriggers)std::cout<< "isPastTrig_dilepHT = " << isPastTrig_dilepHT <<std::endl;  
 
 		if(DEBUG)std::cout<<"Matching with desired MC trigger selection..."<<std::endl;  
 
       	isPastTrigMC = 1;
-		isPastTrigMCAlt = 1; 
-		isPastTrigMC_trilep = 1;
 		isPastTrigMC_dilep = 1;
-		isPastTrigMC_dilepDZ4runH = 1;
-		isPastTrigMC_dilepHT = 1;
-
+		
+		if(isPastTrig) npass_trigger+=1;
       }
       
-      if(isPastTrig) npass_trigger+=1;
       
-      if(DataPastTrigger) npass_trigger+=1;
+      if(DataPastTrigger) npass_trigger+=1; // --> unfinished implementation.
             
       if(DEBUG)std::cout<<"Rizki B - end"<<std::endl;      
 
@@ -2380,14 +2017,6 @@ eta:2.5 bin:11
       NJets_singleLepCalc = 0;
       AK4HT = 0;
       vector<pair<double,int>> jetptindpair;
-      JetSF_pTNbwflat = 1.0;
-      JetSFup_pTNbwflat = 1.0;
-      JetSFdn_pTNbwflat = 1.0;
-      JetSFupwide_pTNbwflat = 1.0;
-      JetSFdnwide_pTNbwflat = 1.0;
-      JetSF_80X = 1.0;
-      JetSFup_80X = 1.0;
-      JetSFdn_80X = 1.0;
       
       if(DEBUGjets)std::cout<< "AK4JetPt_singleLepCalc->size() (before jet loop) = " << AK4JetPt_singleLepCalc->size() << std::endl;
 
@@ -2403,128 +2032,6 @@ eta:2.5 bin:11
 		if(isMC){
 
 		  if(DEBUGjets)std::cout<< "Jet Flavor = " << AK4JetFlav_singleLepCalc->at(ijet) << std::endl;
-
-		  // ----------------------------------------------------------------------------
-		  // Jet Scale factor
-		  // ----------------------------------------------------------------------------
-		  if(DEBUG)std::cout<<"Jet Scale factor"<<std::endl;      
-
-		  float one = 1.0;	    
-		  float jetpt = AK4JetPt_singleLepCalc->at(ijet);
-		  float jetsf = 1.09383 - 0.000477777*jetpt;
-		  float jetsferr = sqrt(0.00314541714554 + 2.18390370364e-08*jetpt*jetpt + 2*jetpt*(-7.85447860996e-06));	 
-		  float wideup = min(one,max(float(0.747382 + 0.164524),jetsf+jetsferr));				    
-		  float widedn = min(one,max(jetsf-jetsferr,float(0.747382 - 0.164524)));
-	  
-		  if(isTOP || isSig){
-			if(jetpt >= 200){
-			  if(jetpt < 725){
-				JetSF_pTNbwflat *= min(one,jetsf);
-				JetSFup_pTNbwflat *= wideup;
-				JetSFdn_pTNbwflat *= widedn;
-				JetSFupwide_pTNbwflat *= wideup;
-				JetSFdnwide_pTNbwflat *= widedn;
-			  }else{
-				JetSF_pTNbwflat *= 0.747382;
-				JetSFup_pTNbwflat *= wideup;
-				JetSFdn_pTNbwflat *= widedn;
-				JetSFupwide_pTNbwflat *= wideup;
-				JetSFdnwide_pTNbwflat *= widedn;
-			  }
-			}
-		  }else{
-			jetsf = 1.24507 - 0.000664768*jetpt;
-			jetsferr = sqrt(0.000506216376592 + 3.1532423475e-09*jetpt*jetpt + 2*jetpt*(-1.17981363543e-06));
-			if(jetpt < 1020){
-			  JetSF_pTNbwflat *= min(one,jetsf);
-			  JetSFup_pTNbwflat *= min(one,max(jetsf+jetsferr,float(0.568135+0.0522921)));
-			  JetSFdn_pTNbwflat *= min(one,max(jetsf-jetsferr,float(0.568135-0.0522921)));
-			  JetSFupwide_pTNbwflat *= max(wideup,min(one,max(jetsf+jetsferr,float(0.568135+0.0522921))));
-			  JetSFdnwide_pTNbwflat *= min(widedn,min(one,max(jetsf-jetsferr,float(0.568135-0.0522921))));
-			}else{
-			  JetSF_pTNbwflat *= 0.568135;
-			  JetSFup_pTNbwflat *= min(one,max(jetsf+jetsferr,float(0.568135+0.0522921)));
-			  JetSFdn_pTNbwflat *= min(one,max(jetsf-jetsferr,float(0.568135-0.0522921)));
-			  JetSFupwide_pTNbwflat *= max(wideup,min(one,max(jetsf+jetsferr,float(0.568135+0.0522921))));
-			  JetSFdnwide_pTNbwflat *= min(widedn,min(one,max(jetsf-jetsferr,float(0.568135-0.0522921))));
-			}
-			jetsf = 1.09502 - 0.00045995*jetpt;
-			jetsferr = sqrt(2.41563501145e-05 + 3.64859173927e-10*jetpt*jetpt + 2*jetpt*(-8.66909413702e-08));
-			if(jetpt < 801.75){
-			  JetSF_80X *= min(one,jetsf);
-			  JetSFup_80X *= min(one,max(jetsf+jetsferr,float(0.726255+0.0190384)));
-			  JetSFdn_80X *= min(one,max(jetsf-jetsferr,float(0.726255-0.0190384)));
-			}else{
-			  JetSF_80X *= 0.726255;
-			  JetSFup_80X *= min(one,max(jetsf+jetsferr,float(0.726255+0.0190384)));
-			  JetSFdn_80X *= min(one,max(jetsf-jetsferr,float(0.726255-0.0190384)));
-			}
-		  }
-		  
-		  /*
-		  // ----------------------------------------------------------------------------
-		  // B TAGGING fix -- not needed after LJMet from 8/1/16 (efficiency had a typo)
-		  // ----------------------------------------------------------------------------
-		  if(DEBUG)std::cout<<"B TAGGING fix"<<std::endl;      
-
-		  float bSF = 1.0;
-		  float bSFup = 1.0;
-		  float bSFdn = 1.0;
-		  double bEff = 1.0;
-		  float lSF = 1.0;
-		  float lSFup = 1.0;
-		  float lSFdn = 1.0;
-		  double lEff = 1.0;
-
-		  // Set the initial tagged/untagged state
-		  bool istagged = AK4JetBDisc_singleLepCalc->at(ijet) > 0.8484; //Medium WP as confirmed by Julie on 20th Jan 2017. But this is updated here on 23rd Jan 2017.
-
-		  if(AK4JetFlav_singleLepCalc->at(ijet) == 5 || AK4JetFlav_singleLepCalc->at(ijet) == 4){	    
-
-			int binSF = (std::upper_bound(ptRangeSF.begin(), ptRangeSF.end(), AK4JetPt_singleLepCalc->at(ijet))-ptRangeSF.begin())-1;
-			float err = SFerr[binSF];
-			if(AK4JetFlav_singleLepCalc->at(ijet) == 4) err *= 2;
-			bSF = 0.901114+(1.32145e-05*AK4JetPt_singleLepCalc->at(ijet));	    
-			bSFup = bSF + err;
-			bSFdn = bSF - err;
-	  
-			int bin = (std::upper_bound(ptRangeEff.begin(), ptRangeEff.end(), AK4JetPt_singleLepCalc->at(ijet))-ptRangeEff.begin())-1;
-			bEff = BtagEff[bin];
-			if(AK4JetFlav_singleLepCalc->at(ijet) == 4) bEff *= 0.2;
-
-			int tag = applySF(istagged,bSF,bEff);
-			int tag_up = applySF(istagged,bSFup,bEff);
-			int tag_dn = applySF(istagged,bSFdn,bEff);
-
-			AK4JetBTag_singleLepCalc->at(ijet) = tag;
-			AK4JetBTag_bSFup_singleLepCalc->at(ijet) = tag_up;
-			AK4JetBTag_bSFdn_singleLepCalc->at(ijet) = tag_dn;
-			AK4JetBTag_lSFup_singleLepCalc->at(ijet) = tag;
-			AK4JetBTag_lSFdn_singleLepCalc->at(ijet) = tag;
-
-		  }else{
-
-			int binSF = (std::upper_bound(ptRangeSF.begin(), ptRangeSF.end(), AK4JetPt_singleLepCalc->at(ijet))-ptRangeSF.begin())-1;
-			float pt = AK4JetPt_singleLepCalc->at(ijet);
-			lSF = 0.980777+(-0.00109334*pt)+(4.2909e-06*pt*pt)+(-2.78512e-09*pt*pt*pt);
-			lSFdn = lSF*(1-(0.0672836+(0.000102309*pt)+(-1.01558e-07*pt*pt)));
-			lSFup = lSF*(1+(0.0672836+(0.000102309*pt)+(-1.01558e-07*pt*pt)));
-
-			int bin = (std::upper_bound(ptRangeEff.begin(), ptRangeEff.end(), AK4JetPt_singleLepCalc->at(ijet))-ptRangeEff.begin())-1;
-			lEff = MistagEff[bin];
-
-			int tag = applySF(istagged,lSF,lEff);
-			int tag_up = applySF(istagged,lSFup,lEff);
-			int tag_dn = applySF(istagged,lSFdn,lEff);
-
-			AK4JetBTag_singleLepCalc->at(ijet) = tag;
-			AK4JetBTag_bSFup_singleLepCalc->at(ijet) = tag;
-			AK4JetBTag_bSFdn_singleLepCalc->at(ijet) = tag;
-			AK4JetBTag_lSFup_singleLepCalc->at(ijet) = tag_up;
-			AK4JetBTag_lSFdn_singleLepCalc->at(ijet) = tag_dn;
-
-		  }
-		  */
 		  
 		  // ----------------------------------------------------------------------------
 		  // Counts and pt ordering pair
@@ -2571,6 +2078,9 @@ eta:2.5 bin:11
       AK4JetEnergy_singleLepCalc_PtOrdered.clear();
       AK4JetFlav_singleLepCalc_PtOrdered.clear();
       AK4JetBDisc_singleLepCalc_PtOrdered.clear();
+      AK4JetBDeepCSVb_singleLepCalc_PtOrdered.clear();
+      AK4JetBDeepCSVbb_singleLepCalc_PtOrdered.clear();
+      
       AK4JetBTag_singleLepCalc_PtOrdered.clear();
       AK4JetBTag_bSFdn_singleLepCalc_PtOrdered.clear();
       AK4JetBTag_bSFup_singleLepCalc_PtOrdered.clear();
@@ -2583,12 +2093,21 @@ eta:2.5 bin:11
       	AK4JetEnergy_singleLepCalc_PtOrdered.push_back(AK4JetEnergy_singleLepCalc->at(jetptindpair[ijet].second));
       	AK4JetFlav_singleLepCalc_PtOrdered.push_back(AK4JetFlav_singleLepCalc->at(jetptindpair[ijet].second));
       	AK4JetBDisc_singleLepCalc_PtOrdered.push_back(AK4JetBDisc_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetBTag_singleLepCalc_PtOrdered.push_back(AK4JetBTag_singleLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetBDeepCSVb_singleLepCalc_PtOrdered.push_back(AK4JetBDeepCSVb_singleLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetBDeepCSVbb_singleLepCalc_PtOrdered.push_back(AK4JetBDeepCSVbb_singleLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetBTag_singleLepCalc_PtOrdered.push_back(theJetBTag_JetSubCalc->at(jetptindpair[ijet].second)); // ATTENTION !!!!! HACK SO THAT WE USE theJetBTag_JetSubCalc_PtOrdered instead, but keep namings. 9 Nov 2018.
       	AK4JetBTag_bSFdn_singleLepCalc_PtOrdered.push_back(AK4JetBTag_bSFdn_singleLepCalc->at(jetptindpair[ijet].second));
       	AK4JetBTag_bSFup_singleLepCalc_PtOrdered.push_back(AK4JetBTag_bSFup_singleLepCalc->at(jetptindpair[ijet].second));
       	AK4JetBTag_lSFdn_singleLepCalc_PtOrdered.push_back(AK4JetBTag_lSFdn_singleLepCalc->at(jetptindpair[ijet].second));
       	AK4JetBTag_lSFup_singleLepCalc_PtOrdered.push_back(AK4JetBTag_lSFup_singleLepCalc->at(jetptindpair[ijet].second));
       }
+
+      // ----------------------------------------------------------------------------
+      // Apply trigger cut : must pass at least one trigger
+      // ----------------------------------------------------------------------------
+
+      if(isMC){if(!isPastTrigMC)continue;} // MC trig selection
+      else{if(!isPastTrig)continue;} // Data trig selection
 
       // ----------------------------------------------------------------------------
       // Apply kinematic cuts
@@ -2598,11 +2117,13 @@ eta:2.5 bin:11
       int isPastNJetsCut = 0;
       if(NJets_singleLepCalc >= njetsCut){npass_njets+=1;isPastNJetsCut=1;}
       
-      int isPastJetLeadPtCut = 0;
-      if(AK4JetPt_singleLepCalc_PtOrdered.size() > 0 && AK4JetPt_singleLepCalc_PtOrdered[0] > JetLeadPtCut){npass_JetLeadPt+=1;isPastJetLeadPtCut=1;}
-      
-      int isPastJetSubLeadPtCut = 0;
-      if(AK4JetPt_singleLepCalc_PtOrdered.size() > 1 && AK4JetPt_singleLepCalc_PtOrdered[1] > JetSubLeadPtCut){npass_JetSubLeadPt+=1;isPastJetSubLeadPtCut=1;}
+      int isPastJetPtCut = 0;
+      bool allJetsAboveJetPtCut = true;
+      for(unsigned int ijet=0; ijet < AK4JetPt_singleLepCalc_PtOrdered.size(); ijet++){
+      		if(AK4JetPt_singleLepCalc_PtOrdered[ijet] < jetPtCut){allJetsAboveJetPtCut=false;} 
+      }
+      if(allJetsAboveJetPtCut){npass_JetPt+=1;isPastJetPtCut=1;}
+
       
       int isPastMETcut = 0;
       if(corr_met_singleLepCalc > metCut){npass_met+=1;isPastMETcut=1;}
@@ -2610,102 +2131,9 @@ eta:2.5 bin:11
       int isPastTriLepPtCut = 0;
       if(AllLeptonPt_PtOrdered[0] > lepPtCut && AllLeptonPt_PtOrdered[1] > lepPtCut && AllLeptonPt_PtOrdered[2] > lepPtCut){npass_trilepPt+=1;isPastTriLepPtCut=1;}
       
-      /* from SingleLep
-      int isPastElEtaCut = 0;
-      if(isElectron && fabs(lepeta) < elEtaCut){npass_ElEta+=1;isPastElEtaCut=1;}
-      if(isMuon){Nmuons+=1;isPastElEtaCut=1;}
-      if(isElectron){Nelectrons+=1;}
       
+      if(!(isPastMETcut && isPastNJetsCut && isPastJetPtCut && isPastTriLepPtCut)) continue;
       
-      AK4HTpMETpLepPt = 0;
-      AK4HTpMETpLepPt = AK4HT + corr_met_singleLepCalc + leppt;
-      */
-      
-      /*
-      
-      // ----------------------------------------------------------------------------
-      // Loop over AK8 jets for calculations and pt ordering pair
-      // ----------------------------------------------------------------------------
-	  if(DEBUG)std::cout<<"Loop over AK8 jets for calculations and pt ordering pair"<<std::endl;      
-      
-      NJetsHtagged = 0;      
-      int NJetsHtagged_bSFup = 0;      
-      int NJetsHtagged_bSFdn = 0;      
-      int NJetsHtagged_lSFup = 0;      
-      int NJetsHtagged_lSFdn = 0;      
-      NJetsAK8_JetSubCalc = 0;
-      vector<float> maxsubcsv;
-      NJetsHtagged_shifts.clear();
-      vector<pair<double,int>> jetak8ptindpair;
-
-      for(unsigned int ijet=0; ijet < theJetAK8Pt_JetSubCalc->size(); ijet++){
-
-		// ----------------------------------------------------------------------------
-		// Basic cuts
-		// ----------------------------------------------------------------------------
-		if(DEBUG)std::cout<<"Basic cuts"<<std::endl;      
-
-		maxsubcsv.push_back(-99.0);
-		if(theJetAK8Pt_JetSubCalc->at(ijet) < 180 || fabs(theJetAK8Eta_JetSubCalc->at(ijet)) > ak8EtaCut) continue;
-		if(theJetAK8NjettinessTau1_JetSubCalc->at(ijet)==0) continue;
-		if(theJetAK8NjettinessTau2_JetSubCalc->at(ijet)==0) continue;
-
-		// ----------------------------------------------------------------------------
-		// Counter and pt ordering pair
-		// ----------------------------------------------------------------------------
-		if(DEBUG)std::cout<<"Counter and pt ordering pair"<<std::endl;      
-
-		NJetsAK8_JetSubCalc += 1; 
-		jetak8ptindpair.push_back(std::make_pair(theJetAK8Pt_JetSubCalc->at(ijet),ijet));
-	  
-		// ----------------------------------------------------------------------------
-		// Count Higgs tags
-		// ----------------------------------------------------------------------------
-		if(DEBUG)std::cout<<"Count Higgs tags"<<std::endl;      
-
-		int firstsub = theJetAK8SDSubjetIndex_JetSubCalc->at(ijet);
-		int nsubs = theJetAK8SDSubjetSize_JetSubCalc->at(ijet);
-		double maxCSVsubjet = 0;
-		TLorentzVector tempsubjet;
-		TLorentzVector sumsubjets; sumsubjets.SetPtEtaPhiM(0,0,0,0);
-		for(int isub = firstsub; isub < firstsub + nsubs; isub++){
-		  tempsubjet.SetPtEtaPhiM(theJetAK8SDSubjetPt_JetSubCalc->at(isub),theJetAK8SDSubjetEta_JetSubCalc->at(isub),theJetAK8SDSubjetPhi_JetSubCalc->at(isub),theJetAK8SDSubjetMass_JetSubCalc->at(isub));
-		  sumsubjets += tempsubjet;
-		  if(theJetAK8SDSubjetCSV_JetSubCalc->at(isub) > maxCSVsubjet) maxCSVsubjet = theJetAK8SDSubjetCSV_JetSubCalc->at(isub);
-		  if(isub != firstsub && theJetAK8SDSubjetPt_JetSubCalc->at(isub) == theJetAK8SDSubjetPt_JetSubCalc->at(firstsub)) cout << "subjets have matching pT, something's wrong" << endl;
-		}
-		maxsubcsv.at(ijet) = maxCSVsubjet;
-		if(theJetAK8Pt_JetSubCalc->at(ijet) > 300 &&  theJetAK8SDSubjetNCSVMSF_JetSubCalc->at(ijet) > 0 && sumsubjets.M() > 60 && sumsubjets.M() < 150) NJetsHtagged += 1;
-		if(theJetAK8Pt_JetSubCalc->at(ijet) > 300 &&  theJetAK8SDSubjetNCSVM_bSFup_JetSubCalc->at(ijet) > 0 && sumsubjets.M() > 60 && sumsubjets.M() < 150) NJetsHtagged_bSFup += 1;
-		if(theJetAK8Pt_JetSubCalc->at(ijet) > 300 &&  theJetAK8SDSubjetNCSVM_bSFdn_JetSubCalc->at(ijet) > 0 && sumsubjets.M() > 60 && sumsubjets.M() < 150) NJetsHtagged_bSFdn += 1;
-		if(theJetAK8Pt_JetSubCalc->at(ijet) > 300 &&  theJetAK8SDSubjetNCSVM_lSFup_JetSubCalc->at(ijet) > 0 && sumsubjets.M() > 60 && sumsubjets.M() < 150) NJetsHtagged_lSFup += 1;
-		if(theJetAK8Pt_JetSubCalc->at(ijet) > 300 &&  theJetAK8SDSubjetNCSVM_lSFdn_JetSubCalc->at(ijet) > 0 && sumsubjets.M() > 60 && sumsubjets.M() < 150) NJetsHtagged_lSFdn += 1;
-      }
-      NJetsHtagged_shifts.push_back(NJetsHtagged_bSFup);
-      NJetsHtagged_shifts.push_back(NJetsHtagged_bSFdn);
-      NJetsHtagged_shifts.push_back(NJetsHtagged_lSFup);
-      NJetsHtagged_shifts.push_back(NJetsHtagged_lSFdn);
-      
-      */
-      /*
-
-      // ----------------------------------------------------------------------------
-      // Skip failing events
-      // ----------------------------------------------------------------------------
-      if(DEBUG)std::cout<<"Skip failing events"<<std::endl;      
-
-      int isPastNHjetsCut = 0;
-      if(NJetsHtagged >= 0){npass_nHjets += 1; isPastNHjetsCut = 1; }
-      */
-
-      /* From SingleLep
-      if(!(isPastMETcut && isPastNJetsCut && isPastJetLeadPtCut && isPastTriLepPtCut && isPastElEtaCut && isPastJetSubLeadPtCut)) continue;
-      */
-
-      //if(!(isPastMETcut && isPastNJetsCut && isPastJetLeadPtCut && isPastTriLepPtCut && isPastJetSubLeadPtCut)) continue; //this indirectly removes events with nJets < 2 !
-
-      if(!(isPastMETcut && isPastNJetsCut && isPastTriLepPtCut)) continue;
-
       npass_all+=1;
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2714,112 +2142,12 @@ eta:2.5 bin:11
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      // ----------------------------------------------------------------------------
-      // Combine lepton variables into one set
-      // ----------------------------------------------------------------------------
-      
-      /* From SingleLep  
-      if(isElectron){
-		leptonPt_singleLepCalc = leppt;
-		leptonEta_singleLepCalc = lepeta;
-		leptonPhi_singleLepCalc = elPhi_singleLepCalc->at(0);
-		leptonEnergy_singleLepCalc = elEnergy_singleLepCalc->at(0);
-		leptonMiniIso_singleLepCalc = elMiniIso_singleLepCalc->at(0);
-		leptonRelIso_singleLepCalc = elRelIso_singleLepCalc->at(0);
-		leptonDxy_singleLepCalc = elDxy_singleLepCalc->at(0);
-		leptonDz_singleLepCalc = elDZ_singleLepCalc->at(0);
-		leptonCharge_singleLepCalc = elCharge_singleLepCalc->at(0);
-      }
-      if(isMuon){
-		leptonPt_singleLepCalc = leppt;
-		leptonEta_singleLepCalc = lepeta;
-		leptonPhi_singleLepCalc = muPhi_singleLepCalc->at(0);
-		leptonEnergy_singleLepCalc = muEnergy_singleLepCalc->at(0);
-		leptonMiniIso_singleLepCalc = muMiniIso_singleLepCalc->at(0);
-		leptonRelIso_singleLepCalc = muRelIso_singleLepCalc->at(0);
-		leptonDxy_singleLepCalc = muDxy_singleLepCalc->at(0);
-		leptonDz_singleLepCalc = muDz_singleLepCalc->at(0);
-		leptonCharge_singleLepCalc = muCharge_singleLepCalc->at(0);
-      }
-      */
-      
-      /*	
-      // ----------------------------------------------------------------------------
-      // Apply pt ordering to AK8 vectors 
-      // ----------------------------------------------------------------------------
-      if(DEBUG)std::cout<<"Apply pt ordering to AK8 vectors"<<std::endl;      
-
-      //Pt ordering for AK8
-      std::sort(jetak8ptindpair.begin(), jetak8ptindpair.end(), comparepair);
-      theJetAK8Pt_JetSubCalc_PtOrdered.clear();
-      theJetAK8Eta_JetSubCalc_PtOrdered.clear();
-      theJetAK8Phi_JetSubCalc_PtOrdered.clear();
-      theJetAK8Energy_JetSubCalc_PtOrdered.clear();
-      theJetAK8Mass_JetSubCalc_PtOrdered.clear();
-      theJetAK8PrunedMass_JetSubCalc_PtOrdered.clear();
-      theJetAK8PrunedMassWtagUncerts_JetSubCalc_PtOrdered.clear();
-      theJetAK8SoftDropMass_JetSubCalc_PtOrdered.clear();
-      theJetAK8MaxSubCSV_JetSubCalc_PtOrdered.clear();
-      theJetAK8NjettinessTau1_JetSubCalc_PtOrdered.clear();
-      theJetAK8NjettinessTau2_JetSubCalc_PtOrdered.clear();
-      theJetAK8NjettinessTau3_JetSubCalc_PtOrdered.clear();
-      for(unsigned int ijet=0; ijet < jetak8ptindpair.size(); ijet++){
-      	theJetAK8Pt_JetSubCalc_PtOrdered.push_back(theJetAK8Pt_JetSubCalc->at(jetak8ptindpair[ijet].second));
-      	theJetAK8Eta_JetSubCalc_PtOrdered.push_back(theJetAK8Eta_JetSubCalc->at(jetak8ptindpair[ijet].second));
-      	theJetAK8Phi_JetSubCalc_PtOrdered.push_back(theJetAK8Phi_JetSubCalc->at(jetak8ptindpair[ijet].second));
-      	theJetAK8Energy_JetSubCalc_PtOrdered.push_back(theJetAK8Energy_JetSubCalc->at(jetak8ptindpair[ijet].second));
-      	theJetAK8Mass_JetSubCalc_PtOrdered.push_back(theJetAK8Mass_JetSubCalc->at(jetak8ptindpair[ijet].second));
-      	theJetAK8PrunedMass_JetSubCalc_PtOrdered.push_back(theJetAK8PrunedMass_JetSubCalc->at(jetak8ptindpair[ijet].second));
-      	theJetAK8PrunedMassWtagUncerts_JetSubCalc_PtOrdered.push_back(theJetAK8PrunedMassWtagUncerts_JetSubCalc->at(jetak8ptindpair[ijet].second));
-      	theJetAK8SoftDropMass_JetSubCalc_PtOrdered.push_back(theJetAK8SoftDropMass_JetSubCalc->at(jetak8ptindpair[ijet].second));
-      	theJetAK8MaxSubCSV_JetSubCalc_PtOrdered.push_back(maxsubcsv.at(jetak8ptindpair[ijet].second));
-      	theJetAK8NjettinessTau1_JetSubCalc_PtOrdered.push_back(theJetAK8NjettinessTau1_JetSubCalc->at(jetak8ptindpair[ijet].second));
-      	theJetAK8NjettinessTau2_JetSubCalc_PtOrdered.push_back(theJetAK8NjettinessTau2_JetSubCalc->at(jetak8ptindpair[ijet].second));
-      	theJetAK8NjettinessTau3_JetSubCalc_PtOrdered.push_back(theJetAK8NjettinessTau3_JetSubCalc->at(jetak8ptindpair[ijet].second));
-      }
-      */
 
       // ----------------------------------------------------------------------------
       // Lepton 4-vectors, calculate MT and electron trigger presel value
       // ----------------------------------------------------------------------------
       if(DEBUG)std::cout<<"Lepton 4-vectors, calculate MT and electron trigger presel value"<<std::endl;      
-      
-      /* From SingleLep
-      // Set lepton 4-vectors
-      double lepM;
-      double lepphi;
-      elTrigPresel_singleLepCalc = false;
-      if (isMuon){ 
-		lepM = 0.105658367;
-		lepphi = muPhi_singleLepCalc->at(0);
-		lepton_lv.SetPtEtaPhiM(muPt_singleLepCalc->at(0),muEta_singleLepCalc->at(0),muPhi_singleLepCalc->at(0),lepM);
-      }
-      else{
-		lepM = 0.00051099891;
-		lepphi = elPhi_singleLepCalc->at(0);
-		lepton_lv.SetPtEtaPhiM(elPt_singleLepCalc->at(0),elEta_singleLepCalc->at(0),elPhi_singleLepCalc->at(0),lepM);
-
-		if(elEta_singleLepCalc->at(0) < 1.442){
-		  if(elSihih_singleLepCalc->at(0) < 0.012 &&
-			 elHoE_singleLepCalc->at(0) < 0.09 &&
-			 elEcalPFClusterIso_singleLepCalc->at(0)/leppt < 0.37 &&
-			 elHcalPFClusterIso_singleLepCalc->at(0)/leppt < 0.25 &&
-			 elDR03TkSumPt_singleLepCalc->at(0)/leppt < 0.18 &&
-			 fabs(elDEtaSCTkAtVtx_singleLepCalc->at(0)) < 0.0095 &&
-			 fabs(elDPhiSCTkAtVtx_singleLepCalc->at(0)) < 0.065
-			 ) elTrigPresel_singleLepCalc = true;
-		}else{
-		  if(elSihih_singleLepCalc->at(0) < 0.033 &&
-			 elHoE_singleLepCalc->at(0) < 0.09 &&
-			 elEcalPFClusterIso_singleLepCalc->at(0)/leppt < 0.45 &&
-			 elHcalPFClusterIso_singleLepCalc->at(0)/leppt < 0.28 &&
-			 elDR03TkSumPt_singleLepCalc->at(0)/leppt < 0.18
-			 ) elTrigPresel_singleLepCalc = true;
-		}	  
-      }
-      MT_lepMet = sqrt(2*leppt*corr_met_singleLepCalc*(1 - cos(lepphi - corr_met_phi_singleLepCalc)));
-      */    
-        
+              
       //Rizki - start
 
       if(DEBUG)std::cout<<"Rizki C - start"<<std::endl;      
@@ -2935,135 +2263,13 @@ eta:2.5 bin:11
       // ----------------------------------------------------------------------------
       if(DEBUG)std::cout<<"8TeV Top pT reweighting"<<std::endl;      
 
-      /* From SingleLep
-      genTopPt = -999;
-      genAntiTopPt = -999;
-      topPtWeight = 1.0;
-      topPtWeightPast400 = 1.0;
-      topPtWeightHighPt = 1.0;
-
-      for(unsigned int ijet=0; ijet < topPt_TTbarMassCalc->size(); ijet++){
-		if(genTopPt < 0 && topID_TTbarMassCalc->at(ijet) == 6) genTopPt = topPt_TTbarMassCalc->at(ijet);
-		if(genAntiTopPt < 0 && topID_TTbarMassCalc->at(ijet) == -6) genAntiTopPt = topPt_TTbarMassCalc->at(ijet);
-      }
-
-      if(genTopPt > 0 && genAntiTopPt > 0){
-		float toppt_temp = genTopPt;
-		if(genTopPt > 400) toppt_temp = 400;
-		float antitoppt_temp = genAntiTopPt;
-		if(genAntiTopPt > 400) antitoppt_temp = 400;
-	
-		float SFtop = TMath::Exp(0.156-0.00137*toppt_temp); // using 8TeV TopPtReweighting: https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
-		float SFantitop = TMath::Exp(0.156-0.00137*antitoppt_temp);
-		topPtWeight = TMath::Sqrt(SFtop*SFantitop)/0.99277; //0.99277-->average weight
-	
-		float SFtopPast400 = TMath::Exp(0.156-0.00137*genTopPt);
-		float SFantitopPast400 = TMath::Exp(0.156-0.00137*genAntiTopPt);
-		topPtWeightPast400 = TMath::Sqrt(SFtopPast400*SFantitopPast400)/0.9927;
-	
-		float SFtopHighPt = 0.98  - 0.00026*genTopPt;  // 0.98 +- 0.24, 0.0026 +- 0.00039
-		float SFantitopHighPt = 0.98  - 0.00026*genAntiTopPt;
-		topPtWeightHighPt = TMath::Sqrt(SFtopHighPt*SFantitopHighPt);
-      }
-      */
-      
-      // ----------------------------------------------------------------------------
-      // W --> l nu with mass constraint
-      // ----------------------------------------------------------------------------
-      
-      /* From SingleLep
-      double metpx = corr_met_singleLepCalc*cos(corr_met_phi_singleLepCalc);
-      double metpy = corr_met_singleLepCalc*sin(corr_met_phi_singleLepCalc);
-      double metpt = corr_met_singleLepCalc;
-
-      double Dtmp = (MW*MW)-(lepM*lepM)+2*((lepton_lv.Px())*(metpx)+(lepton_lv.Py())*(metpy));
-      double Atmp = 4.0*((lepton_lv.Energy())*(lepton_lv.Energy())-(lepton_lv.Pz())*(lepton_lv.Pz()));
-      double Btmp = -4.0*Dtmp*(lepton_lv.Pz());
-      double Ctmp = 4.0*(lepton_lv.Energy())*(lepton_lv.Energy())*(metpt)*(metpt)-Dtmp*Dtmp;
-      
-      double nuPz_1;
-      double nuPz_2;
-      
-      double DETtmp = Btmp*Btmp-4.0*Atmp*Ctmp;
-      
-      TLorentzVector Wlv_1, Wlv_2, Wlv,lvTop, lvXTF;
-      if(DETtmp >= 0) {
-		nuPz_1 = (-Btmp+TMath::Sqrt(DETtmp))/(2.0*Atmp);
-		nuPz_2 = (-Btmp-TMath::Sqrt(DETtmp))/(2.0*Atmp);
-		TLorentzVector Nulv_1(metpx,metpy,nuPz_1,TMath::Sqrt((metpt)*(metpt)+(nuPz_1)*(nuPz_1)));
-		TLorentzVector Nulv_2(metpx,metpy,nuPz_2,TMath::Sqrt((metpt)*(metpt)+(nuPz_2)*(nuPz_2)));
-		Wlv_1 = Nulv_1+lepton_lv;
-		Wlv_2 = Nulv_2+lepton_lv;
-      }
-      if(DETtmp < 0) {
-		nuPz_1 = (-Btmp)/(2.0*Atmp);
-		nuPz_2 = (-Btmp)/(2.0*Atmp);
-		double alpha = (lepton_lv.Px())*(metpx)/(metpt)+(lepton_lv.Py())*(metpy)/(metpt);
-		double Delta = (MW*MW)-(lepM*lepM);
-		Atmp = 4.0*((lepton_lv.Pz())*(lepton_lv.Pz())-(lepton_lv.Energy())*(lepton_lv.Energy())+(alpha*alpha));
-		Btmp = 4.0*alpha*Delta;
-		Ctmp = Delta*Delta;
-		DETtmp = Btmp*Btmp-4.0*Atmp*Ctmp;
-		double pTnu_1 = (-Btmp+TMath::Sqrt(DETtmp))/(2.0*Atmp);
-		double pTnu_2 = (-Btmp-TMath::Sqrt(DETtmp))/(2.0*Atmp);
-		TLorentzVector Nulv_1(metpx*(pTnu_1)/(metpt),metpy*(pTnu_1)/(metpt),nuPz_1,TMath::Sqrt((pTnu_1)*(pTnu_1)+(nuPz_1)*(nuPz_1)));
-		TLorentzVector Nulv_2(metpx*(pTnu_2)/(metpt),metpy*(pTnu_2)/(metpt),nuPz_2,TMath::Sqrt((pTnu_2)*(pTnu_2)+(nuPz_2)*(nuPz_2)));
-		Wlv_1 = Nulv_1+lepton_lv;
-		Wlv_2 = Nulv_2+lepton_lv;
-		if (fabs(Wlv_1.M()-MW) < fabs(Wlv_2.M()-MW)) Wlv_2 = Wlv_1;
-		else Wlv_1 = Wlv_2;
-      }
-      */
-      
-      // ----------------------------------------------------------------------------
-      // top --> W b --> l nu b using W from above
-      // ----------------------------------------------------------------------------
-      
-      /* From SingleLep
-      double dMTOP = 1e8;
-      unsigned int topIndex = 0;
-      bool firstW = true;
-      double MTop_1, MTop_2;
-      for(unsigned int ijet=0; ijet < AK4JetPt_singleLepCalc_PtOrdered.size(); ijet++){
-		jet_lv.SetPtEtaPhiE(AK4JetPt_singleLepCalc_PtOrdered.at(ijet),AK4JetEta_singleLepCalc_PtOrdered.at(ijet),AK4JetPhi_singleLepCalc_PtOrdered.at(ijet),AK4JetEnergy_singleLepCalc_PtOrdered.at(ijet));
-		MTop_1 = (jet_lv + Wlv_1).M();
-		MTop_2 = (jet_lv + Wlv_2).M();
-		if(fabs(MTop_1 - MTOP) < dMTOP) {
-		  if(fabs(MTop_1 - MTOP) < fabs(MTop_2 - MTOP)) {
-			firstW = true;
-			topIndex = ijet;
-			dMTOP = fabs(MTop_1 - MTOP);
-		  }
-		  else {
-			firstW = false;
-			topIndex = ijet;
-			dMTOP = fabs(MTop_2 - MTOP);
-		  }
-		}
-		else if(fabs(MTop_2 - MTOP) < dMTOP) {
-		  firstW = false;
-		  topIndex = ijet;
-		  dMTOP = fabs(MTop_2 - MTOP);
-		}
-      }
-
-      if(firstW) {Wlv = Wlv_1;}
-      else{Wlv = Wlv_2;}
-
-      jet_lv.SetPtEtaPhiE(AK4JetPt_singleLepCalc_PtOrdered.at(topIndex),AK4JetEta_singleLepCalc_PtOrdered.at(topIndex),AK4JetPhi_singleLepCalc_PtOrdered.at(topIndex),AK4JetEnergy_singleLepCalc_PtOrdered.at(topIndex));
-      lvTop = jet_lv + Wlv; //Top LV
-
-      topPt = lvTop.Pt();
-      topMass = lvTop.M();
-      topPtGen = genTopPt;
-      if(fabs(lvTop.Pt() - genTopPt) > fabs(lvTop.Pt() - genAntiTopPt)) topPtGen = genAntiTopPt;
-      */
 
       // ----------------------------------------------------------------------------
       // AK4 Jet - lepton associations
       // ----------------------------------------------------------------------------
       if(DEBUG)std::cout<<"AK4 Jet - lepton associations"<<std::endl;      
 
+      NJetsBTag_singleLepCalc = 0;
       NJetsBTagwithSF_singleLepCalc = 0;
       BJetLeadPt = -99;
       minMleppBjet = 1e8;
@@ -3129,17 +2335,6 @@ eta:2.5 bin:11
       for(unsigned int ijet=0; ijet < AK4JetPt_singleLepCalc_PtOrdered.size(); ijet++){
         jet_lv.SetPtEtaPhiE(AK4JetPt_singleLepCalc_PtOrdered.at(ijet),AK4JetEta_singleLepCalc_PtOrdered.at(ijet),AK4JetPhi_singleLepCalc_PtOrdered.at(ijet),AK4JetEnergy_singleLepCalc_PtOrdered.at(ijet));
         
-        /* From SingleLep
-		if((lepton_lv + jet_lv).M() < minMleppJet) {
-		  minMleppJet = fabs((lepton_lv + jet_lv).M());
-		  deltaRlepJetInMinMljet = jet_lv.DeltaR(lepton_lv);
-		  deltaPhilepJetInMinMljet = jet_lv.DeltaPhi(lepton_lv);
-		}
-
-		deltaR_lepJets.push_back(lepton_lv.DeltaR(jet_lv));
-		deltaPhi_lepJets.push_back(lepton_lv.DeltaPhi(jet_lv));
-		mass_lepJets.push_back((lepton_lv + jet_lv).M());
-		*/
 
 		for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
 			if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppJet) {
@@ -3220,21 +2415,17 @@ eta:2.5 bin:11
 		if(DEBUG || DEBUGjets) cout << "" << endl;
 		//calculate minDPhi(MET,jet) - end
 
+
+		// Count BTag withOUT SFs
+		if(AK4JetBDeepCSVbb_singleLepCalc_PtOrdered.at(ijet) + AK4JetBDeepCSVbb_singleLepCalc_PtOrdered.at(ijet) > 0.4941){ // ATTENTION !!! : HARD CODED BTAG MEDIUM VALUE for 2017data. 9 Nov 2018.
+			  NJetsBTag_singleLepCalc += 1;
+			}
+
+		// Count BTag with SFs
 		if(AK4JetBTag_singleLepCalc_PtOrdered.at(ijet) == 1){
 		  NJetsBTagwithSF_singleLepCalc += 1;
 		  if(AK4JetPt_singleLepCalc_PtOrdered.at(ijet) > BJetLeadPt) BJetLeadPt = AK4JetPt_singleLepCalc_PtOrdered.at(ijet);
 		  
-		  /* From SingleLep
-		  deltaR_lepBJets.push_back(lepton_lv.DeltaR(jet_lv));
-		  deltaPhi_lepBJets.push_back(lepton_lv.DeltaPhi(jet_lv));
-		  mass_lepBJets.push_back((lepton_lv + jet_lv).M());
-
-		  if((lepton_lv + jet_lv).M() < minMleppBjet) {
-		    minMleppBjet = fabs( (lepton_lv + jet_lv).M() );
-		    deltaRlepbJetInMinMlb = jet_lv.DeltaR(lepton_lv);
-		    deltaPhilepbJetInMinMlb = jet_lv.DeltaPhi(lepton_lv);
-		  }
-		  */
 		  
 		  if(DEBUG || DEBUGleptons) cout << "min M[lep,BJet("<<NJetsBTagwithSF_singleLepCalc<<")] = " ;
 		  if(DEBUG || DEBUGleptons) cout <<  minMleppBjet ; 
@@ -3263,17 +2454,6 @@ eta:2.5 bin:11
 		  NJetsBTagwithSF_singleLepCalc_shifts.at(0) += 1;
 		  if(AK4JetPt_singleLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(0)) BJetLeadPt_shifts.at(0) = AK4JetPt_singleLepCalc_PtOrdered.at(ijet);
 		  
-		  /* From SingleLep
-		  deltaR_lepBJets_bSFup.push_back(lepton_lv.DeltaR(jet_lv));
-		  deltaPhi_lepBJets_bSFup.push_back(lepton_lv.DeltaPhi(jet_lv));
-		  mass_lepBJets_bSFup.push_back((lepton_lv + jet_lv).M());
-
-		  if((lepton_lv + jet_lv).M() < minMleppBjet_shifts.at(0)) {
-		    minMleppBjet_shifts.at(0) = fabs( (lepton_lv + jet_lv).M() );
-		    deltaRlepbJetInMinMlb_shifts.at(0) = jet_lv.DeltaR(lepton_lv);
-		    deltaPhilepbJetInMinMlb_shifts.at(0) = jet_lv.DeltaPhi(lepton_lv);
-		  }
-		  */
 
 		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
 			  if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppBjet) {
@@ -3297,17 +2477,6 @@ eta:2.5 bin:11
 		  NJetsBTagwithSF_singleLepCalc_shifts.at(1) += 1;
 		  if(AK4JetPt_singleLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(1)) BJetLeadPt_shifts.at(1) = AK4JetPt_singleLepCalc_PtOrdered.at(ijet);
 		  
-		  /*From SingleLep
-		  deltaR_lepBJets_bSFdn.push_back(lepton_lv.DeltaR(jet_lv));
-		  deltaPhi_lepBJets_bSFdn.push_back(lepton_lv.DeltaPhi(jet_lv));
-		  mass_lepBJets_bSFdn.push_back((lepton_lv + jet_lv).M());
-
-		  if((lepton_lv + jet_lv).M() < minMleppBjet_shifts.at(1)) {
-		    minMleppBjet_shifts.at(1) = fabs( (lepton_lv + jet_lv).M() );
-		    deltaRlepbJetInMinMlb_shifts.at(1) = jet_lv.DeltaR(lepton_lv);
-		    deltaPhilepbJetInMinMlb_shifts.at(1) = jet_lv.DeltaPhi(lepton_lv);
-		  }
-		  */
 
 		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
 			  if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppBjet) {
@@ -3332,17 +2501,6 @@ eta:2.5 bin:11
 		  NJetsBTagwithSF_singleLepCalc_shifts.at(2) += 1;
 		  if(AK4JetPt_singleLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(2)) BJetLeadPt_shifts.at(2) = AK4JetPt_singleLepCalc_PtOrdered.at(ijet);
 		  
-		  /* From SingleLep
-		  deltaR_lepBJets_lSFup.push_back(lepton_lv.DeltaR(jet_lv));
-		  deltaPhi_lepBJets_lSFup.push_back(lepton_lv.DeltaPhi(jet_lv));
-		  mass_lepBJets_lSFup.push_back((lepton_lv + jet_lv).M());
-
-		  if((lepton_lv + jet_lv).M() < minMleppBjet_shifts.at(2)) {
-		    minMleppBjet_shifts.at(2) = fabs( (lepton_lv + jet_lv).M() );
-		    deltaRlepbJetInMinMlb_shifts.at(2) = jet_lv.DeltaR(lepton_lv);
-		    deltaPhilepbJetInMinMlb_shifts.at(2) = jet_lv.DeltaPhi(lepton_lv);
-		  }
-		  */
 
 		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
 			  if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppBjet) {
@@ -3367,17 +2525,6 @@ eta:2.5 bin:11
 		  NJetsBTagwithSF_singleLepCalc_shifts.at(3) += 1;
 		  if(AK4JetPt_singleLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(3)) BJetLeadPt_shifts.at(3) = AK4JetPt_singleLepCalc_PtOrdered.at(ijet);
 
-		  /* From SingleLep
-		  deltaR_lepBJets_lSFdn.push_back(lepton_lv.DeltaR(jet_lv));
-		  deltaPhi_lepBJets_lSFdn.push_back(lepton_lv.DeltaPhi(jet_lv));
-		  mass_lepBJets_lSFdn.push_back((lepton_lv + jet_lv).M());
-
-		  if((lepton_lv + jet_lv).M() < minMleppBjet_shifts.at(3)) {
-		    minMleppBjet_shifts.at(3) = fabs( (lepton_lv + jet_lv).M() );
-		    deltaRlepbJetInMinMlb_shifts.at(3) = jet_lv.DeltaR(lepton_lv);
-		    deltaPhilepbJetInMinMlb_shifts.at(3) = jet_lv.DeltaPhi(lepton_lv);
-		  }
-		  */
 
 		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
 			  if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppBjet) {
@@ -3398,12 +2545,6 @@ eta:2.5 bin:11
 
 		}
       	
-      	/* From SingleLep
-		if(deltaR_lepJets[ijet] < minDR_lepJet) {
-		  minDR_lepJet = deltaR_lepJets[ijet];
-		  ptRel_lepJet = lepton_lv.P()*(jet_lv.Vect().Cross(lepton_lv.Vect()).Mag()/jet_lv.P()/lepton_lv.P());
-		}
-		*/
       }
       
       if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep1,jets) = "<< minDR_lep1Jet << "	ptRel = "<< ptRel_minDRlep1Jet << std::endl;
@@ -3411,344 +2552,6 @@ eta:2.5 bin:11
       if(DEBUGjets||DEBUGleptons) std::cout << "min dR(lep3,jets) = "<< minDR_lep3Jet << "	ptRel = "<< ptRel_minDRlep3Jet << std::endl;
       if(DEBUGjets||DEBUGleptons) std::cout << "min dR(leps,jets) = "<< minDR_lepJet << "	ptRel = "<< ptRel_minDRlepJet << std::endl;
       
-      /*
-      // ----------------------------------------------------------------------------
-      // AK8 Jet - lepton associations, Top and W taggging
-      // ----------------------------------------------------------------------------
-      if(DEBUG)std::cout<<"AK8 Jet - lepton associations, Top and W taggging"<<std::endl;      
-
-      NJetsWtagged_0p6 = 0;
-      NJetsTtagged_0p81 = 0;
-      deltaR_lepAK8s.clear();
-      deltaPhi_lepAK8s.clear();
-      mass_lepAK8s.clear();
-      minDR_lepAK8 = 1000;
-      minDR_leadAK8otherAK8 = 1000;
-      if(theJetAK8Pt_JetSubCalc_PtOrdered.size() < 1) minDR_lepAK8 = -99.0;      
-      if(theJetAK8Pt_JetSubCalc_PtOrdered.size() < 2) minDR_leadAK8otherAK8 = -99.0;
-      WJetLeadPt = -99.0;
-      TJetLeadPt = -99.0;
-      deltaRtopWjet = -99;     deltaPhitopWjet = -99;
-      deltaRlepWjet = -99;     deltaPhilepWjet = -99;	  
-      deltaRlepTjet = -99;     deltaPhilepTjet = -99;	  
-
-      NJetsWtagged_0p6_shifts.clear();
-      NJetsTtagged_0p81_shifts.clear();
-      theJetAK8Wmatch_JetSubCalc_PtOrdered.clear();
-      theJetAK8Hmatch_JetSubCalc_PtOrdered.clear();
-      theJetAK8Zmatch_JetSubCalc_PtOrdered.clear();
-      theJetAK8Tmatch_JetSubCalc_PtOrdered.clear();
-      theJetAK8MatchedPt_JetSubCalc_PtOrdered.clear();
-      WJetLeadPt_shifts.clear();
-      TJetLeadPt_shifts.clear();
-      deltaRtopWjet_shifts.clear();  deltaPhitopWjet_shifts.clear(); 
-      deltaRlepWjet_shifts.clear();  deltaPhilepWjet_shifts.clear(); 
-      deltaRlepTjet_shifts.clear();  deltaPhilepTjet_shifts.clear(); 
-
-      wjet1_lv.SetPtEtaPhiM(0,0,0,0);
-      tjet1_lv.SetPtEtaPhiM(0,0,0,0);
-      ak8_lv.SetPtEtaPhiM(0,0,0,0);
-      TLorentzVector leadak8;
-      leadak8.SetPtEtaPhiM(0,0,0,0);
-
-      for(int i = 0; i < 2; i++){
-		NJetsWtagged_0p6_shifts.push_back(0);
-		NJetsTtagged_0p81_shifts.push_back(0);
-		WJetLeadPt_shifts.push_back(-99.0);
-		TJetLeadPt_shifts.push_back(-99.0);
-		deltaRtopWjet_shifts.push_back(-99.0);  deltaPhitopWjet_shifts.push_back(-99.0); 
-		deltaRlepWjet_shifts.push_back(-99.0);  deltaPhilepWjet_shifts.push_back(-99.0); 
-		deltaRlepTjet_shifts.push_back(-99.0);  deltaPhilepTjet_shifts.push_back(-99.0); 
-      }
-      */
-      
-      /*
-
-      for(unsigned int ijet=0; ijet < theJetAK8Pt_JetSubCalc_PtOrdered.size(); ijet++){
-
-		// ----------------------------------------------------------------------------
-		// AK8 - lepton and AK8 -- AK8 associations
-		// ----------------------------------------------------------------------------
-		if(DEBUG)std::cout<<"AK8 - lepton and AK8 -- AK8 associations"<<std::endl;      
-	
-		ak8_lv.SetPtEtaPhiE(theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet),theJetAK8Eta_JetSubCalc_PtOrdered.at(ijet),theJetAK8Phi_JetSubCalc_PtOrdered.at(ijet),theJetAK8Energy_JetSubCalc_PtOrdered.at(ijet));
-		if(ijet == 0) leadak8 = ak8_lv;
-		*/
-
-		/* From SingleLep
-		deltaR_lepAK8s.push_back(lepton_lv.DeltaR(ak8_lv));
-		deltaPhi_lepAK8s.push_back(lepton_lv.DeltaPhi(ak8_lv));
-		mass_lepAK8s.push_back((lepton_lv+ak8_lv).M());
-	
-		if(lepton_lv.DeltaR(ak8_lv) < minDR_lepAK8) minDR_lepAK8 = lepton_lv.DeltaR(ak8_lv);
-		*/
-		
-		/*
-
-		if(ijet > 0){
-		  float tempdr = leadak8.DeltaR(ak8_lv);
-		  if(tempdr < minDR_leadAK8otherAK8){
-			minDR_leadAK8otherAK8 = tempdr;
-		  }
-		}
-
-		// ----------------------------------------------------------------------------
-		// W & top tagging on MC
-		// ----------------------------------------------------------------------------
-		if(DEBUG)std::cout<<"W & top tagging on MC"<<std::endl;      
-
-		float tau21 = theJetAK8NjettinessTau2_JetSubCalc_PtOrdered.at(ijet)/theJetAK8NjettinessTau1_JetSubCalc_PtOrdered.at(ijet);
-		float tau32 = theJetAK8NjettinessTau3_JetSubCalc_PtOrdered.at(ijet)/theJetAK8NjettinessTau2_JetSubCalc_PtOrdered.at(ijet);
-		float mass = theJetAK8PrunedMassWtagUncerts_JetSubCalc_PtOrdered.at(ijet);
-		float massSD = theJetAK8SoftDropMass_JetSubCalc_PtOrdered.at(ijet);
-
-		// ------------------------------------------------------------------------------------------------------------------
-		// MC Calculation first
-		// ------------------------------------------------------------------------------------------------------------------
-		if(DEBUG)std::cout<<"MC Calculation first"<<std::endl;      
-
-		if(isMC){
-
-		  // ------------------------------------------------------------------------------------------------------------------
-		  // TRUTH MATCHING
-		  // ------------------------------------------------------------------------------------------------------------------
-		  float minDR = 1000;
-		  float matchedPt= -99;
-		  int matchedID = 0;
-		  bool isWmatched = false;
-		  bool isHmatched = false;
-		  bool isZmatched = false;
-		  bool isTmatched = false;
-		  TLorentzVector trueW,d1,d2,d3;
-
-		  for(unsigned int iW = 0; iW < HadronicVHtPt_JetSubCalc->size(); iW++){
-			trueW.SetPtEtaPhiE(HadronicVHtPt_JetSubCalc->at(iW),HadronicVHtEta_JetSubCalc->at(iW),HadronicVHtPhi_JetSubCalc->at(iW),HadronicVHtEnergy_JetSubCalc->at(iW));
-
-			if(ak8_lv.DeltaR(trueW) < minDR){
-			  minDR = ak8_lv.DeltaR(trueW);
-			  matchedPt = HadronicVHtPt_JetSubCalc->at(iW);
-			  matchedID = abs(HadronicVHtID_JetSubCalc->at(iW));	      
-			  d1.SetPtEtaPhiE(HadronicVHtD0Pt_JetSubCalc->at(iW),HadronicVHtD0Eta_JetSubCalc->at(iW),HadronicVHtD0Phi_JetSubCalc->at(iW),HadronicVHtD0E_JetSubCalc->at(iW));
-			  d2.SetPtEtaPhiE(HadronicVHtD1Pt_JetSubCalc->at(iW),HadronicVHtD1Eta_JetSubCalc->at(iW),HadronicVHtD1Phi_JetSubCalc->at(iW),HadronicVHtD1E_JetSubCalc->at(iW));
-			  d3.SetPtEtaPhiE(HadronicVHtD2Pt_JetSubCalc->at(iW),HadronicVHtD2Eta_JetSubCalc->at(iW),HadronicVHtD2Phi_JetSubCalc->at(iW),HadronicVHtD2E_JetSubCalc->at(iW));
-			}
-		  }	 
-  
-		  bool WallDsInJet = false;
-		  bool TallDsInJet = false;
-		  if(matchedID != 6 && ak8_lv.DeltaR(d1) < 0.8 && ak8_lv.DeltaR(d2) < 0.8) WallDsInJet = true;
-		  if(matchedID == 6 && ak8_lv.DeltaR(d1) < 0.8 && ak8_lv.DeltaR(d2) < 0.8 && ak8_lv.DeltaR(d3) < 0.8) TallDsInJet = true;
-		  if(minDR < 0.8 && matchedID == 24 && WallDsInJet) isWmatched = true;
-		  if(minDR < 0.8 && matchedID == 25 && WallDsInJet) isHmatched = true;
-		  if(minDR < 0.8 && matchedID == 23 && WallDsInJet) isZmatched = true;
-		  if(minDR < 0.8 && matchedID == 6 && TallDsInJet) isTmatched = true;
-
-		  theJetAK8Wmatch_JetSubCalc_PtOrdered.push_back(isWmatched);
-		  theJetAK8Hmatch_JetSubCalc_PtOrdered.push_back(isHmatched);
-		  theJetAK8Zmatch_JetSubCalc_PtOrdered.push_back(isZmatched);
-		  theJetAK8Tmatch_JetSubCalc_PtOrdered.push_back(isTmatched);
-		  if(isWmatched || isZmatched || isHmatched || isTmatched) theJetAK8MatchedPt_JetSubCalc_PtOrdered.push_back(matchedPt);
-		  else theJetAK8MatchedPt_JetSubCalc_PtOrdered.push_back(-99.0);
-		  */
-	  
-		  // ------------------------------------------------------------------------------------------------------------------
-		  // W TAGGING
-		  // ------------------------------------------------------------------------------------------------------------------
-	  
-		  /*
-	  
-		  float tau0p6SF = 1.0;
-		  float tau0p6SFup = 1.0;
-		  float tau0p6SFdn = 1.0;
-		  double tau0p6Eff = 1.0;
-		  if(isWmatched){	    
-			// VALUES FOR 76X FROM TWIKI 76X with JEC v2
-			tau0p6SF = 0.980;
-			tau0p6SFup = 1.014;
-			tau0p6SFdn = 0.946;
-	  
-			// Use matched W to find the efficiency -- calculated for TpTp and ttbar, EWK/QCD will almost never pass here (use ttbar eff when they do)
-			if(isSig){
-			  int bin = (std::upper_bound(ptRangeTpTp.begin(), ptRangeTpTp.end(), matchedPt)-ptRangeTpTp.begin())-1;
-			  tau0p6Eff = SignalEff[SigMass][bin];
-			}else{
-			  int bin = (std::upper_bound(ptRangeTTbar.begin(), ptRangeTTbar.end(), matchedPt)-ptRangeTTbar.begin())-1;
-			  if(isTT) tau0p6Eff = TTbarEff[bin]; // ttbar
-			  else if(isST) tau0p6Eff = STEff[bin]; // single top (s and t channel had 0 boosted tops)
-			  else if(isTTV) tau0p6Eff = TTVEff[bin]; // tt+V
-			  else tau0p6Eff = WVEff[bin]; // WW, WZ, etc. 
-			}
-		  }
-
-		  // Set the initial tagged/untagged state
-		  bool isWtagged = (mass > 65) && (mass < 105) && (tau21 < 0.6);
- 
-		  // IF THE JET IS NOT TRUTH-MATCHED, THESE IFS WILL DO NOTHING, SF == 1
-		  int tag_tau0p6 = applySF(isWtagged,tau0p6SF,tau0p6Eff);
-		  int tag_tau0p6up = applySF(isWtagged,tau0p6SFup,tau0p6Eff);
-		  int tag_tau0p6dn = applySF(isWtagged,tau0p6SFdn,tau0p6Eff);
-	  
-		  // Now increase the tag count in the right variable	  
-		  NJetsWtagged_0p6 += tag_tau0p6;
-		  NJetsWtagged_0p6_shifts[0] += tag_tau0p6up;
-		  NJetsWtagged_0p6_shifts[1] += tag_tau0p6dn;
-	  
-		  */
-
-		  // ------------------------------------------------------------------------------------------------------------------
-		  // Variables for W tagged jets
-		  // ------------------------------------------------------------------------------------------------------------------
-	  
-		  /*
-		  if(tag_tau0p6 == 1){
-			if(NJetsWtagged_0p6 == 1){
-			  WJetLeadPt = theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet);
-			  wjet1_lv.SetPtEtaPhiM(theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet),theJetAK8Eta_JetSubCalc_PtOrdered.at(ijet),
-						theJetAK8Phi_JetSubCalc_PtOrdered.at(ijet),mass);
-			  deltaRtopWjet = wjet1_lv.DeltaR(lvTop);
-			  deltaRlepWjet = wjet1_lv.DeltaR(lepton_lv);
-			  deltaPhitopWjet = wjet1_lv.DeltaPhi(lvTop);
-			  deltaPhilepWjet = wjet1_lv.DeltaPhi(lepton_lv);
-			}
-		  }
-		  if(tag_tau0p6up == 1){
-			if(NJetsWtagged_0p6_shifts[0] == 1){
-			  WJetLeadPt_shifts.at(0) = theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet);
-			  wjet1_lv.SetPtEtaPhiM(theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet),theJetAK8Eta_JetSubCalc_PtOrdered.at(ijet),
-						theJetAK8Phi_JetSubCalc_PtOrdered.at(ijet),mass);
-			  deltaRtopWjet_shifts.at(0) = wjet1_lv.DeltaR(lvTop);
-			  deltaRlepWjet_shifts.at(0) = wjet1_lv.DeltaR(lepton_lv);
-			  deltaPhitopWjet_shifts.at(0) = wjet1_lv.DeltaPhi(lvTop);
-			  deltaPhilepWjet_shifts.at(0) = wjet1_lv.DeltaPhi(lepton_lv);
-			}
-		  }
-		  if(tag_tau0p6dn == 1){
-			if(NJetsWtagged_0p6_shifts[1] == 1){
-			  WJetLeadPt_shifts.at(1) = theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet);
-			  wjet1_lv.SetPtEtaPhiM(theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet),theJetAK8Eta_JetSubCalc_PtOrdered.at(ijet),
-						theJetAK8Phi_JetSubCalc_PtOrdered.at(ijet),mass);
-			  deltaRtopWjet_shifts.at(1) = wjet1_lv.DeltaR(lvTop);
-			  deltaRlepWjet_shifts.at(1) = wjet1_lv.DeltaR(lepton_lv);
-			  deltaPhitopWjet_shifts.at(1) = wjet1_lv.DeltaPhi(lvTop);
-			  deltaPhilepWjet_shifts.at(1) = wjet1_lv.DeltaPhi(lepton_lv);
-			}
-		  }
-		  */
-
-		  // ------------------------------------------------------------------------------------------------------------------
-		  // TOP TAGGING
-		  // ------------------------------------------------------------------------------------------------------------------
-	  
-		  /*
-		  float topTau81SF = 1.0;
-		  float topTau81SFup = 1.0;
-		  float topTau81SFdn = 1.0;
-		  double topTau81Eff = 1.0;
-		  if(isTmatched){	    
-			// VALUES FOR 76X FROM PAS
-			topTau81SF = 0.96;
-			topTau81SFup = 1.04;
-			topTau81SFdn = 0.88;
-	  
-			// Use matched T to find the efficiency -- calculated for TpTp and ttbar, EWK/QCD will almost never pass here (use ttbar eff when they do)
-			if(isSig){
-			  int bin = (std::upper_bound(ptRangeTpTpTop.begin(), ptRangeTpTpTop.end(), matchedPt)-ptRangeTpTpTop.begin())-1;
-			  topTau81Eff = SignalEffTop[SigMass][bin];
-			}else{
-			  int bin = (std::upper_bound(ptRangeTTbarTop.begin(), ptRangeTTbarTop.end(), matchedPt)-ptRangeTTbarTop.begin())-1;
-			  topTau81Eff = TTbarEffTop[bin];
-			}
-		  }
-
-		  // Set the initial tagged/untagged state
-		  bool isTtagged = (massSD > 105) && (massSD < 220) && (tau32 < 0.81);
-
-		  // IF THE JET IS NOT TRUTH-MATCHED, THESE IFS WILL DO NOTHING, SF == 1
-		  int tag_topTau81 = applySF(isTtagged,topTau81SF,topTau81Eff);
-		  int tag_topTau81up = applySF(isTtagged,topTau81SFup,topTau81Eff);
-		  int tag_topTau81dn = applySF(isTtagged,topTau81SFdn,topTau81Eff);
- 
-		  // Now increase the tag count in the right variable	  
-		  NJetsTtagged_0p81 += tag_topTau81;
-		  NJetsTtagged_0p81_shifts[0] += tag_topTau81up;
-		  NJetsTtagged_0p81_shifts[1] += tag_topTau81dn;	  
-		  */
-
-		  // ------------------------------------------------------------------------------------------------------------------
-		  // Variable for top tagged jets
-		  // ------------------------------------------------------------------------------------------------------------------
-	  
-		  /*
-		  if(tag_topTau81 == 1){
-			TJetLeadPt = theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet);
-			if(NJetsTtagged_0p81 == 1){
-			  tjet1_lv.SetPtEtaPhiM(theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet),theJetAK8Eta_JetSubCalc_PtOrdered.at(ijet),
-						theJetAK8Phi_JetSubCalc_PtOrdered.at(ijet),massSD);
-			  deltaRlepTjet = tjet1_lv.DeltaR(lepton_lv);
-			  deltaPhilepTjet = tjet1_lv.DeltaPhi(lepton_lv);
-			}
-		  }
-		  if(tag_topTau81up == 1){
-			TJetLeadPt_shifts.at(0) = theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet);
-			if(NJetsTtagged_0p81_shifts[0] == 1){
-			  tjet1_lv.SetPtEtaPhiM(theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet),theJetAK8Eta_JetSubCalc_PtOrdered.at(ijet),
-						theJetAK8Phi_JetSubCalc_PtOrdered.at(ijet),massSD);
-			  deltaRlepTjet_shifts.at(0) = tjet1_lv.DeltaR(lepton_lv);
-			  deltaPhilepTjet_shifts.at(0) = tjet1_lv.DeltaPhi(lepton_lv);
-			}
-		  }
-		  if(tag_topTau81dn == 1){
-			TJetLeadPt_shifts.at(1) = theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet);
-			if(NJetsTtagged_0p81_shifts[1] == 1){
-			  tjet1_lv.SetPtEtaPhiM(theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet),theJetAK8Eta_JetSubCalc_PtOrdered.at(ijet),
-						theJetAK8Phi_JetSubCalc_PtOrdered.at(ijet),massSD);
-			  deltaRlepTjet_shifts.at(1) = tjet1_lv.DeltaR(lepton_lv);
-			  deltaPhilepTjet_shifts.at(1) = tjet1_lv.DeltaPhi(lepton_lv);
-			}
-		  }
-
-		}
-		
-		
-		// ------------------------------------------------------------------------------------------------------------------
-		// DATA Calculation second
-		// ------------------------------------------------------------------------------------------------------------------
-		if(DEBUG)std::cout<<"DATA Calculation second"<<std::endl;
-		      
-		else{
-	 
-		  theJetAK8Wmatch_JetSubCalc_PtOrdered.push_back(0);
-		  theJetAK8Hmatch_JetSubCalc_PtOrdered.push_back(0);
-		  theJetAK8Zmatch_JetSubCalc_PtOrdered.push_back(0);
-		  theJetAK8Tmatch_JetSubCalc_PtOrdered.push_back(0);
-	  
-		  if(tau21 < 0.6 && mass > 65.0 && mass < 105.0){
-
-			NJetsWtagged_0p6 += 1;
-			if(NJetsWtagged_0p6 == 1){
-			  WJetLeadPt = theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet);
-			  wjet1_lv.SetPtEtaPhiM(theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet),theJetAK8Eta_JetSubCalc_PtOrdered.at(ijet),
-						theJetAK8Phi_JetSubCalc_PtOrdered.at(ijet),mass);
-			  deltaRtopWjet = wjet1_lv.DeltaR(lvTop);
-			  deltaRlepWjet = wjet1_lv.DeltaR(lepton_lv);
-			  deltaPhitopWjet = wjet1_lv.DeltaPhi(lvTop);
-			  deltaPhilepWjet = wjet1_lv.DeltaPhi(lepton_lv);
-			}
-		  }
-		  if(tau32 < 0.81 && massSD > 105.0 && massSD < 220.0){
-
-			NJetsTtagged_0p81 += 1;
-			if(NJetsTtagged_0p81 == 1){
-			  TJetLeadPt = theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet);
-			  tjet1_lv.SetPtEtaPhiM(theJetAK8Pt_JetSubCalc_PtOrdered.at(ijet),theJetAK8Eta_JetSubCalc_PtOrdered.at(ijet),
-						theJetAK8Phi_JetSubCalc_PtOrdered.at(ijet),massSD);
-			  deltaRlepTjet = tjet1_lv.DeltaR(lepton_lv);
-			  deltaPhilepTjet = tjet1_lv.DeltaPhi(lepton_lv);
-			}
-		  }
-		}
-      }
-	 */
 
       // ----------------------------------------------------------------------------
       // PDF and Matrix Element energy scale weights
@@ -3823,12 +2626,6 @@ eta:2.5 bin:11
 
       MCPastTrigger_dilep         = (int)   isPastTrigMC_dilep;
       DataPastTrigger_dilep       = (int)   isPastTrig_dilep;
-      MCPastTrigger_dilepDZ4runH      = (int)   isPastTrigMC_dilepDZ4runH;
-      DataPastTrigger_dilepDZ4runH    = (int)   isPastTrig_dilepDZ4runH;
-      MCPastTrigger_dilepHT         = (int)   isPastTrigMC_dilepHT;
-      DataPastTrigger_dilepHT       = (int)   isPastTrig_dilepHT;
-      MCPastTrigger_trilep         = (int)   isPastTrigMC_trilep;
-      DataPastTrigger_trilep       = (int)   isPastTrig_trilep;
       
       if(DEBUGjets)std::cout<< "NJets (just before filling tree) = " << NJets_singleLepCalc << std::endl;
  
@@ -3841,13 +2638,11 @@ eta:2.5 bin:11
 
    //std::cout<<"Nelectrons             = "<<Nelectrons<<" / "<<nentries<<std::endl;
    //std::cout<<"Nmuons                 = "<<Nmuons<<" / "<<nentries<<std::endl;
-   //std::cout<<"Npassed_Mu500          = "<<npass_mu500<<" / "<<nentries<<std::endl;
-   std::cout<<"Npassed_Trigger(DATA)  = "<<npass_trigger<<" / "<<nentries<<std::endl;
-   std::cout<<"Npassed_MET            = "<<npass_met<<" / "<<nentries<<std::endl;
+   std::cout<<"Npassed_Trigger  = "<<npass_trigger<<" / "<<nentries<<std::endl;
    std::cout<<"Npassed_trilepPt       = "<<npass_trilepPt<<" / "<<nentries<<std::endl;
-   std::cout<<"Npassed_JetLeadPt      = "<<npass_JetLeadPt<<" / "<<nentries<<std::endl;
-   std::cout<<"Npassed_JetSubLeadPt   = "<<npass_JetSubLeadPt<<" / "<<nentries<<std::endl;
+   std::cout<<"Npassed_MET            = "<<npass_met<<" / "<<nentries<<std::endl;
    std::cout<<"Npassed_nJets          = "<<npass_njets<<" / "<<nentries<<std::endl;
+   std::cout<<"Npassed_JetPt          = "<<npass_JetPt<<" / "<<nentries<<std::endl;
    //std::cout<<"Npassed_ElEta          = "<<npass_ElEta<<" / "<<nentries<<std::endl;
    std::cout<<"Npassed_ALL            = "<<npass_all<<" / "<<nentries<<std::endl;
 
