@@ -18,18 +18,15 @@ outDir=outputDir[10:]
 os.system('eos root://cmseos.fnal.gov/ mkdir -p '+outDir)
 
 # signalList = [
-# #    'TprimeTprime_M-700_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'TprimeTprime_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'TprimeTprime_M-900_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'TprimeTprime_M-1000_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'TprimeTprime_M-1100_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'TprimeTprime_M-1200_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'TprimeTprime_M-1300_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'TprimeTprime_M-1400_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'TprimeTprime_M-1500_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'TprimeTprime_M-1600_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'TprimeTprime_M-1700_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'TprimeTprime_M-1800_TuneCUETP8M1_13TeV-madgraph-pythia8',
+# #     'TprimeTprime_M-1000_TuneCP5_13TeV-madgraph-pythia8',
+#     'TprimeTprime_M-1100_TuneCP5_13TeV-madgraph-pythia8',
+#     'TprimeTprime_M-1200_TuneCP5_13TeV-madgraph-pythia8',
+#     'TprimeTprime_M-1300_TuneCP5_13TeV-madgraph-pythia8',
+#     'TprimeTprime_M-1400_TuneCP5_13TeV-madgraph-pythia8',
+#     'TprimeTprime_M-1500_TuneCP5_13TeV-madgraph-pythia8',
+#     'TprimeTprime_M-1600_TuneCP5_13TeV-madgraph-pythia8',
+#     'TprimeTprime_M-1700_TuneCP5_13TeV-madgraph-pythia8',
+#     'TprimeTprime_M-1800_TuneCP5_13TeV-madgraph-pythia8',
 #     ]
 # 
 # signalOutList = ['BWBW','TZBW','THBW','TZTH','TZTZ','THTH']
@@ -39,7 +36,8 @@ os.system('eos root://cmseos.fnal.gov/ mkdir -p '+outDir)
 # 
 #         rootfiles = EOSlist_root_files(inputDir+'/'+sample+'_'+outlabel)
 # #        print 'N root files in',sample,'=',len(rootfiles)
-#         haddcommand = 'hadd root://cmseos.fnal.gov/'+outDir+'/'+sample+'_'+outlabel+'_hadd.root '
+# #         haddcommand = 'hadd root://cmseos.fnal.gov/'+outDir+'/'+sample+'_'+outlabel+'_hadd.root '
+#         haddcommand = 'hadd -f root://cmseos.fnal.gov/'+outDir+'/'+sample+'_'+outlabel+'_hadd.root '
 # 
 #         print '##########'*15
 #         print 'HADDING:', sample,'_',outlabel
@@ -52,20 +50,17 @@ os.system('eos root://cmseos.fnal.gov/ mkdir -p '+outDir)
 #         os.system(haddcommand)
 # #        print haddcommand
 # 
-# 
+
 # signalList = [
-#    #'BprimeBprime_M-700_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'BprimeBprime_M-800_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'BprimeBprime_M-900_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'BprimeBprime_M-1000_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'BprimeBprime_M-1100_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'BprimeBprime_M-1200_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'BprimeBprime_M-1300_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'BprimeBprime_M-1400_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'BprimeBprime_M-1500_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'BprimeBprime_M-1600_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'BprimeBprime_M-1700_TuneCUETP8M1_13TeV-madgraph-pythia8',
-#     'BprimeBprime_M-1800_TuneCUETP8M1_13TeV-madgraph-pythia8',
+#     'BprimeBprime_M-1000_TuneCP5_13TeV-madgraph-pythia8',
+#     'BprimeBprime_M-1100_TuneCP5_13TeV-madgraph-pythia8',
+#     'BprimeBprime_M-1200_TuneCP5_13TeV-madgraph-pythia8',
+#     'BprimeBprime_M-1300_TuneCP5_13TeV-madgraph-pythia8',
+#     'BprimeBprime_M-1400_TuneCP5_13TeV-madgraph-pythia8',
+#     'BprimeBprime_M-1500_TuneCP5_13TeV-madgraph-pythia8',
+#     'BprimeBprime_M-1600_TuneCP5_13TeV-madgraph-pythia8',
+#     'BprimeBprime_M-1700_TuneCP5_13TeV-madgraph-pythia8',
+#     'BprimeBprime_M-1800_TuneCP5_13TeV-madgraph-pythia8',
 #     ]
 # 
 # signalOutList = ['TWTW','BZTW','BHTW','BZBH','BZBZ','BHBH']
@@ -90,77 +85,21 @@ os.system('eos root://cmseos.fnal.gov/ mkdir -p '+outDir)
 
 
 dirList = [
-# 	'TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8',
-# 	'TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_combined',
-# 	'TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8',
-# 	'TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
-# 	'TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
-# 
-# # 	'TT_TuneCUETP8M1_13TeV-powheg-pythia8',
-# 'TT_TuneCUETP8M2T4_13TeV-powheg-pythia8', #MoriondMC
-# # 	'TT_Mtt-1000toInf_TuneCUETP8M2T4_13TeV-powheg-pythia8',
-# # 	'TT_Mtt-700to1000_TuneCUETP8M2T4_13TeV-powheg-pythia8',
-# 'TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8',
-# 'TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8',
-# 
-# 
-# #
-# # 	'ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1',
-# # 	'ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1',
-# # 	'ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1',
-# # 	'ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1',
-# # 	'ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1',
-# #
-# 	'DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
-# # 	'DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# 	'DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
-# 	'DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# 	'DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_combined',
-# # 	'DYJetsToLL_M-50_TuneCUETHS1_13TeV-madgraphMLM-herwigpp',
-# 
-# 	'DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# 	'DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# 	'DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# 	'DYJetsToLL_M-50_HT-600to800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# 	'DYJetsToLL_M-50_HT-800to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# 	'DYJetsToLL_M-50_HT-1200to2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# 	'DYJetsToLL_M-50_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# 
-# 	'DYJetsToLL_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
-# 	'DYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
-# 	'DYJetsToLL_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
-# 	'DYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
-# 	'DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
-# 
-# #
-# 	'WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
-# # 	'WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# # 	'WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# # 	'WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# # 	'WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# # 	'WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# # 	'WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# # 	'WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# # 	'WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
-# #
-# 	'WW_TuneCUETP8M1_13TeV-pythia8',
-# 
-# 	'WZ_TuneCUETP8M1_13TeV-pythia8',
-# 	'ZZ_TuneCUETP8M1_13TeV-pythia8',
-#
-# # 	Additionally for multilepton:
-# 	'WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8',
-# 	'ZZTo4L_13TeV_powheg_pythia8',
-# 	'WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
-# 	'WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
-# 	'WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
-# 	'ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8',
-
 	#### As requested by Cristina Botta (ARC B2G-17-011).
-	'TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8',
+# 	'TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8',
 # 	'ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
 # 	'TTZToLL_M-1to10_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
 
+# 	'WZTo3LNu_13TeV-powheg-pythia8',
+# 	'ZZTo4L_13TeV_powheg_pythia8',
+# 	'WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8',
+	'WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8',
+# 	'WZZ_TuneCP5_13TeV-amcatnlo-pythia8',
+# 	'ZZZ_TuneCP5_13TeV-amcatnlo-pythia8',
+# 	'TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8',
+# 	'TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8',
+# 	'WW_TuneCP5_13TeV-pythia8',	
+	
     ]
 
 # if shift == 'nominal':
@@ -179,13 +118,9 @@ dirList = [
 # 	dirList.append('DoubleEG_RRF')
 # 	dirList.append('DoubleMuon_RRF')
 # 	dirList.append('MuonEG_RRF')
-# 	dirList.append('DoubleEG_RRG')
-# 	dirList.append('DoubleMuon_RRG')
-# 	dirList.append('MuonEG_RRG')
-# 	dirList.append('DoubleEG_RRH')
-# 	dirList.append('DoubleMuon_RRH')
-# 	dirList.append('MuonEG_RRH')
-
+# 	dirList.append('DoubleEG_RRF_v2')
+# 	dirList.append('DoubleMuon_RRF_v2')
+# 	dirList.append('MuonEG_RRF_v2')
 
 for sample in dirList:
 
