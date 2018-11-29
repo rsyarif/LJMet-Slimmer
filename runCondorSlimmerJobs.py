@@ -11,11 +11,11 @@ shift = sys.argv[1]
 
 relbase = os.environ['CMSSW_BASE']
 
-inputDir='/eos/uscms/store/group/lpcljm/LJMet94x_3lepTT_2017datasets_2018_11_7_rizki/'+shift+'/'
+inputDir='/eos/uscms/store/group/lpcljm/LJMet102x_3lepTT_2018datasets_2018_11_22_rizki/'+shift+'/'
 
-outputDir='/eos/uscms/store/group/lpcljm/LJMet94x_3lepTT_2017datasets_2018_11_7_rizki_step1/'+shift+'/'
+outputDir='/eos/uscms/store/group/lpcljm/LJMet102x_3lepTT_2018datasets_2018_11_22_rizki_step1/'+shift+'/'
 
-condorDir=os.environ['CMSSW_BASE']+'/..'+'/LJMet94x_3lepTT_2017datasets_2018_11_7_rizki_step1/'+shift+'/'
+condorDir=os.environ['CMSSW_BASE']+'/..'+'/LJMet102x_3lepTT_2018datasets_2018_11_22_rizki_step1/'+shift+'/'
 
 runDir=os.getcwd()
 # Can change the file directory if needed
@@ -153,7 +153,7 @@ dirList = [
 # 	'WZTo3LNu_13TeV-powheg-pythia8',
 # 	'ZZTo4L_13TeV_powheg_pythia8',
 # 	'WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8',
-	'WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8',
+# 	'WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8',
 # 	'WZZ_TuneCP5_13TeV-amcatnlo-pythia8',
 # 	'ZZZ_TuneCP5_13TeV-amcatnlo-pythia8',
 # 	'TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8',
@@ -162,25 +162,22 @@ dirList = [
 	
     ]
 
-# if shift == 'nominal':
-# 	dirList.append('DoubleEG_RRB')
-# 	dirList.append('DoubleMuon_RRB')
-# 	dirList.append('MuonEG_RRB')
-# 	dirList.append('DoubleEG_RRC')
-# 	dirList.append('DoubleMuon_RRC')
-# 	dirList.append('MuonEG_RRC')
-# 	dirList.append('DoubleEG_RRD')
-# 	dirList.append('DoubleMuon_RRD')
-# 	dirList.append('MuonEG_RRD')
-# 	dirList.append('DoubleEG_RRE')
-# 	dirList.append('DoubleMuon_RRE')
-# 	dirList.append('MuonEG_RRE')
-# 	dirList.append('DoubleEG_RRF')
-# 	dirList.append('DoubleMuon_RRF')
-# 	dirList.append('MuonEG_RRF')
-# 	dirList.append('DoubleEG_RRF_v2')
-# 	dirList.append('DoubleMuon_RRF_v2')
-# 	dirList.append('MuonEG_RRF_v2')
+if shift == 'nominal':
+# 	dirList.append('EGamma_RunA')
+# 	dirList.append('DoubleMuon_RunA')
+	dirList.append('EGamma_RunB')
+# 	dirList.append('DoubleMuon_RunB')
+# 	dirList.append('EGamma_RunC')
+# 	dirList.append('DoubleMuon_RunC')
+# 	dirList.append('EGamma_RunD')
+# 	dirList.append('DoubleMuon_RunD')
+
+	dirList.append('EGamma_RunB_26Sep2018')
+
+	dirList.append('MuonEG_RunA')
+	dirList.append('MuonEG_RunB')
+	dirList.append('MuonEG_RunC')
+	dirList.append('MuonEG_RunD')
 
 
 for sample in dirList:

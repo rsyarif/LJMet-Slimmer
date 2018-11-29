@@ -24,7 +24,7 @@ bool DEBUGleptons = false;
 bool DEBUGjets = false;
 bool DEBUGddbkg = false;
 bool DEBUGddbkgScan = false;
-bool DEBUGTriggers = false;
+bool DEBUGTriggers = true;
 
 // ----------------------------------------------------------------------------
 // Define functions
@@ -896,6 +896,14 @@ void step1::Loop()
       if(DEBUG)std::cout<<"Collecting electrons ..."<<std::endl;      
       if(DEBUG)std::cout<<"elPt_singleLepCalc->size() = "<< elPt_singleLepCalc->size() <<std::endl;  
       for(unsigned int iel = 0; iel < elPt_singleLepCalc->size(); iel++){
+      
+      	if(DEBUGleptons) std::cout << "\t" << iel << std::endl;
+      	if(DEBUGleptons) std::cout << "\t\t pT :" << elPt_singleLepCalc->at(iel) << std::endl;
+      	if(DEBUGleptons) std::cout << "\t\t eta:" << fabs(elEta_singleLepCalc->at(iel)) << std::endl;
+      	if(DEBUGleptons) std::cout << "\t\t miniIso:" << elMiniIso_singleLepCalc->at(iel) << std::endl;
+      	if(DEBUGleptons) std::cout << "\t\t isMVATight:" << elIsMVATight_singleLepCalc->at(iel) << std::endl;
+      	if(DEBUGleptons) std::cout << "\t\t isMVALoose:" << elIsMVALoose_singleLepCalc->at(iel) << std::endl;
+      
 		if(elPt_singleLepCalc->at(iel) < lepPtCut || fabs(elEta_singleLepCalc->at(iel)) > elEtaCut) continue;
 
 		//Explicit check for Tight electrons
@@ -930,6 +938,7 @@ void step1::Loop()
 
 		  alllepptindpair.push_back(std::make_pair(elPt_singleLepCalc->at(iel),alllepindex));
 		  alllepindex++;
+      	  if(DEBUGleptons) std::cout << "\t\t\t ---> Tight " << std::endl;
 		}
 
 		//Explicit check for Loose electrons 
@@ -964,6 +973,7 @@ void step1::Loop()
 
 		  alllepptindpair.push_back(std::make_pair(elPt_singleLepCalc->at(iel),alllepindex));
 		  alllepindex++;
+      	  if(DEBUGleptons) std::cout << "\t\t\t ---> Loose " << std::endl;
 		}
 		
       }
@@ -972,6 +982,14 @@ void step1::Loop()
       if(DEBUG)std::cout<<"Collecting muons ..."<<std::endl;      
       if(DEBUG)std::cout<<"muPt_singleLepCalc->size() = "<< muPt_singleLepCalc->size() <<std::endl;  
       for(unsigned int imu = 0; imu < muPt_singleLepCalc->size(); imu++){
+
+      	if(DEBUGleptons) std::cout << "\t" << imu << std::endl;
+      	if(DEBUGleptons) std::cout << "\t\t pT :" << muPt_singleLepCalc->at(imu) << std::endl;
+      	if(DEBUGleptons) std::cout << "\t\t eta:" << fabs(muEta_singleLepCalc->at(imu)) << std::endl;
+      	if(DEBUGleptons) std::cout << "\t\t miniIso:" << muMiniIso_singleLepCalc->at(imu) << std::endl;
+      	if(DEBUGleptons) std::cout << "\t\t isTight:" << muIsTight_singleLepCalc->at(imu) << std::endl;
+      	if(DEBUGleptons) std::cout << "\t\t isLoose:" << muIsLoose_singleLepCalc->at(imu) << std::endl;
+
 		if(muPt_singleLepCalc->at(imu) < lepPtCut || fabs(muEta_singleLepCalc->at(imu)) > 2.4) continue;
 		
 		//Explicit check for tight muons
@@ -1006,6 +1024,7 @@ void step1::Loop()
 
 		  alllepptindpair.push_back(std::make_pair(muPt_singleLepCalc->at(imu),alllepindex));
 		  alllepindex++;
+      	  if(DEBUGleptons) std::cout << "\t\t\t ---> Tight " << std::endl;
 		}
 		
 		//Explicit check for Loose muons
@@ -1040,6 +1059,7 @@ void step1::Loop()
 
 		  alllepptindpair.push_back(std::make_pair(muPt_singleLepCalc->at(imu),alllepindex));
 		  alllepindex++;
+		  if(DEBUGleptons) std::cout << "\t\t\t ---> Loose " << std::endl;
 		}
 
       }

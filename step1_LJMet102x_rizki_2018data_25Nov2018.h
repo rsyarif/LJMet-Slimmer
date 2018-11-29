@@ -1138,7 +1138,7 @@ step1::step1(TString inputFileName, TString outputFileName) : inputTree(0), inpu
   isTT = (inputFileName.Contains("TT_Tune") || inputFileName.Contains("Mtt"));
   isST = inputFileName.Contains("ST");
   isTTV = (inputFileName.Contains("TTZ_") || inputFileName.Contains("TTW_"));
-  isMC      = !inputFileName.Contains("DoubleEG") && !inputFileName.Contains("Muon")  ;
+  isMC      = !inputFileName.Contains("EGamma") && !inputFileName.Contains("Muon")  ;
   isTTincMtt0to700    = outputFileName.Contains("Mtt0to700");
   isTTincMtt0to1000    = outputFileName.Contains("Mtt0to1000");
   isTTincMtt700to1000    = outputFileName.Contains("Mtt700to1000");

@@ -1,18 +1,15 @@
 #include "step1.cc"
 
 void testStep1(){  
-  TString path ="root://cmseos.fnal.gov//store/group/lpcljm/LJMet94x_3lepTT_2017datasets_2018_11_7_rizki/nominal/";
+  TString path ="root://cmseos.fnal.gov//store/group/lpcljm/LJMet102x_3lepTT_2018datasets_2018_11_22_rizki/nominal/";
   
   //Choose one for test:
-//   TString filename ="TprimeTprime_M-1000_TuneCP5_13TeV-madgraph-pythia8"; //Signal
-//   TString filename ="DoubleEG_RRD"; //Data
-//   TString filename ="DoubleMuon_RRD"; //Data
-  TString filename ="MuonEG_RRE"; //Data
-//   TString filename ="TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8";  //MC bkg
+  TString filename ="EGamma_RunC"; //Data
+//   TString filename ="DoubleMuon_RunC"; //Data
 
 
   TString inputFile=path+"/"+filename+"/"+filename+"_1.root";    	
-  TString outputFile="testStep1_"+filename+".root";
+  TString outputFile="testStep1_2018data"+filename+".root";
 
   gSystem->AddIncludePath("-I$CMSSW_BASE/src/");
   
