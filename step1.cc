@@ -66,16 +66,37 @@ bool step1::applySF(bool& isTagged, float tag_SF, float tag_eff){
   return newTag;
 }
 
+
+// -------------------------------------
+// Function- SAVE Histograms from ljmet
+//--------------------------------------
+void step1::saveHistograms() 
+{ 
+TH1D* numhist = (TH1D*)inputFile->Get("mcweightanalyzer/NumTrueHist");
+TH1D* wgthist = (TH1D*)inputFile->Get("mcweightanalyzer/weightHist");
+outputFile->cd();
+numhist->Write();
+wgthist->Write();
+
+}
+
 // ----------------------------------------------------------------------------
 // MAIN EVENT LOOP
 // ----------------------------------------------------------------------------
 
-void step1::Loop() 
+void step1::Loop(TString inTreeName, TString outTreeName) 
 {
 
   // ----------------------------------------------------------------------------
   // Turn on input tree branches
   // ----------------------------------------------------------------------------
+
+   inputTree=(TTree*)inputFile->Get(inTreeName+"/"+inTreeName);
+   if(inputTree->GetEntries()==0) {
+       std::cout<<"WARNING! Found 0 events in the tree!!!!"<<std::endl;
+       exit(1);
+   }
+   Init(inputTree);
 
    if (inputTree == 0) return;
    
@@ -86,11 +107,11 @@ void step1::Loop()
    inputTree->SetBranchStatus("event_CommonCalc",1);
    inputTree->SetBranchStatus("run_CommonCalc",1);
    inputTree->SetBranchStatus("lumi_CommonCalc",1);
-   inputTree->SetBranchStatus("nPV_singleLepCalc",1);
-   inputTree->SetBranchStatus("nTrueInteractions_singleLepCalc",1);
-   inputTree->SetBranchStatus("MCWeight_singleLepCalc",1);
-   inputTree->SetBranchStatus("LHEweightids_singleLepCalc",1);
-   inputTree->SetBranchStatus("LHEweights_singleLepCalc",1);
+   inputTree->SetBranchStatus("nPV_MultiLepCalc",1);
+   inputTree->SetBranchStatus("nTrueInteractions_MultiLepCalc",1);
+   inputTree->SetBranchStatus("MCWeight_MultiLepCalc",1);
+   inputTree->SetBranchStatus("LHEweightids_MultiLepCalc",1);
+   inputTree->SetBranchStatus("LHEweights_MultiLepCalc",1);
 
    inputTree->SetBranchStatus("isTHBW_TpTpCalc",1);
    inputTree->SetBranchStatus("isTHTH_TpTpCalc",1);
@@ -108,67 +129,67 @@ void step1::Loop()
    inputTree->SetBranchStatus("NLeptonDecays_TpTpCalc",1);
    
    //triggers
-   inputTree->SetBranchStatus("vsSelMCTriggersEl_singleLepCalc",1);
-   inputTree->SetBranchStatus("viSelMCTriggersEl_singleLepCalc",1);
-   inputTree->SetBranchStatus("vsSelMCTriggersMu_singleLepCalc",1);
-   inputTree->SetBranchStatus("viSelMCTriggersMu_singleLepCalc",1);
-   inputTree->SetBranchStatus("vsSelTriggersEl_singleLepCalc",1);
-   inputTree->SetBranchStatus("viSelTriggersEl_singleLepCalc",1);
-   inputTree->SetBranchStatus("vsSelTriggersMu_singleLepCalc",1);
-   inputTree->SetBranchStatus("viSelTriggersMu_singleLepCalc",1);
+   inputTree->SetBranchStatus("vsSelMCTriggersEl_MultiLepCalc",1);
+   inputTree->SetBranchStatus("viSelMCTriggersEl_MultiLepCalc",1);
+   inputTree->SetBranchStatus("vsSelMCTriggersMu_MultiLepCalc",1);
+   inputTree->SetBranchStatus("viSelMCTriggersMu_MultiLepCalc",1);
+   inputTree->SetBranchStatus("vsSelTriggersEl_MultiLepCalc",1);
+   inputTree->SetBranchStatus("viSelTriggersEl_MultiLepCalc",1);
+   inputTree->SetBranchStatus("vsSelTriggersMu_MultiLepCalc",1);
+   inputTree->SetBranchStatus("viSelTriggersMu_MultiLepCalc",1);
    
    //electrons
-   inputTree->SetBranchStatus("elPt_singleLepCalc",1);
-   inputTree->SetBranchStatus("elEta_singleLepCalc",1);
-   inputTree->SetBranchStatus("elPhi_singleLepCalc",1);
-   inputTree->SetBranchStatus("elEnergy_singleLepCalc",1);
-   inputTree->SetBranchStatus("elDxy_singleLepCalc",1);
-   inputTree->SetBranchStatus("elD0_singleLepCalc",1);
-   inputTree->SetBranchStatus("elDZ_singleLepCalc",1);
-   inputTree->SetBranchStatus("elCharge_singleLepCalc",1);
-   inputTree->SetBranchStatus("elMVAValue_singleLepCalc",1);
-   inputTree->SetBranchStatus("elIsMVATight_singleLepCalc",1);
-   inputTree->SetBranchStatus("elIsMVALoose_singleLepCalc",1);
-   inputTree->SetBranchStatus("elMiniIso_singleLepCalc",1);
-   inputTree->SetBranchStatus("elIsTightBarrel_singleLepCalc",1);
-   inputTree->SetBranchStatus("elIsMediumBarrel_singleLepCalc",1);
-   inputTree->SetBranchStatus("elIsLooseBarrel_singleLepCalc",1);
-   inputTree->SetBranchStatus("elIsVetoBarrel_singleLepCalc",1);
-   inputTree->SetBranchStatus("elIsTIghtEndCap_singleLepCalc",1);
-   inputTree->SetBranchStatus("elIsMediumEndCap_singleLepCalc",1);
-   inputTree->SetBranchStatus("elIsLooseEndCap_singleLepCalc",1);
-   inputTree->SetBranchStatus("elIsVetoEndCap_singleLepCalc",1);
+   inputTree->SetBranchStatus("elPt_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elEta_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elPhi_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elEnergy_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elDxy_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elD0_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elDZ_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elCharge_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elMVAValue_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elIsMVATight90_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elIsMVALoose_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elMiniIso_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elIsTightBarrel_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elIsMediumBarrel_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elIsLooseBarrel_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elIsVetoBarrel_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elIsTIghtEndCap_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elIsMediumEndCap_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elIsLooseEndCap_MultiLepCalc",1);
+   inputTree->SetBranchStatus("elIsVetoEndCap_MultiLepCalc",1);
 
    //muons
-   inputTree->SetBranchStatus("muPt_singleLepCalc",1);
-   inputTree->SetBranchStatus("muEta_singleLepCalc",1);
-   inputTree->SetBranchStatus("muPhi_singleLepCalc",1);
-   inputTree->SetBranchStatus("muEnergy_singleLepCalc",1);
-   inputTree->SetBranchStatus("muDxy_singleLepCalc",1);
-   inputTree->SetBranchStatus("muDz_singleLepCalc",1);
-   inputTree->SetBranchStatus("muCharge_singleLepCalc",1);
-   inputTree->SetBranchStatus("muMiniIso_singleLepCalc",1);
-   inputTree->SetBranchStatus("muIsTight_singleLepCalc",1);
-   inputTree->SetBranchStatus("muIsMedium_singleLepCalc",1);
-   inputTree->SetBranchStatus("muIsMediumPrompt_singleLepCalc",1);
-   inputTree->SetBranchStatus("muIsLoose_singleLepCalc",1);
+   inputTree->SetBranchStatus("muPt_MultiLepCalc",1);
+   inputTree->SetBranchStatus("muEta_MultiLepCalc",1);
+   inputTree->SetBranchStatus("muPhi_MultiLepCalc",1);
+   inputTree->SetBranchStatus("muEnergy_MultiLepCalc",1);
+   inputTree->SetBranchStatus("muDxy_MultiLepCalc",1);
+   inputTree->SetBranchStatus("muDz_MultiLepCalc",1);
+   inputTree->SetBranchStatus("muCharge_MultiLepCalc",1);
+   inputTree->SetBranchStatus("muMiniIso_MultiLepCalc",1);
+   inputTree->SetBranchStatus("muIsTight_MultiLepCalc",1);
+   inputTree->SetBranchStatus("muIsMedium_MultiLepCalc",1);
+   inputTree->SetBranchStatus("muIsMediumPrompt_MultiLepCalc",1);
+   inputTree->SetBranchStatus("muIsLoose_MultiLepCalc",1);
 
    //missing et
-   inputTree->SetBranchStatus("corr_met_singleLepCalc",1);
-   inputTree->SetBranchStatus("corr_met_phi_singleLepCalc",1);
+   inputTree->SetBranchStatus("corr_met_MultiLepCalc",1);
+   inputTree->SetBranchStatus("corr_met_phi_MultiLepCalc",1);
 
    // genParticles
-   inputTree->SetBranchStatus("genPt_singleLepCalc",1);
-   inputTree->SetBranchStatus("genEta_singleLepCalc",1);
-   inputTree->SetBranchStatus("genPhi_singleLepCalc",1);
-   inputTree->SetBranchStatus("genEnergy_singleLepCalc",1);
-   inputTree->SetBranchStatus("genStatus_singleLepCalc",1);
-   inputTree->SetBranchStatus("genID_singleLepCalc",1);
-   inputTree->SetBranchStatus("genMotherID_singleLepCalc",1);
-   inputTree->SetBranchStatus("genJetPt_singleLepCalc",1);
-   inputTree->SetBranchStatus("genJetEta_singleLepCalc",1);
-   inputTree->SetBranchStatus("genJetPhi_singleLepCalc",1);
-   inputTree->SetBranchStatus("genJetEnergy_singleLepCalc",1);
+   inputTree->SetBranchStatus("genPt_MultiLepCalc",1);
+   inputTree->SetBranchStatus("genEta_MultiLepCalc",1);
+   inputTree->SetBranchStatus("genPhi_MultiLepCalc",1);
+   inputTree->SetBranchStatus("genEnergy_MultiLepCalc",1);
+   inputTree->SetBranchStatus("genStatus_MultiLepCalc",1);
+   inputTree->SetBranchStatus("genID_MultiLepCalc",1);
+   inputTree->SetBranchStatus("genMotherID_MultiLepCalc",1);
+   inputTree->SetBranchStatus("genJetPt_MultiLepCalc",1);
+   inputTree->SetBranchStatus("genJetEta_MultiLepCalc",1);
+   inputTree->SetBranchStatus("genJetPhi_MultiLepCalc",1);
+   inputTree->SetBranchStatus("genJetEnergy_MultiLepCalc",1);
 
    //boosted truth
    inputTree->SetBranchStatus("HadronicVHtPt_JetSubCalc",1);
@@ -190,30 +211,30 @@ void step1::Loop()
    inputTree->SetBranchStatus("HadronicVHtD2E_JetSubCalc",1);
 
    //jets
-   inputTree->SetBranchStatus("AK4JetFlav_singleLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetFlav_MultiLepCalc",1);
 //    inputTree->SetBranchStatus("theJetPFlav_JetSubCalc",1);
-   inputTree->SetBranchStatus("AK4JetPt_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetEta_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetPhi_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetEnergy_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetBDisc_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetBDeepCSVb_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetBDeepCSVbb_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetBDeepCSVudsg_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetBTag_singleLepCalc",1); // --> POSSIBLY INCORRECTLY IMPLEMENTED IN LJMET. CHECK! 9 Nov 2018 (https://github.com/jmhogan/Ljmet-Com/blob/CMSSW_9_4_X/src/singleLepCalc.cc#L1206)
+   inputTree->SetBranchStatus("AK4JetPt_MultiLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetEta_MultiLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetPhi_MultiLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetEnergy_MultiLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBDisc_MultiLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBDeepCSVb_MultiLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBDeepCSVbb_MultiLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBDeepCSVudsg_MultiLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBTag_MultiLepCalc",1); // --> POSSIBLY INCORRECTLY IMPLEMENTED IN LJMET. CHECK! 9 Nov 2018 (https://github.com/jmhogan/Ljmet-Com/blob/CMSSW_9_4_X/src/MultiLepCalc.cc#L1206)
    inputTree->SetBranchStatus("theJetBTag_JetSubCalc",1); // ---> USE THIS INSTEAD FOR NOW, 9 NOV 2018.
-   inputTree->SetBranchStatus("AK4JetBTag_bSFup_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetBTag_bSFdn_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetBTag_lSFup_singleLepCalc",1);
-   inputTree->SetBranchStatus("AK4JetBTag_lSFdn_singleLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBTag_bSFup_MultiLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBTag_bSFdn_MultiLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBTag_lSFup_MultiLepCalc",1);
+   inputTree->SetBranchStatus("AK4JetBTag_lSFdn_MultiLepCalc",1);
    
    
    //top
    inputTree->SetBranchStatus("ttbarMass_TTbarMassCalc",1);
    
    //LHE weights
-   inputTree->SetBranchStatus("LHEweightids_singleLepCalc",1);
-   inputTree->SetBranchStatus("LHEweights_singleLepCalc",1);
+   inputTree->SetBranchStatus("LHEweightids_MultiLepCalc",1);
+   inputTree->SetBranchStatus("LHEweights_MultiLepCalc",1);
 
   // ----------------------------------------------------------------------------
   // Create output tree and define branches
@@ -221,7 +242,7 @@ void step1::Loop()
    
    // OUTPUT FILE
    outputFile->cd();
-   TTree *outputTree = new TTree("ljmet","ljmet");
+   TTree *outputTree = new TTree(outTreeName, outTreeName);
 
    int NJetsWtagged_0p6;
    bool isPassTrilepton;    	    
@@ -379,8 +400,8 @@ void step1::Loop()
    outputTree->Branch("event_CommonCalc",&event_CommonCalc,"event_CommonCalc/I");
    outputTree->Branch("run_CommonCalc",&run_CommonCalc,"run_CommonCalc/I");
    outputTree->Branch("lumi_CommonCalc",&lumi_CommonCalc,"lumi_CommonCalc/I");
-   outputTree->Branch("nPV_singleLepCalc",&nPV_singleLepCalc,"nPV_singleLepCalc/I");
-   outputTree->Branch("nTrueInteractions_singleLepCalc",&nTrueInteractions_singleLepCalc,"nTrueInteractions_singleLepCalc/I");
+   outputTree->Branch("nPV_MultiLepCalc",&nPV_MultiLepCalc,"nPV_MultiLepCalc/I");
+   outputTree->Branch("nTrueInteractions_MultiLepCalc",&nTrueInteractions_MultiLepCalc,"nTrueInteractions_MultiLepCalc/I");
    outputTree->Branch("isElectron",&isElectron,"isElectron/I");
    outputTree->Branch("isMuon",&isMuon,"isMuon/I");
    outputTree->Branch("MCPastTrigger",&MCPastTrigger,"MCPastTrigger/I");
@@ -399,7 +420,7 @@ void step1::Loop()
    outputTree->Branch("isBZBZ_TpTpCalc",&isBZBZ_TpTpCalc,"isBZBZ_TpTpCalc/O");
    outputTree->Branch("tPrimePt_TpTpCalc",&tPrimePt_TpTpCalc,"tPrimePt_TpTpCalc/O");
    outputTree->Branch("NLeptonDecays_TpTpCalc",&NLeptonDecays_TpTpCalc,"NLeptonDecays_TpTpCalc/I");
-   outputTree->Branch("MCWeight_singleLepCalc",&MCWeight_singleLepCalc,"MCWeight_singleLepCalc/D");
+   outputTree->Branch("MCWeight_MultiLepCalc",&MCWeight_MultiLepCalc,"MCWeight_MultiLepCalc/D");
    outputTree->Branch("renormWeights",&renormWeights);
    outputTree->Branch("pdfWeights",&pdfWeights);
    outputTree->Branch("pileupWeight",&pileupWeight,"pileupWeight/F");
@@ -435,19 +456,19 @@ void step1::Loop()
 
 
    outputTree->Branch("ttbarMass_TTbarMassCalc",&ttbarMass_TTbarMassCalc,"ttbarMass_TTbarMassCalc/D");
-   outputTree->Branch("corr_met_singleLepCalc",&corr_met_singleLepCalc,"corr_met_singleLepCalc/D");
-   outputTree->Branch("corr_met_phi_singleLepCalc",&corr_met_phi_singleLepCalc,"corr_met_phi_singleLepCalc/D");
-   outputTree->Branch("leptonPt_singleLepCalc",&leptonPt_singleLepCalc,"leptonPt_singleLepCalc/F");
-   outputTree->Branch("leptonEta_singleLepCalc",&leptonEta_singleLepCalc,"leptonEta_singleLepCalc/F");
-   outputTree->Branch("leptonPhi_singleLepCalc",&leptonPhi_singleLepCalc,"leptonPhi_singleLepCalc/F");
-   outputTree->Branch("leptonEnergy_singleLepCalc",&leptonEnergy_singleLepCalc,"leptonEnergy_singleLepCalc/F");
-   outputTree->Branch("leptonMiniIso_singleLepCalc",&leptonMiniIso_singleLepCalc,"leptonMiniIso_singleLepCalc/F");
-   outputTree->Branch("leptonRelIso_singleLepCalc",&leptonRelIso_singleLepCalc,"leptonRelIso_singleLepCalc/F");
-   outputTree->Branch("leptonDxy_singleLepCalc",&leptonDxy_singleLepCalc,"leptonDxy_singleLepCalc/F");
-   outputTree->Branch("leptonDz_singleLepCalc",&leptonDz_singleLepCalc,"leptonDz_singleLepCalc/F");
-   outputTree->Branch("leptonCharge_singleLepCalc",&leptonCharge_singleLepCalc,"leptonCharge_singleLepCalc/I");
-   outputTree->Branch("elTrigPresel_singleLepCalc",&elTrigPresel_singleLepCalc,"elTrigPresel_singleLepCalc/I");
-   outputTree->Branch("elNotConversion_singleLepCalc",&elNotConversion_singleLepCalc,"elNotConversion_singleLepCalc/I");
+   outputTree->Branch("corr_met_MultiLepCalc",&corr_met_MultiLepCalc,"corr_met_MultiLepCalc/D");
+   outputTree->Branch("corr_met_phi_MultiLepCalc",&corr_met_phi_MultiLepCalc,"corr_met_phi_MultiLepCalc/D");
+   outputTree->Branch("leptonPt_MultiLepCalc",&leptonPt_MultiLepCalc,"leptonPt_MultiLepCalc/F");
+   outputTree->Branch("leptonEta_MultiLepCalc",&leptonEta_MultiLepCalc,"leptonEta_MultiLepCalc/F");
+   outputTree->Branch("leptonPhi_MultiLepCalc",&leptonPhi_MultiLepCalc,"leptonPhi_MultiLepCalc/F");
+   outputTree->Branch("leptonEnergy_MultiLepCalc",&leptonEnergy_MultiLepCalc,"leptonEnergy_MultiLepCalc/F");
+   outputTree->Branch("leptonMiniIso_MultiLepCalc",&leptonMiniIso_MultiLepCalc,"leptonMiniIso_MultiLepCalc/F");
+   outputTree->Branch("leptonRelIso_MultiLepCalc",&leptonRelIso_MultiLepCalc,"leptonRelIso_MultiLepCalc/F");
+   outputTree->Branch("leptonDxy_MultiLepCalc",&leptonDxy_MultiLepCalc,"leptonDxy_MultiLepCalc/F");
+   outputTree->Branch("leptonDz_MultiLepCalc",&leptonDz_MultiLepCalc,"leptonDz_MultiLepCalc/F");
+   outputTree->Branch("leptonCharge_MultiLepCalc",&leptonCharge_MultiLepCalc,"leptonCharge_MultiLepCalc/I");
+   outputTree->Branch("elTrigPresel_MultiLepCalc",&elTrigPresel_MultiLepCalc,"elTrigPresel_MultiLepCalc/I");
+   outputTree->Branch("elNotConversion_MultiLepCalc",&elNotConversion_MultiLepCalc,"elNotConversion_MultiLepCalc/I");
 
 //electrons, ID and pt ordered
    outputTree->Branch("AllLeptonElPt_PtOrdered",&AllLeptonElPt_PtOrdered);
@@ -559,25 +580,25 @@ void step1::Loop()
    outputTree->Branch("TightLeptonCharge_PtOrdered",&TightLeptonCharge_PtOrdered);
 
 
-   outputTree->Branch("AK4JetPt_singleLepCalc_PtOrdered",&AK4JetPt_singleLepCalc_PtOrdered);
-   outputTree->Branch("AK4JetEta_singleLepCalc_PtOrdered",&AK4JetEta_singleLepCalc_PtOrdered);
-   outputTree->Branch("AK4JetPhi_singleLepCalc_PtOrdered",&AK4JetPhi_singleLepCalc_PtOrdered);
-   outputTree->Branch("AK4JetEnergy_singleLepCalc_PtOrdered",&AK4JetEnergy_singleLepCalc_PtOrdered);
-   outputTree->Branch("AK4JetFlav_singleLepCalc_PtOrdered",&AK4JetFlav_singleLepCalc_PtOrdered);
-   outputTree->Branch("AK4JetBTag_singleLepCalc_PtOrdered",&AK4JetBTag_singleLepCalc_PtOrdered); 
-   outputTree->Branch("AK4JetBTag_bSFup_singleLepCalc_PtOrdered",&AK4JetBTag_bSFup_singleLepCalc_PtOrdered);
-   outputTree->Branch("AK4JetBTag_bSFdn_singleLepCalc_PtOrdered",&AK4JetBTag_bSFdn_singleLepCalc_PtOrdered);
-   outputTree->Branch("AK4JetBTag_lSFup_singleLepCalc_PtOrdered",&AK4JetBTag_lSFup_singleLepCalc_PtOrdered);
-   outputTree->Branch("AK4JetBTag_lSFdn_singleLepCalc_PtOrdered",&AK4JetBTag_lSFdn_singleLepCalc_PtOrdered);
+   outputTree->Branch("AK4JetPt_MultiLepCalc_PtOrdered",&AK4JetPt_MultiLepCalc_PtOrdered);
+   outputTree->Branch("AK4JetEta_MultiLepCalc_PtOrdered",&AK4JetEta_MultiLepCalc_PtOrdered);
+   outputTree->Branch("AK4JetPhi_MultiLepCalc_PtOrdered",&AK4JetPhi_MultiLepCalc_PtOrdered);
+   outputTree->Branch("AK4JetEnergy_MultiLepCalc_PtOrdered",&AK4JetEnergy_MultiLepCalc_PtOrdered);
+   outputTree->Branch("AK4JetFlav_MultiLepCalc_PtOrdered",&AK4JetFlav_MultiLepCalc_PtOrdered);
+   outputTree->Branch("AK4JetBTag_MultiLepCalc_PtOrdered",&AK4JetBTag_MultiLepCalc_PtOrdered); 
+   outputTree->Branch("AK4JetBTag_bSFup_MultiLepCalc_PtOrdered",&AK4JetBTag_bSFup_MultiLepCalc_PtOrdered);
+   outputTree->Branch("AK4JetBTag_bSFdn_MultiLepCalc_PtOrdered",&AK4JetBTag_bSFdn_MultiLepCalc_PtOrdered);
+   outputTree->Branch("AK4JetBTag_lSFup_MultiLepCalc_PtOrdered",&AK4JetBTag_lSFup_MultiLepCalc_PtOrdered);
+   outputTree->Branch("AK4JetBTag_lSFdn_MultiLepCalc_PtOrdered",&AK4JetBTag_lSFdn_MultiLepCalc_PtOrdered);
    outputTree->Branch("HadronicVHtID_JetSubCalc",&HadronicVHtID_JetSubCalc);
    outputTree->Branch("HadronicVHtPt_JetSubCalc",&HadronicVHtPt_JetSubCalc);
    outputTree->Branch("HadronicVHtEta_JetSubCalc",&HadronicVHtEta_JetSubCalc);
    outputTree->Branch("HadronicVHtPhi_JetSubCalc",&HadronicVHtPhi_JetSubCalc);
    outputTree->Branch("HadronicVHtEnergy_JetSubCalc",&HadronicVHtEnergy_JetSubCalc);
-   outputTree->Branch("genJetPt_singleLepCalc",&genJetPt_singleLepCalc);
-   outputTree->Branch("genJetEta_singleLepCalc",&genJetEta_singleLepCalc);
-   outputTree->Branch("genJetPhi_singleLepCalc",&genJetPhi_singleLepCalc);
-   outputTree->Branch("genJetEnergy_singleLepCalc",&genJetEnergy_singleLepCalc);
+   outputTree->Branch("genJetPt_MultiLepCalc",&genJetPt_MultiLepCalc);
+   outputTree->Branch("genJetEta_MultiLepCalc",&genJetEta_MultiLepCalc);
+   outputTree->Branch("genJetPhi_MultiLepCalc",&genJetPhi_MultiLepCalc);
+   outputTree->Branch("genJetEnergy_MultiLepCalc",&genJetEnergy_MultiLepCalc);
    outputTree->Branch("BJetLeadPt",&BJetLeadPt,"BJetLeadPt/F");
    outputTree->Branch("BJetLeadPt_shifts",&BJetLeadPt_shifts);
    outputTree->Branch("WJetLeadPt",&WJetLeadPt,"WJetLeadPt/F");
@@ -592,13 +613,13 @@ void step1::Loop()
    outputTree->Branch("ddBkgWeights_scan_muFR",&ddBkgWeights_scan_muFR);
    outputTree->Branch("ddBkgWeights_scan_elFR",&ddBkgWeights_scan_elFR);
 
-   outputTree->Branch("NJets_singleLepCalc",&NJets_singleLepCalc,"NJets_singleLepCalc/I");
+   outputTree->Branch("NJets_MultiLepCalc",&NJets_MultiLepCalc,"NJets_MultiLepCalc/I");
    outputTree->Branch("NJetsAK8_JetSubCalc",&NJetsAK8_JetSubCalc,"NJetsAK8_JetSubCalc/I");
-   outputTree->Branch("NJetsBTag_singleLepCalc",&NJetsBTag_singleLepCalc,"NJetsBTag_singleLepCalc/I");
-   outputTree->Branch("NJetsBTagwithSF_singleLepCalc",&NJetsBTagwithSF_singleLepCalc,"NJetsBTagwithSF_singleLepCalc/I");
-   outputTree->Branch("NJetsBTagwithSF_singleLepCalc_shifts",&NJetsBTagwithSF_singleLepCalc_shifts);
-   outputTree->Branch("NJetsBTagwithSF_singleLepCalc_noLepCorr",&NJetsBTagwithSF_singleLepCalc_noLepCorr,"NJetsBTagwithSF_singleLepCalc_noLepCorr/I");
-   outputTree->Branch("NJetsBTagwithSF_singleLepCalc_noLepCorr_shifts",&NJetsBTagwithSF_singleLepCalc_noLepCorr_shifts);
+   outputTree->Branch("NJetsBTag_MultiLepCalc",&NJetsBTag_MultiLepCalc,"NJetsBTag_MultiLepCalc/I");
+   outputTree->Branch("NJetsBTagwithSF_MultiLepCalc",&NJetsBTagwithSF_MultiLepCalc,"NJetsBTagwithSF_MultiLepCalc/I");
+   outputTree->Branch("NJetsBTagwithSF_MultiLepCalc_shifts",&NJetsBTagwithSF_MultiLepCalc_shifts);
+   outputTree->Branch("NJetsBTagwithSF_MultiLepCalc_noLepCorr",&NJetsBTagwithSF_MultiLepCalc_noLepCorr,"NJetsBTagwithSF_MultiLepCalc_noLepCorr/I");
+   outputTree->Branch("NJetsBTagwithSF_MultiLepCalc_noLepCorr_shifts",&NJetsBTagwithSF_MultiLepCalc_noLepCorr_shifts);
    outputTree->Branch("topPt",&topPt,"topPt/F");
    outputTree->Branch("topPtGen",&topPtGen,"topPtGen/F");
    outputTree->Branch("topMass",&topMass,"topMass/F");
@@ -894,75 +915,75 @@ void step1::Loop()
             
       //collect all electrons.
       if(DEBUG)std::cout<<"Collecting electrons ..."<<std::endl;      
-      if(DEBUG)std::cout<<"elPt_singleLepCalc->size() = "<< elPt_singleLepCalc->size() <<std::endl;  
-      for(unsigned int iel = 0; iel < elPt_singleLepCalc->size(); iel++){
-		if(elPt_singleLepCalc->at(iel) < lepPtCut || fabs(elEta_singleLepCalc->at(iel)) > elEtaCut) continue;
+      if(DEBUG)std::cout<<"elPt_MultiLepCalc->size() = "<< elPt_MultiLepCalc->size() <<std::endl;  
+      for(unsigned int iel = 0; iel < elPt_MultiLepCalc->size(); iel++){
+		if(elPt_MultiLepCalc->at(iel) < lepPtCut || fabs(elEta_MultiLepCalc->at(iel)) > elEtaCut) continue;
 
 		//Explicit check for Tight electrons
 		bool isTightEl = false;
-		if(elMiniIso_singleLepCalc->at(iel) < 0.1 && elIsMVATight_singleLepCalc->at(iel) > 0){isTightEl = true;}
+		if(elMiniIso_MultiLepCalc->at(iel) < 0.1 && elIsMVATight90_MultiLepCalc->at(iel) > 0){isTightEl = true;}
 		if(isTightEl){
-		  TightLeptonPt.push_back(elPt_singleLepCalc->at(iel));
-		  TightLeptonEta.push_back(elEta_singleLepCalc->at(iel));
-		  TightLeptonPhi.push_back(elPhi_singleLepCalc->at(iel));
-		  TightLeptonEnergy.push_back(elEnergy_singleLepCalc->at(iel));
-		  TightLeptonMiniIso.push_back(elMiniIso_singleLepCalc->at(iel));
+		  TightLeptonPt.push_back(elPt_MultiLepCalc->at(iel));
+		  TightLeptonEta.push_back(elEta_MultiLepCalc->at(iel));
+		  TightLeptonPhi.push_back(elPhi_MultiLepCalc->at(iel));
+		  TightLeptonEnergy.push_back(elEnergy_MultiLepCalc->at(iel));
+		  TightLeptonMiniIso.push_back(elMiniIso_MultiLepCalc->at(iel));
 		  TightLeptonFlavor.push_back(0);
-		  TightLeptonCharge.push_back(elCharge_singleLepCalc->at(iel));
+		  TightLeptonCharge.push_back(elCharge_MultiLepCalc->at(iel));
 		  TightLeptonIdx.push_back(iel);
-		  TightLeptonDxy.push_back(elD0_singleLepCalc->at(iel));
-		  TightLeptonDz.push_back(elDZ_singleLepCalc->at(iel));
+		  TightLeptonDxy.push_back(elD0_MultiLepCalc->at(iel));
+		  TightLeptonDz.push_back(elDZ_MultiLepCalc->at(iel));
 
-		  tightlepptindpair.push_back(std::make_pair(elPt_singleLepCalc->at(iel),tightlepindex));
+		  tightlepptindpair.push_back(std::make_pair(elPt_MultiLepCalc->at(iel),tightlepindex));
 		  tightlepindex++;
 
-		  AllLeptonPt.push_back(elPt_singleLepCalc->at(iel));
-		  AllLeptonEta.push_back(elEta_singleLepCalc->at(iel));
-		  AllLeptonPhi.push_back(elPhi_singleLepCalc->at(iel));
-		  AllLeptonEnergy.push_back(elEnergy_singleLepCalc->at(iel));
-		  AllLeptonMiniIso.push_back(elMiniIso_singleLepCalc->at(iel));
+		  AllLeptonPt.push_back(elPt_MultiLepCalc->at(iel));
+		  AllLeptonEta.push_back(elEta_MultiLepCalc->at(iel));
+		  AllLeptonPhi.push_back(elPhi_MultiLepCalc->at(iel));
+		  AllLeptonEnergy.push_back(elEnergy_MultiLepCalc->at(iel));
+		  AllLeptonMiniIso.push_back(elMiniIso_MultiLepCalc->at(iel));
 		  AllLeptonFlavor.push_back(0);
-		  AllLeptonCharge.push_back(elCharge_singleLepCalc->at(iel));
+		  AllLeptonCharge.push_back(elCharge_MultiLepCalc->at(iel));
 		  AllLeptonIsTight.push_back(1);
 		  AllLeptonIdx.push_back(iel);
-		  AllLeptonDxy.push_back(elD0_singleLepCalc->at(iel));
-		  AllLeptonDz.push_back(elDZ_singleLepCalc->at(iel));
+		  AllLeptonDxy.push_back(elD0_MultiLepCalc->at(iel));
+		  AllLeptonDz.push_back(elDZ_MultiLepCalc->at(iel));
 
-		  alllepptindpair.push_back(std::make_pair(elPt_singleLepCalc->at(iel),alllepindex));
+		  alllepptindpair.push_back(std::make_pair(elPt_MultiLepCalc->at(iel),alllepindex));
 		  alllepindex++;
 		}
 
 		//Explicit check for Loose electrons 
 		bool isLooseEl = false;
-		if(elMiniIso_singleLepCalc->at(iel) < 0.4 && elIsMVALoose_singleLepCalc->at(iel) > 0){isLooseEl = true;}
+		if(elMiniIso_MultiLepCalc->at(iel) < 0.4 && elIsMVALoose_MultiLepCalc->at(iel) > 0){isLooseEl = true;}
 		if(!isTightEl && isLooseEl){
-		  LooseNotTightLeptonPt.push_back(elPt_singleLepCalc->at(iel));
-		  LooseNotTightLeptonEta.push_back(elEta_singleLepCalc->at(iel));
-		  LooseNotTightLeptonPhi.push_back(elPhi_singleLepCalc->at(iel));
-		  LooseNotTightLeptonEnergy.push_back(elEnergy_singleLepCalc->at(iel));
-		  LooseNotTightLeptonMiniIso.push_back(elMiniIso_singleLepCalc->at(iel));
+		  LooseNotTightLeptonPt.push_back(elPt_MultiLepCalc->at(iel));
+		  LooseNotTightLeptonEta.push_back(elEta_MultiLepCalc->at(iel));
+		  LooseNotTightLeptonPhi.push_back(elPhi_MultiLepCalc->at(iel));
+		  LooseNotTightLeptonEnergy.push_back(elEnergy_MultiLepCalc->at(iel));
+		  LooseNotTightLeptonMiniIso.push_back(elMiniIso_MultiLepCalc->at(iel));
 		  LooseNotTightLeptonFlavor.push_back(0);
-		  LooseNotTightLeptonCharge.push_back(elCharge_singleLepCalc->at(iel));
+		  LooseNotTightLeptonCharge.push_back(elCharge_MultiLepCalc->at(iel));
 		  LooseNotTightLeptonIdx.push_back(iel);
-		  LooseNotTightLeptonDxy.push_back(elD0_singleLepCalc->at(iel));
-		  LooseNotTightLeptonDz.push_back(elDZ_singleLepCalc->at(iel));
+		  LooseNotTightLeptonDxy.push_back(elD0_MultiLepCalc->at(iel));
+		  LooseNotTightLeptonDz.push_back(elDZ_MultiLepCalc->at(iel));
 		  
-		  loosenottightlepptindpair.push_back(std::make_pair(elPt_singleLepCalc->at(iel),loosenottightlepindex));
+		  loosenottightlepptindpair.push_back(std::make_pair(elPt_MultiLepCalc->at(iel),loosenottightlepindex));
 		  loosenottightlepindex++;
 
-		  AllLeptonPt.push_back(elPt_singleLepCalc->at(iel));
-		  AllLeptonEta.push_back(elEta_singleLepCalc->at(iel));
-		  AllLeptonPhi.push_back(elPhi_singleLepCalc->at(iel));
-		  AllLeptonEnergy.push_back(elEnergy_singleLepCalc->at(iel));
-		  AllLeptonMiniIso.push_back(elMiniIso_singleLepCalc->at(iel));
+		  AllLeptonPt.push_back(elPt_MultiLepCalc->at(iel));
+		  AllLeptonEta.push_back(elEta_MultiLepCalc->at(iel));
+		  AllLeptonPhi.push_back(elPhi_MultiLepCalc->at(iel));
+		  AllLeptonEnergy.push_back(elEnergy_MultiLepCalc->at(iel));
+		  AllLeptonMiniIso.push_back(elMiniIso_MultiLepCalc->at(iel));
 		  AllLeptonFlavor.push_back(0);
-		  AllLeptonCharge.push_back(elCharge_singleLepCalc->at(iel));
+		  AllLeptonCharge.push_back(elCharge_MultiLepCalc->at(iel));
 		  AllLeptonIsTight.push_back(0);
 		  AllLeptonIdx.push_back(iel);
-		  AllLeptonDxy.push_back(elD0_singleLepCalc->at(iel));
-		  AllLeptonDz.push_back(elDZ_singleLepCalc->at(iel));
+		  AllLeptonDxy.push_back(elD0_MultiLepCalc->at(iel));
+		  AllLeptonDz.push_back(elDZ_MultiLepCalc->at(iel));
 
-		  alllepptindpair.push_back(std::make_pair(elPt_singleLepCalc->at(iel),alllepindex));
+		  alllepptindpair.push_back(std::make_pair(elPt_MultiLepCalc->at(iel),alllepindex));
 		  alllepindex++;
 		}
 		
@@ -970,75 +991,75 @@ void step1::Loop()
       
       //collect all muons. 
       if(DEBUG)std::cout<<"Collecting muons ..."<<std::endl;      
-      if(DEBUG)std::cout<<"muPt_singleLepCalc->size() = "<< muPt_singleLepCalc->size() <<std::endl;  
-      for(unsigned int imu = 0; imu < muPt_singleLepCalc->size(); imu++){
-		if(muPt_singleLepCalc->at(imu) < lepPtCut || fabs(muEta_singleLepCalc->at(imu)) > 2.4) continue;
+      if(DEBUG)std::cout<<"muPt_MultiLepCalc->size() = "<< muPt_MultiLepCalc->size() <<std::endl;  
+      for(unsigned int imu = 0; imu < muPt_MultiLepCalc->size(); imu++){
+		if(muPt_MultiLepCalc->at(imu) < lepPtCut || fabs(muEta_MultiLepCalc->at(imu)) > 2.4) continue;
 		
 		//Explicit check for tight muons
 		bool isTightMu = false;
-		if(muMiniIso_singleLepCalc->at(imu) < 0.1 && muIsTight_singleLepCalc->at(imu) > 0) isTightMu = true;
+		if(muMiniIso_MultiLepCalc->at(imu) < 0.1 && muIsTight_MultiLepCalc->at(imu) > 0) isTightMu = true;
 		if(isTightMu){
-		  TightLeptonPt.push_back(muPt_singleLepCalc->at(imu));
-		  TightLeptonEta.push_back(muEta_singleLepCalc->at(imu));
-		  TightLeptonPhi.push_back(muPhi_singleLepCalc->at(imu));
-		  TightLeptonEnergy.push_back(muEnergy_singleLepCalc->at(imu));
-		  TightLeptonMiniIso.push_back(muMiniIso_singleLepCalc->at(imu));
+		  TightLeptonPt.push_back(muPt_MultiLepCalc->at(imu));
+		  TightLeptonEta.push_back(muEta_MultiLepCalc->at(imu));
+		  TightLeptonPhi.push_back(muPhi_MultiLepCalc->at(imu));
+		  TightLeptonEnergy.push_back(muEnergy_MultiLepCalc->at(imu));
+		  TightLeptonMiniIso.push_back(muMiniIso_MultiLepCalc->at(imu));
 		  TightLeptonFlavor.push_back(1);
-		  TightLeptonCharge.push_back(muCharge_singleLepCalc->at(imu));
+		  TightLeptonCharge.push_back(muCharge_MultiLepCalc->at(imu));
 		  TightLeptonIdx.push_back(imu);
-		  TightLeptonDxy.push_back(muDxy_singleLepCalc->at(imu));
-		  TightLeptonDz.push_back(muDz_singleLepCalc->at(imu));
+		  TightLeptonDxy.push_back(muDxy_MultiLepCalc->at(imu));
+		  TightLeptonDz.push_back(muDz_MultiLepCalc->at(imu));
 
-		  tightlepptindpair.push_back(std::make_pair(muPt_singleLepCalc->at(imu),tightlepindex));
+		  tightlepptindpair.push_back(std::make_pair(muPt_MultiLepCalc->at(imu),tightlepindex));
 		  tightlepindex++;
 
-		  AllLeptonPt.push_back(muPt_singleLepCalc->at(imu));
-		  AllLeptonEta.push_back(muEta_singleLepCalc->at(imu));
-		  AllLeptonPhi.push_back(muPhi_singleLepCalc->at(imu));
-		  AllLeptonEnergy.push_back(muEnergy_singleLepCalc->at(imu));
-		  AllLeptonMiniIso.push_back(muMiniIso_singleLepCalc->at(imu));
+		  AllLeptonPt.push_back(muPt_MultiLepCalc->at(imu));
+		  AllLeptonEta.push_back(muEta_MultiLepCalc->at(imu));
+		  AllLeptonPhi.push_back(muPhi_MultiLepCalc->at(imu));
+		  AllLeptonEnergy.push_back(muEnergy_MultiLepCalc->at(imu));
+		  AllLeptonMiniIso.push_back(muMiniIso_MultiLepCalc->at(imu));
 		  AllLeptonFlavor.push_back(1);
-		  AllLeptonCharge.push_back(muCharge_singleLepCalc->at(imu));
+		  AllLeptonCharge.push_back(muCharge_MultiLepCalc->at(imu));
 		  AllLeptonIsTight.push_back(1);
 		  AllLeptonIdx.push_back(imu);
-		  AllLeptonDxy.push_back(muDxy_singleLepCalc->at(imu));
-		  AllLeptonDz.push_back(muDz_singleLepCalc->at(imu));
+		  AllLeptonDxy.push_back(muDxy_MultiLepCalc->at(imu));
+		  AllLeptonDz.push_back(muDz_MultiLepCalc->at(imu));
 
-		  alllepptindpair.push_back(std::make_pair(muPt_singleLepCalc->at(imu),alllepindex));
+		  alllepptindpair.push_back(std::make_pair(muPt_MultiLepCalc->at(imu),alllepindex));
 		  alllepindex++;
 		}
 		
 		//Explicit check for Loose muons
 		bool isLooseMu = false;
-		if(muMiniIso_singleLepCalc->at(imu) < 0.4 && muIsLoose_singleLepCalc->at(imu) > 0) isLooseMu = true;
+		if(muMiniIso_MultiLepCalc->at(imu) < 0.4 && muIsLoose_MultiLepCalc->at(imu) > 0) isLooseMu = true;
 		if(!isTightMu && isLooseMu){ 
-		  LooseNotTightLeptonPt.push_back(muPt_singleLepCalc->at(imu));
-		  LooseNotTightLeptonEta.push_back(muEta_singleLepCalc->at(imu));
-		  LooseNotTightLeptonPhi.push_back(muPhi_singleLepCalc->at(imu));
-		  LooseNotTightLeptonEnergy.push_back(muEnergy_singleLepCalc->at(imu));
-		  LooseNotTightLeptonMiniIso.push_back(muMiniIso_singleLepCalc->at(imu));//ATTENTION! there is mistake in new 74x LJMet ntuple muMiniIso twice filled!! hence the imu*2
+		  LooseNotTightLeptonPt.push_back(muPt_MultiLepCalc->at(imu));
+		  LooseNotTightLeptonEta.push_back(muEta_MultiLepCalc->at(imu));
+		  LooseNotTightLeptonPhi.push_back(muPhi_MultiLepCalc->at(imu));
+		  LooseNotTightLeptonEnergy.push_back(muEnergy_MultiLepCalc->at(imu));
+		  LooseNotTightLeptonMiniIso.push_back(muMiniIso_MultiLepCalc->at(imu));//ATTENTION! there is mistake in new 74x LJMet ntuple muMiniIso twice filled!! hence the imu*2
 		  LooseNotTightLeptonFlavor.push_back(1);
-		  LooseNotTightLeptonCharge.push_back(muCharge_singleLepCalc->at(imu));
+		  LooseNotTightLeptonCharge.push_back(muCharge_MultiLepCalc->at(imu));
 		  LooseNotTightLeptonIdx.push_back(imu);
-		  LooseNotTightLeptonDxy.push_back(muDxy_singleLepCalc->at(imu));
-		  LooseNotTightLeptonDz.push_back(muDz_singleLepCalc->at(imu));
+		  LooseNotTightLeptonDxy.push_back(muDxy_MultiLepCalc->at(imu));
+		  LooseNotTightLeptonDz.push_back(muDz_MultiLepCalc->at(imu));
 		  
-		  loosenottightlepptindpair.push_back(std::make_pair(muPt_singleLepCalc->at(imu),loosenottightlepindex));
+		  loosenottightlepptindpair.push_back(std::make_pair(muPt_MultiLepCalc->at(imu),loosenottightlepindex));
 		  loosenottightlepindex++;
 
-		  AllLeptonPt.push_back(muPt_singleLepCalc->at(imu));
-		  AllLeptonEta.push_back(muEta_singleLepCalc->at(imu));
-		  AllLeptonPhi.push_back(muPhi_singleLepCalc->at(imu));
-		  AllLeptonEnergy.push_back(muEnergy_singleLepCalc->at(imu));
-		  AllLeptonMiniIso.push_back(muMiniIso_singleLepCalc->at(imu));
+		  AllLeptonPt.push_back(muPt_MultiLepCalc->at(imu));
+		  AllLeptonEta.push_back(muEta_MultiLepCalc->at(imu));
+		  AllLeptonPhi.push_back(muPhi_MultiLepCalc->at(imu));
+		  AllLeptonEnergy.push_back(muEnergy_MultiLepCalc->at(imu));
+		  AllLeptonMiniIso.push_back(muMiniIso_MultiLepCalc->at(imu));
 		  AllLeptonFlavor.push_back(1);
-		  AllLeptonCharge.push_back(muCharge_singleLepCalc->at(imu));
+		  AllLeptonCharge.push_back(muCharge_MultiLepCalc->at(imu));
 		  AllLeptonIsTight.push_back(0);
 		  AllLeptonIdx.push_back(imu);
-		  AllLeptonDxy.push_back(muDxy_singleLepCalc->at(imu));
-		  AllLeptonDz.push_back(muDz_singleLepCalc->at(imu));
+		  AllLeptonDxy.push_back(muDxy_MultiLepCalc->at(imu));
+		  AllLeptonDz.push_back(muDz_MultiLepCalc->at(imu));
 
-		  alllepptindpair.push_back(std::make_pair(muPt_singleLepCalc->at(imu),alllepindex));
+		  alllepptindpair.push_back(std::make_pair(muPt_MultiLepCalc->at(imu),alllepindex));
 		  alllepindex++;
 		}
 
@@ -1554,10 +1575,10 @@ void step1::Loop()
       pileupWeightUp = 1.0;
       pileupWeightDown = 1.0;
       
-      if(nTrueInteractions_singleLepCalc > 79) nTrueInteractions_singleLepCalc = 79;
-      pileupWeight = pileup_central[nTrueInteractions_singleLepCalc];
-      pileupWeightUp = pileup_down[nTrueInteractions_singleLepCalc];
-      pileupWeightDown = pileup_up[nTrueInteractions_singleLepCalc];
+      if(nTrueInteractions_MultiLepCalc > 79) nTrueInteractions_MultiLepCalc = 79;
+      pileupWeight = pileup_central[nTrueInteractions_MultiLepCalc];
+      pileupWeightUp = pileup_down[nTrueInteractions_MultiLepCalc];
+      pileupWeightDown = pileup_up[nTrueInteractions_MultiLepCalc];
 
       // ----------------------------------------------------------------------------
       // Assign Lepton scale factor or efficiency weights, save trigger pass/fail
@@ -1591,70 +1612,70 @@ void step1::Loop()
       if(isMC){ //MC triggers check
       
 		if(DEBUGTriggers){
-			for(unsigned int itrig=0; itrig < vsSelMCTriggersEl_singleLepCalc->size(); itrig++){
-				if(viSelMCTriggersEl_singleLepCalc->at(itrig) > 0) std::cout << "pass El MC trigger : " << vsSelMCTriggersEl_singleLepCalc->at(itrig) << std::endl;
+			for(unsigned int itrig=0; itrig < vsSelMCTriggersEl_MultiLepCalc->size(); itrig++){
+				if(viSelMCTriggersEl_MultiLepCalc->at(itrig) > 0) std::cout << "pass El MC trigger : " << vsSelMCTriggersEl_MultiLepCalc->at(itrig) << std::endl;
 				}
-			for(unsigned int itrig=0; itrig < vsSelMCTriggersMu_singleLepCalc->size(); itrig++){
-				if(viSelMCTriggersMu_singleLepCalc->at(itrig) > 0) std::cout << "pass Mu MC trigger : " << vsSelMCTriggersMu_singleLepCalc->at(itrig) << std::endl;
+			for(unsigned int itrig=0; itrig < vsSelMCTriggersMu_MultiLepCalc->size(); itrig++){
+				if(viSelMCTriggersMu_MultiLepCalc->at(itrig) > 0) std::cout << "pass Mu MC trigger : " << vsSelMCTriggersMu_MultiLepCalc->at(itrig) << std::endl;
 				}
 		}
 
 		if(DEBUG)std::cout<<"Matching with desired MC trigger selection..."<<std::endl;  
 
    		if(isEEE){
-		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersEl_singleLepCalc->size(); itrig++){
+		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersEl_MultiLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively electron triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
+						( vsSelMCTriggersEl_MultiLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
 
-					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
+					) &&  viSelMCTriggersEl_MultiLepCalc->at(itrig) > 0 ) { 
 					isPastTrigMC = 1;
 					isPastTrigMC_dilep = 1;
 				}
 			}
 	  	}
    		if(isEEM){
-		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersEl_singleLepCalc->size(); itrig++){
+		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersEl_MultiLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively electron triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
+						( vsSelMCTriggersEl_MultiLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
 
 						//el&mu triggers
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
-						( vsSelMCTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
+						( vsSelMCTriggersEl_MultiLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
+						( vsSelMCTriggersEl_MultiLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
 						
-					) &&  viSelMCTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
+					) &&  viSelMCTriggersEl_MultiLepCalc->at(itrig) > 0 ) { 
 					isPastTrigMC = 1;
 					isPastTrigMC_dilep = 1;
 				}
 			}
 	  	}
    		if(isEMM){
-		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersMu_singleLepCalc->size(); itrig++){
+		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersMu_MultiLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) || 	
+						( vsSelMCTriggersMu_MultiLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) || 	
 
 						//el&mu triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
+						( vsSelMCTriggersMu_MultiLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
+						( vsSelMCTriggersMu_MultiLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
 
-					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
+					) &&  viSelMCTriggersMu_MultiLepCalc->at(itrig) > 0 ) { 
 					isPastTrigMC = 1;
 					isPastTrigMC_dilep = 1;
 				}
 			}
 	  	}
    		if(isMMM){
-		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersMu_singleLepCalc->size(); itrig++){
+		  	for(unsigned int itrig=0; itrig < vsSelMCTriggersMu_MultiLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelMCTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) //|| 	
+						( vsSelMCTriggersMu_MultiLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) //|| 	
 
-					) &&  viSelMCTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
+					) &&  viSelMCTriggersMu_MultiLepCalc->at(itrig) > 0 ) { 
 					isPastTrigMC = 1;
 					isPastTrigMC_dilep = 1;
-		  			if(DEBUGTriggers)std::cout << "vsSelMCTriggersMu_singleLepCalc->at(itrig) = " << vsSelMCTriggersMu_singleLepCalc->at(itrig) << std::endl;
+		  			if(DEBUGTriggers)std::cout << "vsSelMCTriggersMu_MultiLepCalc->at(itrig) = " << vsSelMCTriggersMu_MultiLepCalc->at(itrig) << std::endl;
 					if(DEBUGTriggers)std::cout << "isPastTrigMC ="<< isPastTrigMC << ", isPastTrigMC_dilep = " << isPastTrigMC_dilep << std::endl;
 				}
 			}
@@ -1923,70 +1944,70 @@ eta:2.5 bin:11
       else{ //Data triggers check
 
 		if(DEBUGTriggers){      	
-			for(unsigned int itrig=0; itrig < vsSelTriggersEl_singleLepCalc->size(); itrig++){
-				if(viSelTriggersEl_singleLepCalc->at(itrig) > 0) std::cout << "pass El trigger : " << vsSelTriggersEl_singleLepCalc->at(itrig) << std::endl;
+			for(unsigned int itrig=0; itrig < vsSelTriggersEl_MultiLepCalc->size(); itrig++){
+				if(viSelTriggersEl_MultiLepCalc->at(itrig) > 0) std::cout << "pass El trigger : " << vsSelTriggersEl_MultiLepCalc->at(itrig) << std::endl;
 				}
-			for(unsigned int itrig=0; itrig < vsSelTriggersMu_singleLepCalc->size(); itrig++){
-				if(viSelTriggersMu_singleLepCalc->at(itrig) > 0) std::cout << "pass Mu trigger : " << vsSelTriggersMu_singleLepCalc->at(itrig) << std::endl;
+			for(unsigned int itrig=0; itrig < vsSelTriggersMu_MultiLepCalc->size(); itrig++){
+				if(viSelTriggersMu_MultiLepCalc->at(itrig) > 0) std::cout << "pass Mu trigger : " << vsSelTriggersMu_MultiLepCalc->at(itrig) << std::endl;
 				}
 		}
 
 		if(DEBUG)std::cout<<"Matching with desired trigger selection..."<<std::endl;  
     	
    		if(isEEE){
-		  	for(unsigned int itrig=0; itrig < vsSelTriggersEl_singleLepCalc->size(); itrig++){
+		  	for(unsigned int itrig=0; itrig < vsSelTriggersEl_MultiLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively electron triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
+						( vsSelTriggersEl_MultiLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
 
-					) &&  viSelTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
+					) &&  viSelTriggersEl_MultiLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
 					isPastTrig_dilep = 1;
 				}
 			}
 	  	}
    		if(isEEM){
-		  	for(unsigned int itrig=0; itrig < vsSelTriggersEl_singleLepCalc->size(); itrig++){
+		  	for(unsigned int itrig=0; itrig < vsSelTriggersEl_MultiLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively electron triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
+						( vsSelTriggersEl_MultiLepCalc->at(itrig).find("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
 
 						//el&mu triggers
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
-						( vsSelTriggersEl_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
+						( vsSelTriggersEl_MultiLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
+						( vsSelTriggersEl_MultiLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
 
-					) &&  viSelTriggersEl_singleLepCalc->at(itrig) > 0 ) { 
+					) &&  viSelTriggersEl_MultiLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
 					isPastTrig_dilep = 1;
 				}
 			}
 	  	}
    		if(isEMM){
-		  	for(unsigned int itrig=0; itrig < vsSelTriggersMu_singleLepCalc->size(); itrig++){
+		  	for(unsigned int itrig=0; itrig < vsSelTriggersMu_MultiLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) || 	
+						( vsSelTriggersMu_MultiLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) || 	
 
 						//el&mu triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
+						( vsSelTriggersMu_MultiLepCalc->at(itrig).find("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) ||
+						( vsSelTriggersMu_MultiLepCalc->at(itrig).find("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ") != std::string::npos) //||
 
-					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
+					) &&  viSelTriggersMu_MultiLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
 					isPastTrig_dilep = 1;
 				}
 			}
 	  	}
    		if(isMMM){
-		  	for(unsigned int itrig=0; itrig < vsSelTriggersMu_singleLepCalc->size(); itrig++){
+		  	for(unsigned int itrig=0; itrig < vsSelTriggersMu_MultiLepCalc->size(); itrig++){
 				if( ( 
 						//exclusively muon triggers
-						( vsSelTriggersMu_singleLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) //|| 	
+						( vsSelTriggersMu_MultiLepCalc->at(itrig).find("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8") != std::string::npos) //|| 	
 
-					) &&  viSelTriggersMu_singleLepCalc->at(itrig) > 0 ) { 
+					) &&  viSelTriggersMu_MultiLepCalc->at(itrig) > 0 ) { 
 					isPastTrig = 1;
 					isPastTrig_dilep = 1;
-		  			if(DEBUGTriggers)std::cout << "vsSelTriggersMu_singleLepCalc->at(itrig) = " << vsSelTriggersMu_singleLepCalc->at(itrig) << std::endl;
+		  			if(DEBUGTriggers)std::cout << "vsSelTriggersMu_MultiLepCalc->at(itrig) = " << vsSelTriggersMu_MultiLepCalc->at(itrig) << std::endl;
 					if(DEBUGTriggers)std::cout << "isPastTrig ="<< isPastTrig << ", isPastTrig_dilep = " << isPastTrig_dilep << std::endl;
 				}
 			}
@@ -2014,43 +2035,43 @@ eta:2.5 bin:11
       // Loop over AK4 jets for calculations and pt ordering pair
       // ----------------------------------------------------------------------------
 
-      NJets_singleLepCalc = 0;
+      NJets_MultiLepCalc = 0;
       AK4HT = 0;
       vector<pair<double,int>> jetptindpair;
       
-      if(DEBUGjets)std::cout<< "AK4JetPt_singleLepCalc->size() (before jet loop) = " << AK4JetPt_singleLepCalc->size() << std::endl;
+      if(DEBUGjets)std::cout<< "AK4JetPt_MultiLepCalc->size() (before jet loop) = " << AK4JetPt_MultiLepCalc->size() << std::endl;
 
-      for(unsigned int ijet=0; ijet < AK4JetPt_singleLepCalc->size(); ijet++){
+      for(unsigned int ijet=0; ijet < AK4JetPt_MultiLepCalc->size(); ijet++){
 
 		// ----------------------------------------------------------------------------
 		// Basic cuts
 		// ----------------------------------------------------------------------------
 		if(DEBUG)std::cout<<"Basic cuts"<<std::endl;      
 
-		if(AK4JetPt_singleLepCalc->at(ijet) < jetPtCut || fabs(AK4JetEta_singleLepCalc->at(ijet)) > jetEtaCut) continue;
+		if(AK4JetPt_MultiLepCalc->at(ijet) < jetPtCut || fabs(AK4JetEta_MultiLepCalc->at(ijet)) > jetEtaCut) continue;
 
 		if(isMC){
 
-		  if(DEBUGjets)std::cout<< "Jet Flavor = " << AK4JetFlav_singleLepCalc->at(ijet) << std::endl;
+		  if(DEBUGjets)std::cout<< "Jet Flavor = " << AK4JetFlav_MultiLepCalc->at(ijet) << std::endl;
 		  
 		  // ----------------------------------------------------------------------------
 		  // Counts and pt ordering pair
 		  // ----------------------------------------------------------------------------
 
-		  jetptindpair.push_back(std::make_pair(AK4JetPt_singleLepCalc->at(ijet),ijet));
-		  NJets_singleLepCalc+=1;
-		  AK4HT+=AK4JetPt_singleLepCalc->at(ijet);
+		  jetptindpair.push_back(std::make_pair(AK4JetPt_MultiLepCalc->at(ijet),ijet));
+		  NJets_MultiLepCalc+=1;
+		  AK4HT+=AK4JetPt_MultiLepCalc->at(ijet);
 	  
 		}else{
-		  jetptindpair.push_back(std::make_pair(AK4JetPt_singleLepCalc->at(ijet),ijet));
-		  NJets_singleLepCalc+=1;
-		  AK4HT+=AK4JetPt_singleLepCalc->at(ijet);
+		  jetptindpair.push_back(std::make_pair(AK4JetPt_MultiLepCalc->at(ijet),ijet));
+		  NJets_MultiLepCalc+=1;
+		  AK4HT+=AK4JetPt_MultiLepCalc->at(ijet);
 		}
       }
 
-      if(DEBUGjets)std::cout<< "NJets (after jet loop) = " << NJets_singleLepCalc << std::endl;
+      if(DEBUGjets)std::cout<< "NJets (after jet loop) = " << NJets_MultiLepCalc << std::endl;
 
-      AK4HTpMETpLepPt = AK4HT + corr_met_singleLepCalc;
+      AK4HTpMETpLepPt = AK4HT + corr_met_MultiLepCalc;
 //       if(isPassTrilepton){
 // 		  for(unsigned int ilep = 0; ilep < TightLeptonPt_PtOrdered.size(); ilep++){
 // 			AK4HTpMETpLepPt += TightLeptonPt_PtOrdered.at(ilep);
@@ -2072,34 +2093,34 @@ eta:2.5 bin:11
       if(DEBUG)std::cout<<"Apply pt ordering to AK4 vectors"<<std::endl;      
 
       std::sort(jetptindpair.begin(), jetptindpair.end(), comparepair);
-      AK4JetPt_singleLepCalc_PtOrdered.clear();
-      AK4JetEta_singleLepCalc_PtOrdered.clear();
-      AK4JetPhi_singleLepCalc_PtOrdered.clear();
-      AK4JetEnergy_singleLepCalc_PtOrdered.clear();
-      AK4JetFlav_singleLepCalc_PtOrdered.clear();
-      AK4JetBDisc_singleLepCalc_PtOrdered.clear();
-      AK4JetBDeepCSVb_singleLepCalc_PtOrdered.clear();
-      AK4JetBDeepCSVbb_singleLepCalc_PtOrdered.clear();
+      AK4JetPt_MultiLepCalc_PtOrdered.clear();
+      AK4JetEta_MultiLepCalc_PtOrdered.clear();
+      AK4JetPhi_MultiLepCalc_PtOrdered.clear();
+      AK4JetEnergy_MultiLepCalc_PtOrdered.clear();
+      AK4JetFlav_MultiLepCalc_PtOrdered.clear();
+      AK4JetBDisc_MultiLepCalc_PtOrdered.clear();
+      AK4JetBDeepCSVb_MultiLepCalc_PtOrdered.clear();
+      AK4JetBDeepCSVbb_MultiLepCalc_PtOrdered.clear();
       
-      AK4JetBTag_singleLepCalc_PtOrdered.clear();
-      AK4JetBTag_bSFdn_singleLepCalc_PtOrdered.clear();
-      AK4JetBTag_bSFup_singleLepCalc_PtOrdered.clear();
-      AK4JetBTag_lSFdn_singleLepCalc_PtOrdered.clear();
-      AK4JetBTag_lSFup_singleLepCalc_PtOrdered.clear();
+      AK4JetBTag_MultiLepCalc_PtOrdered.clear();
+      AK4JetBTag_bSFdn_MultiLepCalc_PtOrdered.clear();
+      AK4JetBTag_bSFup_MultiLepCalc_PtOrdered.clear();
+      AK4JetBTag_lSFdn_MultiLepCalc_PtOrdered.clear();
+      AK4JetBTag_lSFup_MultiLepCalc_PtOrdered.clear();
       for(unsigned int ijet=0; ijet < jetptindpair.size(); ijet++){
-      	AK4JetPt_singleLepCalc_PtOrdered.push_back(AK4JetPt_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetEta_singleLepCalc_PtOrdered.push_back(AK4JetEta_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetPhi_singleLepCalc_PtOrdered.push_back(AK4JetPhi_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetEnergy_singleLepCalc_PtOrdered.push_back(AK4JetEnergy_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetFlav_singleLepCalc_PtOrdered.push_back(AK4JetFlav_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetBDisc_singleLepCalc_PtOrdered.push_back(AK4JetBDisc_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetBDeepCSVb_singleLepCalc_PtOrdered.push_back(AK4JetBDeepCSVb_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetBDeepCSVbb_singleLepCalc_PtOrdered.push_back(AK4JetBDeepCSVbb_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetBTag_singleLepCalc_PtOrdered.push_back(theJetBTag_JetSubCalc->at(jetptindpair[ijet].second)); // ATTENTION !!!!! HACK SO THAT WE USE theJetBTag_JetSubCalc_PtOrdered instead, but keep namings. 9 Nov 2018.
-      	AK4JetBTag_bSFdn_singleLepCalc_PtOrdered.push_back(AK4JetBTag_bSFdn_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetBTag_bSFup_singleLepCalc_PtOrdered.push_back(AK4JetBTag_bSFup_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetBTag_lSFdn_singleLepCalc_PtOrdered.push_back(AK4JetBTag_lSFdn_singleLepCalc->at(jetptindpair[ijet].second));
-      	AK4JetBTag_lSFup_singleLepCalc_PtOrdered.push_back(AK4JetBTag_lSFup_singleLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetPt_MultiLepCalc_PtOrdered.push_back(AK4JetPt_MultiLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetEta_MultiLepCalc_PtOrdered.push_back(AK4JetEta_MultiLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetPhi_MultiLepCalc_PtOrdered.push_back(AK4JetPhi_MultiLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetEnergy_MultiLepCalc_PtOrdered.push_back(AK4JetEnergy_MultiLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetFlav_MultiLepCalc_PtOrdered.push_back(AK4JetFlav_MultiLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetBDisc_MultiLepCalc_PtOrdered.push_back(AK4JetBDisc_MultiLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetBDeepCSVb_MultiLepCalc_PtOrdered.push_back(AK4JetBDeepCSVb_MultiLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetBDeepCSVbb_MultiLepCalc_PtOrdered.push_back(AK4JetBDeepCSVbb_MultiLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetBTag_MultiLepCalc_PtOrdered.push_back(theJetBTag_JetSubCalc->at(jetptindpair[ijet].second)); // ATTENTION !!!!! HACK SO THAT WE USE theJetBTag_JetSubCalc_PtOrdered instead, but keep namings. 9 Nov 2018.
+      	AK4JetBTag_bSFdn_MultiLepCalc_PtOrdered.push_back(AK4JetBTag_bSFdn_MultiLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetBTag_bSFup_MultiLepCalc_PtOrdered.push_back(AK4JetBTag_bSFup_MultiLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetBTag_lSFdn_MultiLepCalc_PtOrdered.push_back(AK4JetBTag_lSFdn_MultiLepCalc->at(jetptindpair[ijet].second));
+      	AK4JetBTag_lSFup_MultiLepCalc_PtOrdered.push_back(AK4JetBTag_lSFup_MultiLepCalc->at(jetptindpair[ijet].second));
       }
 
       // ----------------------------------------------------------------------------
@@ -2115,18 +2136,18 @@ eta:2.5 bin:11
 	  if(DEBUG)std::cout<<"Apply kinematic cuts"<<std::endl;      
 	                
       int isPastNJetsCut = 0;
-      if(NJets_singleLepCalc >= njetsCut){npass_njets+=1;isPastNJetsCut=1;}
+      if(NJets_MultiLepCalc >= njetsCut){npass_njets+=1;isPastNJetsCut=1;}
       
       int isPastJetPtCut = 0;
       bool allJetsAboveJetPtCut = true;
-      for(unsigned int ijet=0; ijet < AK4JetPt_singleLepCalc_PtOrdered.size(); ijet++){
-      		if(AK4JetPt_singleLepCalc_PtOrdered[ijet] < jetPtCut){allJetsAboveJetPtCut=false;} 
+      for(unsigned int ijet=0; ijet < AK4JetPt_MultiLepCalc_PtOrdered.size(); ijet++){
+      		if(AK4JetPt_MultiLepCalc_PtOrdered[ijet] < jetPtCut){allJetsAboveJetPtCut=false;} 
       }
       if(allJetsAboveJetPtCut){npass_JetPt+=1;isPastJetPtCut=1;}
 
       
       int isPastMETcut = 0;
-      if(corr_met_singleLepCalc > metCut){npass_met+=1;isPastMETcut=1;}
+      if(corr_met_MultiLepCalc > metCut){npass_met+=1;isPastMETcut=1;}
 
       int isPastTriLepPtCut = 0;
       if(AllLeptonPt_PtOrdered[0] > lepPtCut && AllLeptonPt_PtOrdered[1] > lepPtCut && AllLeptonPt_PtOrdered[2] > lepPtCut){npass_trilepPt+=1;isPastTriLepPtCut=1;}
@@ -2269,8 +2290,8 @@ eta:2.5 bin:11
       // ----------------------------------------------------------------------------
       if(DEBUG)std::cout<<"AK4 Jet - lepton associations"<<std::endl;      
 
-      NJetsBTag_singleLepCalc = 0;
-      NJetsBTagwithSF_singleLepCalc = 0;
+      NJetsBTag_MultiLepCalc = 0;
+      NJetsBTagwithSF_MultiLepCalc = 0;
       BJetLeadPt = -99;
       minMleppBjet = 1e8;
       minMleppJet = 1e8;
@@ -2318,22 +2339,22 @@ eta:2.5 bin:11
       mass_lepBJets_bSFdn.clear();
       mass_lepBJets_lSFup.clear();
       mass_lepBJets_lSFdn.clear();
-      NJetsBTagwithSF_singleLepCalc_shifts.clear();
+      NJetsBTagwithSF_MultiLepCalc_shifts.clear();
       minMleppBjet_shifts.clear();
       minMlllBjet_shifts.clear();
       deltaRlepbJetInMinMlb_shifts.clear();
       deltaPhilepbJetInMinMlb_shifts.clear();
       for(int i = 0; i < 4; i++){
 		BJetLeadPt_shifts.push_back(-99);
-		NJetsBTagwithSF_singleLepCalc_shifts.push_back(0);
+		NJetsBTagwithSF_MultiLepCalc_shifts.push_back(0);
 		minMleppBjet_shifts.push_back(1e8);
 		minMlllBjet_shifts.push_back(1e8);
 		deltaRlepbJetInMinMlb_shifts.push_back(-99);
 		deltaPhilepbJetInMinMlb_shifts.push_back(-99);
       }	
 
-      for(unsigned int ijet=0; ijet < AK4JetPt_singleLepCalc_PtOrdered.size(); ijet++){
-        jet_lv.SetPtEtaPhiE(AK4JetPt_singleLepCalc_PtOrdered.at(ijet),AK4JetEta_singleLepCalc_PtOrdered.at(ijet),AK4JetPhi_singleLepCalc_PtOrdered.at(ijet),AK4JetEnergy_singleLepCalc_PtOrdered.at(ijet));
+      for(unsigned int ijet=0; ijet < AK4JetPt_MultiLepCalc_PtOrdered.size(); ijet++){
+        jet_lv.SetPtEtaPhiE(AK4JetPt_MultiLepCalc_PtOrdered.at(ijet),AK4JetEta_MultiLepCalc_PtOrdered.at(ijet),AK4JetPhi_MultiLepCalc_PtOrdered.at(ijet),AK4JetEnergy_MultiLepCalc_PtOrdered.at(ijet));
         
 
 		for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
@@ -2404,8 +2425,8 @@ eta:2.5 bin:11
 		//calculate dR(MET,jets) and min - end
 
 		//calculate minDPhi(MET,jet) - start
-		if(DEBUG || DEBUGjets) cout << "MET phi = "<< corr_met_phi_singleLepCalc << ", jet ("<< ijet <<") phi = " << jet_lv.Phi()<<endl;
-		double DPhi_METJet_temp = fabs(corr_met_phi_singleLepCalc - jet_lv.Phi());
+		if(DEBUG || DEBUGjets) cout << "MET phi = "<< corr_met_phi_MultiLepCalc << ", jet ("<< ijet <<") phi = " << jet_lv.Phi()<<endl;
+		double DPhi_METJet_temp = fabs(corr_met_phi_MultiLepCalc - jet_lv.Phi());
 		if(DPhi_METJet_temp > M_PI) DPhi_METJet_temp = fabs(DPhi_METJet_temp - 2*M_PI);
 		if(DEBUG || DEBUGjets) cout << "minDPhi_METJet("<< ijet <<") = " << minDPhi_METJet;
 		if(DPhi_METJet_temp < minDPhi_METJet){
@@ -2417,17 +2438,17 @@ eta:2.5 bin:11
 
 
 		// Count BTag withOUT SFs
-		if(AK4JetBDeepCSVbb_singleLepCalc_PtOrdered.at(ijet) + AK4JetBDeepCSVbb_singleLepCalc_PtOrdered.at(ijet) > 0.4941){ // ATTENTION !!! : HARD CODED BTAG MEDIUM VALUE for 2017data. 9 Nov 2018.
-			  NJetsBTag_singleLepCalc += 1;
+		if(AK4JetBDeepCSVbb_MultiLepCalc_PtOrdered.at(ijet) + AK4JetBDeepCSVbb_MultiLepCalc_PtOrdered.at(ijet) > 0.4941){ // ATTENTION !!! : HARD CODED BTAG MEDIUM VALUE for 2017data. 9 Nov 2018.
+			  NJetsBTag_MultiLepCalc += 1;
 			}
 
 		// Count BTag with SFs
-		if(AK4JetBTag_singleLepCalc_PtOrdered.at(ijet) == 1){
-		  NJetsBTagwithSF_singleLepCalc += 1;
-		  if(AK4JetPt_singleLepCalc_PtOrdered.at(ijet) > BJetLeadPt) BJetLeadPt = AK4JetPt_singleLepCalc_PtOrdered.at(ijet);
+		if(AK4JetBTag_MultiLepCalc_PtOrdered.at(ijet) == 1){
+		  NJetsBTagwithSF_MultiLepCalc += 1;
+		  if(AK4JetPt_MultiLepCalc_PtOrdered.at(ijet) > BJetLeadPt) BJetLeadPt = AK4JetPt_MultiLepCalc_PtOrdered.at(ijet);
 		  
 		  
-		  if(DEBUG || DEBUGleptons) cout << "min M[lep,BJet("<<NJetsBTagwithSF_singleLepCalc<<")] = " ;
+		  if(DEBUG || DEBUGleptons) cout << "min M[lep,BJet("<<NJetsBTagwithSF_MultiLepCalc<<")] = " ;
 		  if(DEBUG || DEBUGleptons) cout <<  minMleppBjet ; 
 		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
 			  if((lepton_PtOrderedOnly_lv.at(ilep) + jet_lv).M() < minMleppBjet) {
@@ -2439,7 +2460,7 @@ eta:2.5 bin:11
 		  }
 		  if(DEBUG || DEBUGleptons) cout << "" << endl; 
 		  
-		  if(DEBUG || DEBUGleptons) cout << "min M[lllBJet("<<NJetsBTagwithSF_singleLepCalc<<")] = " ;
+		  if(DEBUG || DEBUGleptons) cout << "min M[lllBJet("<<NJetsBTagwithSF_MultiLepCalc<<")] = " ;
 		  double minMlllBjet_temp =(lepton_PtOrderedOnly_lv.at(0)+lepton_PtOrderedOnly_lv.at(1)+lepton_PtOrderedOnly_lv.at(2) + jet_lv).M();
 		  if(DEBUG || DEBUGleptons) cout <<  minMlllBjet ; 
 		  if( minMlllBjet_temp < minMlllBjet) {
@@ -2450,9 +2471,9 @@ eta:2.5 bin:11
 
 		  
 		}
-		if(AK4JetBTag_bSFup_singleLepCalc_PtOrdered.at(ijet) == 1){
-		  NJetsBTagwithSF_singleLepCalc_shifts.at(0) += 1;
-		  if(AK4JetPt_singleLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(0)) BJetLeadPt_shifts.at(0) = AK4JetPt_singleLepCalc_PtOrdered.at(ijet);
+		if(AK4JetBTag_bSFup_MultiLepCalc_PtOrdered.at(ijet) == 1){
+		  NJetsBTagwithSF_MultiLepCalc_shifts.at(0) += 1;
+		  if(AK4JetPt_MultiLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(0)) BJetLeadPt_shifts.at(0) = AK4JetPt_MultiLepCalc_PtOrdered.at(ijet);
 		  
 
 		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
@@ -2463,7 +2484,7 @@ eta:2.5 bin:11
 			  }
 		  }
 
-		  if(DEBUG || DEBUGleptons) cout << "min M[lllBJet("<<NJetsBTagwithSF_singleLepCalc<<")] (shift.at(0)) = " ;
+		  if(DEBUG || DEBUGleptons) cout << "min M[lllBJet("<<NJetsBTagwithSF_MultiLepCalc<<")] (shift.at(0)) = " ;
 		  double minMlllBjet_temp =(lepton_PtOrderedOnly_lv.at(0)+lepton_PtOrderedOnly_lv.at(1)+lepton_PtOrderedOnly_lv.at(2) + jet_lv).M();
 		  if(DEBUG || DEBUGleptons) cout <<  minMlllBjet_shifts.at(0) ; 
 		  if( minMlllBjet_temp < minMlllBjet_shifts.at(0)) {
@@ -2473,9 +2494,9 @@ eta:2.5 bin:11
 		  if(DEBUG || DEBUGleptons) cout << "" << endl; 
 
 		}
-		if(AK4JetBTag_bSFdn_singleLepCalc_PtOrdered.at(ijet) == 1){
-		  NJetsBTagwithSF_singleLepCalc_shifts.at(1) += 1;
-		  if(AK4JetPt_singleLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(1)) BJetLeadPt_shifts.at(1) = AK4JetPt_singleLepCalc_PtOrdered.at(ijet);
+		if(AK4JetBTag_bSFdn_MultiLepCalc_PtOrdered.at(ijet) == 1){
+		  NJetsBTagwithSF_MultiLepCalc_shifts.at(1) += 1;
+		  if(AK4JetPt_MultiLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(1)) BJetLeadPt_shifts.at(1) = AK4JetPt_MultiLepCalc_PtOrdered.at(ijet);
 		  
 
 		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
@@ -2486,7 +2507,7 @@ eta:2.5 bin:11
 			  }
 		  }
 
-		  if(DEBUG || DEBUGleptons) cout << "min M[lllBJet("<<NJetsBTagwithSF_singleLepCalc<<")] (shift.at(1)) = " ;
+		  if(DEBUG || DEBUGleptons) cout << "min M[lllBJet("<<NJetsBTagwithSF_MultiLepCalc<<")] (shift.at(1)) = " ;
 		  double minMlllBjet_temp =(lepton_PtOrderedOnly_lv.at(0)+lepton_PtOrderedOnly_lv.at(1)+lepton_PtOrderedOnly_lv.at(2) + jet_lv).M();
 		  if(DEBUG || DEBUGleptons) cout <<  minMlllBjet_shifts.at(1) ; 
 		  if( minMlllBjet_temp < minMlllBjet_shifts.at(1)) {
@@ -2497,9 +2518,9 @@ eta:2.5 bin:11
 
 
 		}
-		if(AK4JetBTag_lSFup_singleLepCalc_PtOrdered.at(ijet) == 1){
-		  NJetsBTagwithSF_singleLepCalc_shifts.at(2) += 1;
-		  if(AK4JetPt_singleLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(2)) BJetLeadPt_shifts.at(2) = AK4JetPt_singleLepCalc_PtOrdered.at(ijet);
+		if(AK4JetBTag_lSFup_MultiLepCalc_PtOrdered.at(ijet) == 1){
+		  NJetsBTagwithSF_MultiLepCalc_shifts.at(2) += 1;
+		  if(AK4JetPt_MultiLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(2)) BJetLeadPt_shifts.at(2) = AK4JetPt_MultiLepCalc_PtOrdered.at(ijet);
 		  
 
 		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
@@ -2510,7 +2531,7 @@ eta:2.5 bin:11
 			  }
 		  }
 
-		  if(DEBUG || DEBUGleptons) cout << "min M[lllBJet("<<NJetsBTagwithSF_singleLepCalc<<")] (shift.at(2)) = " ;
+		  if(DEBUG || DEBUGleptons) cout << "min M[lllBJet("<<NJetsBTagwithSF_MultiLepCalc<<")] (shift.at(2)) = " ;
 		  double minMlllBjet_temp =(lepton_PtOrderedOnly_lv.at(0)+lepton_PtOrderedOnly_lv.at(1)+lepton_PtOrderedOnly_lv.at(2) + jet_lv).M();
 		  if(DEBUG || DEBUGleptons) cout <<  minMlllBjet_shifts.at(2) ; 
 		  if( minMlllBjet_temp < minMlllBjet_shifts.at(2)) {
@@ -2521,9 +2542,9 @@ eta:2.5 bin:11
 
 
 		}
-		if(AK4JetBTag_lSFdn_singleLepCalc_PtOrdered.at(ijet) == 1){
-		  NJetsBTagwithSF_singleLepCalc_shifts.at(3) += 1;
-		  if(AK4JetPt_singleLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(3)) BJetLeadPt_shifts.at(3) = AK4JetPt_singleLepCalc_PtOrdered.at(ijet);
+		if(AK4JetBTag_lSFdn_MultiLepCalc_PtOrdered.at(ijet) == 1){
+		  NJetsBTagwithSF_MultiLepCalc_shifts.at(3) += 1;
+		  if(AK4JetPt_MultiLepCalc_PtOrdered.at(ijet) > BJetLeadPt_shifts.at(3)) BJetLeadPt_shifts.at(3) = AK4JetPt_MultiLepCalc_PtOrdered.at(ijet);
 
 
 		  for(unsigned int ilep=0; ilep<lepton_PtOrderedOnly_lv.size();ilep++){
@@ -2534,7 +2555,7 @@ eta:2.5 bin:11
 			  }
 		  }
 
-		  if(DEBUG || DEBUGleptons) cout << "min M[lllBJet("<<NJetsBTagwithSF_singleLepCalc<<")] (shift.at(3)) = " ;
+		  if(DEBUG || DEBUGleptons) cout << "min M[lllBJet("<<NJetsBTagwithSF_MultiLepCalc<<")] (shift.at(3)) = " ;
 		  double minMlllBjet_temp =(lepton_PtOrderedOnly_lv.at(0)+lepton_PtOrderedOnly_lv.at(1)+lepton_PtOrderedOnly_lv.at(2) + jet_lv).M();
 		  if(DEBUG || DEBUGleptons) cout <<  minMlllBjet_shifts.at(3) ; 
 		  if( minMlllBjet_temp < minMlllBjet_shifts.at(3)) {
@@ -2564,46 +2585,46 @@ eta:2.5 bin:11
       pdfWeights.clear();
       if(isSig){
 		// SEEMS TO APPLY TO ALL B2G MG+PYTHIA SIGNALS. LEADING ORDER 4-FLAVOR PDF
-		for(unsigned int i = 0; i < LHEweightids_singleLepCalc->size(); i++){
-		  if(LHEweightids_singleLepCalc->at(i) > 1 && LHEweightids_singleLepCalc->at(i) < 10){
-			if(LHEweightids_singleLepCalc->at(i) == 6 || LHEweightids_singleLepCalc->at(i) == 8) continue;
-			renorm.push_back(LHEweights_singleLepCalc->at(i));
-			renormWeights.push_back(LHEweights_singleLepCalc->at(i));
+		for(unsigned int i = 0; i < LHEweightids_MultiLepCalc->size(); i++){
+		  if(LHEweightids_MultiLepCalc->at(i) > 1 && LHEweightids_MultiLepCalc->at(i) < 10){
+			if(LHEweightids_MultiLepCalc->at(i) == 6 || LHEweightids_MultiLepCalc->at(i) == 8) continue;
+			renorm.push_back(LHEweights_MultiLepCalc->at(i));
+			renormWeights.push_back(LHEweights_MultiLepCalc->at(i));
 		  }
-		  if(LHEweightids_singleLepCalc->at(i) > 111 && LHEweightids_singleLepCalc->at(i) < 212){
-			pdf.push_back(LHEweights_singleLepCalc->at(i));	    
-			pdfWeights.push_back(LHEweights_singleLepCalc->at(i));	    
+		  if(LHEweightids_MultiLepCalc->at(i) > 111 && LHEweightids_MultiLepCalc->at(i) < 212){
+			pdf.push_back(LHEweights_MultiLepCalc->at(i));	    
+			pdfWeights.push_back(LHEweights_MultiLepCalc->at(i));	    
 		  }
 		}
       }
       else if(isMadgraphBkg){
 		// SEEMS TO APPLY TO OTHER MG+PYTHIA BACKGROUNDS. LEADING ORDER 5-FLAVOR PDF
-		for(unsigned int i = 0; i < LHEweightids_singleLepCalc->size(); i++){
-		  if(LHEweightids_singleLepCalc->at(i) > 1 && LHEweightids_singleLepCalc->at(i) < 10){
-			if(LHEweightids_singleLepCalc->at(i) == 6 || LHEweightids_singleLepCalc->at(i) == 8) continue;
-			renorm.push_back(LHEweights_singleLepCalc->at(i));
-			renormWeights.push_back(LHEweights_singleLepCalc->at(i));
+		for(unsigned int i = 0; i < LHEweightids_MultiLepCalc->size(); i++){
+		  if(LHEweightids_MultiLepCalc->at(i) > 1 && LHEweightids_MultiLepCalc->at(i) < 10){
+			if(LHEweightids_MultiLepCalc->at(i) == 6 || LHEweightids_MultiLepCalc->at(i) == 8) continue;
+			renorm.push_back(LHEweights_MultiLepCalc->at(i));
+			renormWeights.push_back(LHEweights_MultiLepCalc->at(i));
 		  }
-		  if(LHEweightids_singleLepCalc->at(i) > 10 && LHEweightids_singleLepCalc->at(i) < 111){
-			pdf.push_back(LHEweights_singleLepCalc->at(i));
-			pdfWeights.push_back(LHEweights_singleLepCalc->at(i));
+		  if(LHEweightids_MultiLepCalc->at(i) > 10 && LHEweightids_MultiLepCalc->at(i) < 111){
+			pdf.push_back(LHEweights_MultiLepCalc->at(i));
+			pdfWeights.push_back(LHEweights_MultiLepCalc->at(i));
 		  }
 		}
       }
       else{
 		// SEEMS TO APPLY TO ALL POWHEG AND MC@NLO BACKGROUNDS. NLO PDFs
-		for(unsigned int i = 0; i < LHEweightids_singleLepCalc->size(); i++){
-		  if(LHEweightids_singleLepCalc->at(i) > 1001 && LHEweightids_singleLepCalc->at(i) < 1010){
-			if(LHEweightids_singleLepCalc->at(i) == 1006 || LHEweightids_singleLepCalc->at(i) == 1008) continue;
-			renorm.push_back(LHEweights_singleLepCalc->at(i));
-			renormWeights.push_back(LHEweights_singleLepCalc->at(i));
+		for(unsigned int i = 0; i < LHEweightids_MultiLepCalc->size(); i++){
+		  if(LHEweightids_MultiLepCalc->at(i) > 1001 && LHEweightids_MultiLepCalc->at(i) < 1010){
+			if(LHEweightids_MultiLepCalc->at(i) == 1006 || LHEweightids_MultiLepCalc->at(i) == 1008) continue;
+			renorm.push_back(LHEweights_MultiLepCalc->at(i));
+			renormWeights.push_back(LHEweights_MultiLepCalc->at(i));
 		  }
-		  if(LHEweightids_singleLepCalc->at(i) > 2000 && LHEweightids_singleLepCalc->at(i) < 2101){
-			pdf.push_back(LHEweights_singleLepCalc->at(i));
-			pdfWeights.push_back(LHEweights_singleLepCalc->at(i));
+		  if(LHEweightids_MultiLepCalc->at(i) > 2000 && LHEweightids_MultiLepCalc->at(i) < 2101){
+			pdf.push_back(LHEweights_MultiLepCalc->at(i));
+			pdfWeights.push_back(LHEweights_MultiLepCalc->at(i));
 		  }
-		  if(LHEweightids_singleLepCalc->at(i) == 2101 || LHEweightids_singleLepCalc->at(i) == 2102){
-			alphaSWeights.push_back(LHEweights_singleLepCalc->at(i));
+		  if(LHEweightids_MultiLepCalc->at(i) == 2101 || LHEweightids_MultiLepCalc->at(i) == 2102){
+			alphaSWeights.push_back(LHEweights_MultiLepCalc->at(i));
 		  }
 		}
       }
@@ -2627,13 +2648,13 @@ eta:2.5 bin:11
       MCPastTrigger_dilep         = (int)   isPastTrigMC_dilep;
       DataPastTrigger_dilep       = (int)   isPastTrig_dilep;
       
-      if(DEBUGjets)std::cout<< "NJets (just before filling tree) = " << NJets_singleLepCalc << std::endl;
+      if(DEBUGjets)std::cout<< "NJets (just before filling tree) = " << NJets_MultiLepCalc << std::endl;
  
       outputTree->Fill();
    }
 
    std::cout<<""<<std::endl;
-   std::cout<<"=======END STATS==========   "<<std::endl;
+   std::cout<<"=======END STATS ("+outTreeName+")==========   "<<std::endl;
    std::cout<<""<<std::endl;
 
    //std::cout<<"Nelectrons             = "<<Nelectrons<<" / "<<nentries<<std::endl;

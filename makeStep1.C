@@ -11,5 +11,15 @@ void makeStep1(TString macroDir, TString inputFile, TString outputFile){
   gSystem->AddIncludePath(incl);
 
   step1 t(inputFile,outputFile);
-  t.Loop();
+  if ( inputFile.Contains("MuonEG") || inputFile.Contains("DoubleEG") || inputFile.Contains("DoubleMuon") ) { 
+      t.Loop("ljmet", "ljmet");   
+  }
+  else {
+      t.saveHistograms();
+      vector<TString> shifts = { "ljmet", "ljmet_JECup", "ljmet_JECdown", "ljmet_JERup", "ljmet_JERdown" };
+      for (size_t i =0; i<shifts.size(); ++i) {
+          cout << endl << "Running shift " << shifts[i] << endl;
+          t.Loop(shifts[i], shifts[i]);
+      }
+  }
 }
